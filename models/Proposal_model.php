@@ -8,7 +8,7 @@ class Proposal_model extends CI_Model
         $outputParams = array('*status', '*statusInfo');
         $inputParams = array('*data' => $data);
 
-        $rule = $this->irodsrule->make('iiSubmitProposal', $inputParams, $outputParams);
+        $rule = $this->irodsrule->make('uuSubmitProposal', $inputParams, $outputParams);
         $result = $rule->execute();
         return $result;
     }
