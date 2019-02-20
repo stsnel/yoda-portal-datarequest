@@ -26,6 +26,12 @@ class Datarequest extends MY_Controller
     public function store()
     {
         $arrayPost = $this->input->post();
-        # TODO: persist data
+
+        $this->load->model('Proposal_model');
+
+        if ($this->input->server('REQUEST_METHOD') == 'POST') {
+            $result = $this->Proposal_model->submit($arrayPost['formData']);
+        }
+
     }
 }
