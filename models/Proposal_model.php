@@ -12,4 +12,32 @@ class Proposal_model extends CI_Model
         $result = $rule->execute();
         return $result;
     }
+
+    function overview()
+    {
+        $outputParams = array('*result', '*status', '*statusInfo');
+        $inputParams = array('*data' => 'bla');
+
+        $rule = $this->irodsrule->make('uuGetProposals', $inputParams, $outputParams);
+        $ruleResult = $rule->execute();
+
+	$results = $ruleResult['*result'];
+
+	$status = $ruleResult['*status'];
+	$statusInfo = $ruleResult['*statusInfo'];
+
+	$summary = $results[0];
+	unset($results[0]);
+
+	$rows = $results;
+
+	$output = array(
+		'summary' => $summary,
+		'rows' => $rows,
+		'status' => $status,
+		'statusInfo' => $statusInfo
+	);
+
+        return $output;
+    }
 }
