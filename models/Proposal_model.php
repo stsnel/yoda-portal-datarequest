@@ -13,15 +13,34 @@ class Proposal_model extends CI_Model
         return $result;
     }
 
-    function overview()
+    function overview($limit, $offset = 0)
     {
-        $outputParams = array('*result', '*status', '*statusInfo');
-        $inputParams = array('*data' => 'bla');
+	$ruleBody = <<<'RULE'
+myRule {
+	*l = int(*limit);
+	*o = int(*offset);
 
-        $rule = $this->irodsrule->make('uuGetProposals', $inputParams, $outputParams);
+	uuGetProposals(*l, *o, *result, *status, *statusInfo)
+}
+RULE;
+
+	$iRodsAccount = $this->rodsuser->getRodsAccount();
+
+	$rule = new ProdsRule(
+		$iRodsAccount,
+		$ruleBody,
+		array(
+			"*limit" => $limit,
+			"*offset" => $offset
+		),
+		array(
+			"*result", "*status", "*statusInfo"
+		)
+	);
+
         $ruleResult = $rule->execute();
 
-	$results = $ruleResult['*result'];
+	$results = json_decode($ruleResult['*result'], true);
 
 	$status = $ruleResult['*status'];
 	$statusInfo = $ruleResult['*statusInfo'];

@@ -67,11 +67,12 @@ class Datarequest extends MY_Controller
 
 	# Get DataTables parameters
 	$totalItemsLeftInView = $this->input->get('length');
+	$length = $totalItemsLeftInView;
 	$start = $this->input->get('start');
 	$draw = $this->input->get('draw');
 
 	# Fetch data from iRODS
-	$data = $this->Proposal_model->overview();
+	$data = $this->Proposal_model->overview($length, $start);
 
 	# Extract summary statistics from data
 	$totalItems = $data['summary']['total'];
