@@ -12,7 +12,7 @@ class Datarequest extends MY_Controller
 
         $viewParams = array(
             'styleIncludes' => array(
-                'css/research.css',
+                'css/datarequest.css',
                 'lib/datatables/css/dataTables.bootstrap.min.css',
                 'lib/font-awesome/css/font-awesome.css'
             ),
@@ -20,10 +20,8 @@ class Datarequest extends MY_Controller
                 'lib/datatables/js/jquery.dataTables.min.js',
                 'lib/datatables/js/dataTables.bootstrap.min.js',
                 'js/datarequest.js',
-//                'js/search.js', // may be added later; not needed for MVP
             ),
-            'items' => $items,
-            'dir' => "DUMMY_DIR"
+            'items' => $items
         );
 
         loadView('index', $viewParams);
