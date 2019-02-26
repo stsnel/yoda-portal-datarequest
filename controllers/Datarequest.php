@@ -65,7 +65,7 @@ class Datarequest extends MY_Controller
 	# Get configured defaults
 	$itemsPerPage = $this->config->item('browser-items-per-page');
 
-	# Get DataTables parameters
+	# Get DataTables parameters (for pagination)
 	$totalItemsLeftInView = $this->input->get('length');
 	$length = $totalItemsLeftInView;
 	$start = $this->input->get('start');
