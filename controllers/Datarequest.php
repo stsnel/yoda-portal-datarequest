@@ -7,6 +7,27 @@ use JsonSchema\Constraints\Factory;
 class Datarequest extends MY_Controller
 {
     public function index() {
+        $this->config->load('config');
+        $items = $this->config->item('browser-items-per-page');
+
+        $viewParams = array(
+            'styleIncludes' => array(
+                'css/datarequest.css',
+                'lib/datatables/css/dataTables.bootstrap.min.css',
+                'lib/font-awesome/css/font-awesome.css'
+            ),
+            'scriptIncludes' => array(
+                'lib/datatables/js/jquery.dataTables.min.js',
+                'lib/datatables/js/dataTables.bootstrap.min.js',
+                'js/datarequest.js',
+            ),
+            'items' => $items
+        );
+
+        loadView('index', $viewParams);
+    }
+
+    public function add() {
 
         // Load CSRF token
         $tokenName = $this->security->get_csrf_token_name();
@@ -33,5 +54,42 @@ class Datarequest extends MY_Controller
             $result = $this->Proposal_model->submit($arrayPost['formData']);
         }
 
+    }
+
+    public function data()
+    {
+        $this->load->model('Proposal_model');
+
+	# Get configured defaults
+	$itemsPerPage = $this->config->item('browser-items-per-page');
+
+	# Get DataTables parameters (for pagination)
+	$totalItemsLeftInView = $this->input->get('length');
+	$length = $totalItemsLeftInView;
+	$start = $this->input->get('start');
+	$draw = $this->input->get('draw');
+
+	# Fetch data from iRODS
+	$data = $this->Proposal_model->overview($length, $start);
+
+	# Extract summary statistics from data
+	$totalItems = $data['summary']['total'];
+
+	# Parse data
+	foreach ($data['rows'] as $row) {
+		$rows[] = array($row['COLL_OWNER_NAME'], $row['COLL_NAME'], date('Y-m-d H:i:s', $row['COLL_CREATE_TIME']));
+	}
+
+	# Construct output array for front-end
+	$output = array('status' => $data["status"],
+			'statusInfo' => $data["statusInfo"],
+			'draw' => $draw,
+			'recordsTotal' => $totalItems,
+			'recordsFiltered' => $totalItems,
+			'data' => $rows
+	);
+
+	# Return data to DataTables
+	$this->output->set_content_type('application/json')->set_output(json_encode($output));
     }
 }
