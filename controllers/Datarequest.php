@@ -77,7 +77,13 @@ class Datarequest extends MY_Controller
 
 	# Parse data
 	foreach ($data['rows'] as $row) {
-		$rows[] = array($row['COLL_OWNER_NAME'], $row['COLL_NAME'], date('Y-m-d H:i:s', $row['COLL_CREATE_TIME']));
+		$owner = $row['COLL_OWNER_NAME'];
+		$exploded_path = explode('/', $row['COLL_NAME']);
+		$name = end($exploded_path);
+		$name = "<a href='view/" . $name . "'>" . $name . "</a>";
+		$date = date('Y-m-d H:i:s', $row['COLL_CREATE_TIME']);
+		$status = $row['META_DATA_ATTR_VALUE'];
+		$rows[] = array($owner, $name, $date, $status);
 	}
 
 	# Construct output array for front-end

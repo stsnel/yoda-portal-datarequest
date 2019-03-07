@@ -15,6 +15,7 @@
 			<th>User</th>
                         <th>Name</th>
                         <th>Submission date</th>
+			<th>Status</th>
                     </tr>
                 </thead>
             </table>
