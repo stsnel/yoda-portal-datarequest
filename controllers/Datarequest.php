@@ -27,6 +27,37 @@ class Datarequest extends MY_Controller
         loadView('index', $viewParams);
     }
 
+    public function view($rpid) {
+
+	$inputParams = array("*researchProposalId" => $rpid);
+	$outputParams = array("*proposalJSON", "*proposalStatus", "*status", "*statusInfo");
+	$rule = $this->irodsrule->make("uuGetProposal", $inputParams, $outputParams);
+
+	$proposal = $rule->execute()["*proposalJSON"];
+	$proposalStatus = $rule->execute()["*proposalStatus"];
+
+        $viewParams = array(
+            'styleIncludes' => array(
+                'css/datarequest.css',
+            ),
+            'rpid' => $rpid,
+            'proposal' => $proposal,
+	    'proposalStatus' => $proposalStatus
+        );
+
+        loadView('view', $viewParams);
+    }
+
+    public function approve($rpid) {
+	$inputParams = array("*researchProposalId" => $rpid);
+	$outputParams = array("*status", "*statusInfo");
+	$rule = $this->irodsrule->make("uuApproveProposal", $inputParams, $outputParams);
+
+	$results = $rule->execute();
+
+	redirect('/datarequest');
+    }
+
     public function add() {
 
         // Load CSRF token
@@ -53,7 +84,6 @@ class Datarequest extends MY_Controller
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $result = $this->Proposal_model->submit($arrayPost['formData']);
         }
-
     }
 
     public function data()
@@ -77,7 +107,13 @@ class Datarequest extends MY_Controller
 
 	# Parse data
 	foreach ($data['rows'] as $row) {
-		$rows[] = array($row['COLL_OWNER_NAME'], $row['COLL_NAME'], date('Y-m-d H:i:s', $row['COLL_CREATE_TIME']));
+		$owner = $row['COLL_OWNER_NAME'];
+		$exploded_path = explode('/', $row['COLL_NAME']);
+		$name = end($exploded_path);
+		$name = "<a href='view/" . $name . "'>" . $name . "</a>";
+		$date = date('Y-m-d H:i:s', $row['COLL_CREATE_TIME']);
+		$status = $row['META_DATA_ATTR_VALUE'];
+		$rows[] = array($owner, $name, $date, $status);
 	}
 
 	# Construct output array for front-end
