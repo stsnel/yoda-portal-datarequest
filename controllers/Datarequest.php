@@ -84,7 +84,6 @@ class Datarequest extends MY_Controller
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $result = $this->Proposal_model->submit($arrayPost['formData']);
         }
-
     }
 
     public function data()
