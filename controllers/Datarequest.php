@@ -27,6 +27,37 @@ class Datarequest extends MY_Controller
         loadView('index', $viewParams);
     }
 
+    public function view($rpid) {
+
+	$inputParams = array("*researchProposalId" => $rpid);
+	$outputParams = array("*proposalJSON", "*proposalStatus", "*status", "*statusInfo");
+	$rule = $this->irodsrule->make("uuGetProposal", $inputParams, $outputParams);
+
+	$proposal = $rule->execute()["*proposalJSON"];
+	$proposalStatus = $rule->execute()["*proposalStatus"];
+
+        $viewParams = array(
+            'styleIncludes' => array(
+                'css/datarequest.css',
+            ),
+            'rpid' => $rpid,
+            'proposal' => $proposal,
+	    'proposalStatus' => $proposalStatus
+        );
+
+        loadView('view', $viewParams);
+    }
+
+    public function approve($rpid) {
+	$inputParams = array("*researchProposalId" => $rpid);
+	$outputParams = array("*status", "*statusInfo");
+	$rule = $this->irodsrule->make("uuApproveProposal", $inputParams, $outputParams);
+
+	$results = $rule->execute();
+
+	redirect('/datarequest');
+    }
+
     public function add() {
 
         // Load CSRF token
