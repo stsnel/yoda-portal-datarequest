@@ -51,7 +51,7 @@ function submitData(data)
         config: { headers: {'Content-Type': 'multipart/form-data' }}
         })
         .then(function (response) {
-//            window.location.href = "/datarequest";
+            window.location.href = "/datarequest";
         })
         .catch(function (error) {
             //handle error
