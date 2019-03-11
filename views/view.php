@@ -3,16 +3,16 @@
 		<div class=col-md-12>
 			<div class="panel panel-default">
 		                <div class="panel-heading clearfix">
-					<h3 class="panel-title pull-left">Research proposal: <?php echo $proposal['title'] ?></h3>
+					<h3 class="panel-title pull-left">Research proposal: <?php echo html_escape($proposal['title']) ?></h3>
 					<div class="pull-right">
 						<a class="btn btn-default" href="/datarequest">Back</a>
 					</div>
 				</div>
 				<div class="panel-body">
 					<label>Title</label>
-					<p><?php echo $proposal['title'] ?></p>
+					<p><?php echo html_escape($proposal['title']) ?></p>
 					<label>Proposal</label>
-					<p><?php echo $proposal['body'] ?></p>
+					<p><?php echo html_escape($proposal['body']) ?></p>
 					<label>Status</label>
 					<p><?php echo $proposalStatus ?></p>
 					<?php if ($proposalStatus == "submitted"): ?>
