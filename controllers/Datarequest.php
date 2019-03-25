@@ -36,13 +36,35 @@ class Datarequest extends MY_Controller
 	$proposal = $rule->execute()["*proposalJSON"];
 	$proposalStatus = $rule->execute()["*proposalStatus"];
 
+	# Check if user is a Board of Directors representative. If not, do
+	# not allow the user to approve the research proposal
+        $rulebody = <<<EORULE
+rule {
+        uuUserInGroup(*user, *zone, *group);
+}
+EORULE;
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            $rulebody,
+                array(
+                    '*user' => $this->rodsuser->getUserInfo()['name'],
+                    '*zone' => $this->rodsuser->getUserInfo()['zone'],
+                    '*group' => 'datarequests-research-board-of-directors'
+                ),
+                array('ruleExecOut')
+            );
+
+        $result = $rule->execute()['ruleExecOut'];
+        $isBodr = $result == 'true' ? true : false;
+
         $viewParams = array(
             'styleIncludes' => array(
                 'css/datarequest.css',
             ),
             'rpid' => $rpid,
             'proposal' => $proposal,
-	    'proposalStatus' => $proposalStatus
+            'proposalStatus' => $proposalStatus,
+            'isBodr' => $isBodr
         );
 
         loadView('view', $viewParams);
