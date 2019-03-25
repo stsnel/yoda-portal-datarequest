@@ -55,7 +55,7 @@ EORULE;
             );
 
         $result = $rule->execute()['ruleExecOut'];
-        $isBodr = $result == 'true' ? true : false;
+        $isBoardMember = $result == 'true' ? true : false;
 
         $viewParams = array(
             'styleIncludes' => array(
@@ -64,7 +64,7 @@ EORULE;
             'rpid' => $rpid,
             'proposal' => $proposal,
             'proposalStatus' => $proposalStatus,
-            'isBodr' => $isBodr
+            'isBoardMember' => $isBoardMember
         );
 
         loadView('view', $viewParams);

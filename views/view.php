@@ -15,7 +15,7 @@
 					<p><?php echo html_escape($proposal['body']) ?></p>
 					<label>Status</label>
 					<p><?php echo $proposalStatus ?></p>
-					<?php if ($proposalStatus == "submitted" AND $isBodr): ?>
+					<?php if ($proposalStatus == "submitted" && $isBoardMember): ?>
 						<a href="/datarequest/approve/<?php echo $rpid ?>" class="btn btn-info">Approve proposal</a>
 					<?php endif ?>
 				</div>
