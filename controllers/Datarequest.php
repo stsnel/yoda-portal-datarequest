@@ -40,7 +40,8 @@ class Datarequest extends MY_Controller
 	# not allow the user to approve the research proposal
         $rulebody = <<<EORULE
 rule {
-        uuUserInGroup(*user, *zone, *group);
+        uuGroupUserExists(*group, "*user#*zone", false, *member);
+        *member = str(*member);
 }
 EORULE;
         $rule = new ProdsRule(
@@ -51,10 +52,10 @@ EORULE;
                     '*zone' => $this->rodsuser->getUserInfo()['zone'],
                     '*group' => 'datarequests-research-board-of-directors'
                 ),
-                array('ruleExecOut')
+                array('*member')
             );
 
-        $result = $rule->execute()['ruleExecOut'];
+        $result = $rule->execute()['*member'];
         $isBoardMember = $result == 'true' ? true : false;
 
         $viewParams = array(
