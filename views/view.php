@@ -12,7 +12,7 @@
 					<label>Title</label>
 					<p><?php echo html_escape($proposal['title']) ?></p>
 					<label>Proposal</label>
-					<p><?php echo html_escape($proposal['body']) ?></p>
+					<p><?php echo nl2br(html_escape($proposal['body'])) ?></p>
 					<label>Status</label>
 					<p><?php echo $proposalStatus ?></p>
 					<?php if ($proposalStatus == "submitted" && $isBoardMember): ?>
