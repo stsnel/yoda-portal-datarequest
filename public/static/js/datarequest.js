@@ -31,7 +31,7 @@ function startBrowsing(items)
         "bInfo": false,
         "bLengthChange": false,
         "language": {
-            "emptyTable": "No accessible files/folders present"
+            "emptyTable": "No research proposals present"
   },
         "ajax": {
             url: "data",
