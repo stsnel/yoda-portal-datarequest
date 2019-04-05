@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from 'axios';
 import { render } from "react-dom";
-import Form from "react-jsonschema-form-uu";
+import Form from "react-jsonschema-form";
 
 var schema = {
   "description": "Please fill out and submit the form below to submit your research proposal.",
