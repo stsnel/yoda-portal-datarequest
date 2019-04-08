@@ -34,38 +34,38 @@
 
 					<h2>Data request</h2>
 					<label>Background of the project</label>
-					<p><?php echo html_escape($proposal['data_request']['background']) ?></p>
+					<p><?php echo nl2br(html_escape($proposal['data_request']['background'])) ?></p>
 					<label>Research question</label>
 					<p><?php echo html_escape($proposal['data_request']['research_question']) ?></p>
 					<label>Methods</label>
-					<p><?php echo html_escape($proposal['data_request']['methods']) ?></p>
+					<p><?php echo nl2br(html_escape($proposal['data_request']['methods'])) ?></p>
 					<label>Design of the study</label>
-					<p><?php echo html_escape($proposal['data_request']['design']) ?></p>
+					<p><?php echo nl2br(html_escape($proposal['data_request']['design'])) ?></p>
 					<label>Study population and sample-size</label>
-					<p><?php echo html_escape($proposal['data_request']['population']) ?></p>
+					<p><?php echo nl2br(html_escape($proposal['data_request']['population'])) ?></p>
 					<label>Data processing and preparation</label>
-					<p><?php echo html_escape($proposal['data_request']['processing']) ?></p>
+					<p><?php echo nl2br(html_escape($proposal['data_request']['processing'])) ?></p>
 					<label>Handling missing data</label>
-					<p><?php echo html_escape($proposal['data_request']['missing_data']) ?></p>
+					<p><?php echo nl2br(html_escape($proposal['data_request']['missing_data'])) ?></p>
 					<label>Data analysis methods</label>
-					<p><?php echo html_escape($proposal['data_request']['analysis_methods']) ?></p>
+					<p><?php echo nl2br(html_escape($proposal['data_request']['analysis_methods'])) ?></p>
 					<label>Planned subgroup analyses</label>
-					<p><?php echo html_escape($proposal['data_request']['subgroup_analyses']) ?></p>
+					<p><?php echo nl2br(html_escape($proposal['data_request']['subgroup_analyses'])) ?></p>
 					<label>Planned sensitivity analyses</label>
-					<p><?php echo html_escape($proposal['data_request']['sensitivity_analyses']) ?></p>
+					<p><?php echo nl2br(html_escape($proposal['data_request']['sensitivity_analyses'])) ?></p>
 					<label>Timeline and milestones</label>
-					<p><?php echo html_escape($proposal['data_request']['timeline']) ?></p>
+					<p><?php echo nl2br(html_escape($proposal['data_request']['timeline'])) ?></p>
 					<label>Output</label>
-					<p><?php echo html_escape($proposal['data_request']['output']) ?></p>
+					<p><?php echo nl2br(html_escape($proposal['data_request']['output'])) ?></p>
 					<label>Proposed authors</label>
-					<p><?php echo html_escape($proposal['data_request']['proposed_authors']) ?></p>
+					<p><?php echo nl2br(html_escape($proposal['data_request']['proposed_authors'])) ?></p>
 
 					<h2>Contributions to YOUth data collection</h2>
 					<label>Contribution(s)</label>
 					<ul>
 					<?php if ($proposal['contribution']['contribution_time'] == 'Yes') { echo '<li>Time: ' . $proposal['contribution']['contribution_time_type'] . ', ' . $proposal['contribution']['contribution_time_amount'] . ' hours</li>'; } ?>
 					<?php if ($proposal['contribution']['contribution_time'] == 'Yes') { echo '<li>Money: ' . $proposal['contribution']['contribution_financial_amount'] . ' euros</li>'; } ?>
-					<?php if ($proposal['contribution']['contribution_favor'] == 'Yes') { echo '<li>Return favor: ' . $proposal['contribution']['contribution_favor_description'] . '</li>'; } ?>
+					<?php if ($proposal['contribution']['contribution_favor'] == 'Yes') { echo '<li>Return favor: ' . nl2br(html_escape($proposal['contribution']['contribution_favor_description'])) . '</li>'; } ?>
 					</ul>
 				</div>
 			</div>
