@@ -14,7 +14,7 @@ var schema = {
         "title": {
           "type": "string",
           "title": "Title of the study",
-          "description": "One request per article"
+          "description": "One request per article."
         }
       },
       "required": ["title"]
@@ -62,7 +62,7 @@ var schema = {
         "background": {
           "type": "string",
           "title": "Background of the project",
-          "description": "Please provide a short background including the rational of your study as you would do in an introduction of the paper",
+          "description": "Please provide a short background including the rational of your study as you would do in an introduction of the paper.",
           "maxLength": 500
         },
         "research_question": {
@@ -78,27 +78,27 @@ var schema = {
         "design": {
           "type": "string",
           "title": "Design of the study",
-          "description": "(for instance cross-sectional, longitudinal etc.; substantiate your choices)"
+          "description": "For instance cross-sectional, longitudinal etc.; substantiate your choices."
         },
         "population": {
           "type": "string",
           "title": "Study population and sample-size",
-          "description": "entire population or a subset; substantiate your choices e.g. Provide a rationale for the requested sample-size, for instance using a power calculation"
+          "description": "Entire population or a subset; substantiate your choices e.g. Provide a rationale for the requested sample-size, for instance using a power calculation."
         },
         "processing": {
           "type": "string",
           "title": "Data processing and preparation",
-          "description": "including necessary recoding of data etc."
+          "description": "Including necessary recoding of data etc."
         },
         "missing_data": {
           "type": "string",
           "title": "Handling missing data",
-          "description": "describe how you will detect and handle missingness in the data"
+          "description": "Describe how you will detect and handle missingness in the data."
         },
         "analysis_methods": {
           "type": "string",
           "title": "Data analysis methods",
-          "description": "including statistical design and statistical analysis plan. If it is not possible to provide a detailed statistical plan, as this does not fit in with the research questions formulated above, please explain."
+          "description": "Including statistical design and statistical analysis plan. If it is not possible to provide a detailed statistical plan, as this does not fit in with the research questions formulated above, please explain."
         },
         "subgroup_analyses": {
           "type": "string",
@@ -113,7 +113,7 @@ var schema = {
         "timeline": {
           "type": "string",
           "title": "Timeline and milestones",
-          "description": "including dates of when to analyze/write up"
+          "description": "Including dates of when to analyze/write up."
         },
         "output": {
           "type": "string",
@@ -123,8 +123,7 @@ var schema = {
         "proposed_authors": {
           "type": "string",
           "title": "Proposed authors and their affiliations",
-          "description": "please note that the YOUth Data Access Committee can request certain authors to be included",
-          "default": ""
+          "description": "Please note that the YOUth Data Access Committee can request certain authors to be included.",
         }
       },
       "required": ["background", "research_question", "methods", "design", "population", "processing", "missing_data", "analysis_methods", "subgroup_analyses", "sensitivity_analyses", "timeline", "output", "proposed_authors"]
@@ -247,7 +246,7 @@ var schema = {
                 },
                 "contribution_favor_description": {
                   "type": "string",
-                  "title": "Detailed description of the return favor"
+                  "title": "Detailed description of the return favor."
                 }
               },
               "required": ["contribution_favor_description"]
