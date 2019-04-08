@@ -73,7 +73,6 @@ var schema = {
           "type": "string",
           "title": "Methods",
           "description": "Describe the methods as in the paper in which the data will be presented, according to the categories below, with a total maximum of 1500 words. For a description of task, methods etc. refer to the website, if possible.",
-          "maxLength": 1500
         },
         "design": {
           "type": "string",
