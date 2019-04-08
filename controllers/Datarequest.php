@@ -27,7 +27,8 @@ class Datarequest extends MY_Controller
                 'lib/datatables/js/dataTables.bootstrap.min.js',
                 'js/datarequest.js',
             ),
-            'items' => $items
+            'items' => $items,
+            'activeModule' => 'datarequest'
         );
 
         loadView('index', $viewParams);
@@ -70,7 +71,8 @@ EORULE;
             'rpid' => $rpid,
             'proposal' => $proposal,
             'proposalStatus' => $proposalStatus,
-            'isBoardMember' => $isBoardMember
+            'isBoardMember' => $isBoardMember,
+            'activeModule' => 'datarequest'
         );
 
         loadView('view', $viewParams);
@@ -98,6 +100,7 @@ EORULE;
             ),
             'tokenName'        => $tokenName,
             'tokenHash'        => $tokenHash,
+            'activeModule' => 'datarequest'
         );
 
         loadView('form', $viewParams);
