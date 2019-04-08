@@ -184,9 +184,8 @@ var schema = {
                   "type": "string",
                   "title": "Contribution in time",
                   "enum": [
-                    "PhD Student", "Other contribution"
-                  ],
-                  "default": "PhD student"
+                    "PhD student", "Other contribution"
+                  ]
                 },
                 "contribution_time_amount": {
                   "type": "number",
