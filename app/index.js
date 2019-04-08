@@ -313,7 +313,6 @@ var uiSchema = {
   }
 };
 
-
 const onSubmit = ({formData}) => submitData(formData);
 
 function submitData(data)
@@ -347,7 +346,6 @@ render((
     <Form className="form form-horizontal metadata-form"
           schema={schema}
           uiSchema={uiSchema}
-          onSubmit={onSubmit}
-          onChange={onChange}>
+          onSubmit={onSubmit}>
     </Form>
 ), document.getElementById("form"));
