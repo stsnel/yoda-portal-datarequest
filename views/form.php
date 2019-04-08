@@ -3,7 +3,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading clearfix">
                     <h3 class="panel-title pull-left">
-                        Research proposal submission form
+                        Data request submission form
                     </h3>
                     <div class="input-group-sm has-feedback pull-right">
                         <a class="btn btn-default" href="/datarequest">Back</a>
