@@ -27,7 +27,7 @@ class Datarequest extends MY_Controller
                 'lib/datatables/js/dataTables.bootstrap.min.js',
                 'js/datarequest.js',
             ),
-            'items' => $items,
+            'items'        => $items,
             'activeModule' => 'datarequest'
         );
 
@@ -54,8 +54,8 @@ EORULE;
             $this->rodsuser->getRodsAccount(),
             $rulebody,
                 array(
-                    '*user' => $this->rodsuser->getUserInfo()['name'],
-                    '*zone' => $this->rodsuser->getUserInfo()['zone'],
+                    '*user'  => $this->rodsuser->getUserInfo()['name'],
+                    '*zone'  => $this->rodsuser->getUserInfo()['zone'],
                     '*group' => 'datarequests-research-board-of-directors'
                 ),
                 array('*member')
@@ -65,14 +65,14 @@ EORULE;
         $isBoardMember = $result == 'true' ? true : false;
 
         $viewParams = array(
-            'styleIncludes' => array(
+            'styleIncludes'  => array(
                 'css/datarequest.css',
             ),
-            'rpid' => $rpid,
-            'proposal' => $proposal,
+            'rpid'           => $rpid,
+            'proposal'       => $proposal,
             'proposalStatus' => $proposalStatus,
-            'isBoardMember' => $isBoardMember,
-            'activeModule' => 'datarequest'
+            'isBoardMember'  => $isBoardMember,
+            'activeModule'   => 'datarequest'
         );
 
         loadView('view', $viewParams);
@@ -95,12 +95,12 @@ EORULE;
         $tokenHash = $this->security->get_csrf_hash();
 
         $viewParams = array(
-            'styleIncludes' => array(
+            'styleIncludes'    => array(
                 'css/datarequest.css',
             ),
             'tokenName'        => $tokenName,
             'tokenHash'        => $tokenHash,
-            'activeModule' => 'datarequest'
+            'activeModule'     => 'datarequest'
         );
 
         loadView('form', $viewParams);
@@ -151,12 +151,12 @@ EORULE;
         }
 
         # Construct output array for front-end
-        $output = array('status' => $data["status"],
-                        'statusInfo' => $data["statusInfo"],
-                        'draw' => $draw,
-                        'recordsTotal' => $totalItems,
+        $output = array('status'          => $data["status"],
+                        'statusInfo'      => $data["statusInfo"],
+                        'draw'            => $draw,
+                        'recordsTotal'    => $totalItems,
                         'recordsFiltered' => $totalItems,
-                        'data' => $rows
+                        'data'            => $rows
         );
 
         # Return data to DataTables
