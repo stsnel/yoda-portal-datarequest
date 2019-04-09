@@ -184,9 +184,8 @@ var schema = {
                   "type": "string",
                   "title": "Contribution in time",
                   "enum": [
-                    "PhD Student", "Other contribution"
-                  ],
-                  "default": "PhD student"
+                    "PhD student", "Other contribution"
+                  ]
                 },
                 "contribution_time_amount": {
                   "type": "number",
@@ -313,6 +312,66 @@ var uiSchema = {
 
 const onSubmit = ({formData}) => submitData(formData);
 
+class YodaForm extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+            <Form className="form form-horizontal metadata-form"
+                  schema={schema}
+                  idPrefix={"yoda"}
+                  uiSchema={uiSchema}
+                  onSubmit={onSubmit}>
+                <button ref={(btn) => {this.submitButton=btn;}} className="hidden" />
+            </Form>
+        );
+    }
+};
+
+class YodaButtons extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+            <div className="form-group">
+                <div className="row yodaButtons">
+                    <div className="col-sm-12">
+                        <button onClick={this.props.submitButton} type="submit" className="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+}
+
+class Container extends React.Component {
+    constructor(props) {
+        super(props);
+        this.submitForm = this.submitForm.bind(this);
+    }
+
+    submitForm() {
+        this.form.submitButton.click();
+    }
+
+    render() {
+        return (
+        <div>
+          <YodaForm ref={(form) => {this.form=form;}}/>
+          <YodaButtons submitButton={this.submitForm}/>
+        </div>
+      );
+    }
+};
+
+render(<Container/>,
+    document.getElementById("form")
+      );
+
 function submitData(data)
 {
     var tokenName = form.dataset.csrf_token_name;
@@ -339,11 +398,3 @@ function submitData(data)
             console.log(error);
         });
 }
-
-render((
-    <Form className="form form-horizontal metadata-form"
-          schema={schema}
-          uiSchema={uiSchema}
-          onSubmit={onSubmit}>
-    </Form>
-), document.getElementById("form"));
