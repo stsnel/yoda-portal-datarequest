@@ -10,11 +10,11 @@
 |
 |
 | This file specifies how the module should behave in the Irods Portal.
-| This file is read by the Irods Portal after the module is imported. 
+| This file is read by the Irods Portal after the module is imported.
 | This file should provide entries for an array named 'module'. The
 | for entries this array should have are 'name', 'label', 'glyph' and
 | 'menu_order'.
-| 
+|
 | The name key defines the name of the module, such as it should appear
 | in the menu. This name should also be the name of the directory the
 | module is cloned in (provide a sample call to add-module.sh to ensure
@@ -24,11 +24,11 @@
 | The label key defines the label for this module, which will be used
 | for the menu
 |
-| The glyph key defines the bootstrap glyph used for buttons referring 
+| The glyph key defines the bootstrap glyph used for buttons referring
 | to this module, without the 'glyphicon glyphicon' part. So to use
 | the icon 'glyphicon glyphicon-user' the value should just be 'user'
-| 
-| The menu_order key defines how important the module is. The lower 
+|
+| The menu_order key defines how important the module is. The lower
 | this number, the more to the left in the menu the module appears.
 | The higher, the more to the right. Default is 50.
 |
@@ -40,26 +40,26 @@
 | -------------------------------------------------------------------
 |
 | To override these settings for your local configuration, do not
-| change this file. The next update WILL override your settings. 
+| change this file. The next update WILL override your settings.
 | Instead, create a new file, called "module_local.php" in the same
-| directory as this file. This file should already be in the 
+| directory as this file. This file should already be in the
 | .gitignore file
-| 
+|
 | Start the file with the usual php opening tags (see first line of
-| this file). 
+| this file).
 | Then, for each of the four keys from the array below you wish to
 | replace, copy the entire line to the "module_local.php" file and
-| replace the value (and only the value). 
+| replace the value (and only the value).
 | This should override the value for that key.
 | You do not have to override keys that you don't want to change,
 | although this won't be harmful.
 */
 
-$module['name'] 		= "datarequest";
-$module['label'] 		= "Datarequest";
-$module['glyph'] 		= "book";
-$module['menu_order'] 	= 10;
-$module['hide_menu']	= false;
+$module['name']       = "datarequest";
+$module['label']      = "Datarequest";
+$module['glyph']      = "book";
+$module['menu_order'] = 20;
+$module['hide_menu']  = false;
 
 if (file_exists(dirname(__FILE__) . '/module_local.php'))
 	include(    dirname(__FILE__) . '/module_local.php');
