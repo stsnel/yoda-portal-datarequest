@@ -3,7 +3,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading clearfix">
                     <h3 class="panel-title pull-left">
-                        Data request submission form
+                        Research proposal submission form
                     </h3>
                     <div class="input-group-sm has-feedback pull-right">
                         <a class="btn btn-default" href="/datarequest">Back</a>
@@ -23,4 +23,4 @@
 
 <script type="text/javascript">
 </script>
-<script src="/datarequest/static/js/form.js" type="text/javascript"></script>
+<script src="/datarequest/static/js/researchproposal/add.js" type="text/javascript"></script>
