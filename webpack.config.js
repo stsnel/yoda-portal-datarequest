@@ -5,10 +5,11 @@ var BUILD_DIR = path.resolve(__dirname, 'public/static/js');
 var APP_DIR = path.resolve(__dirname, 'app');
 
 var config = {
-    entry: APP_DIR + '/index.js',
+    entry: {'researchproposal/add': APP_DIR + '/researchproposal/add.js',
+            'datarequest/add': APP_DIR + '/datarequest/add.js'},
     output: {
         path: BUILD_DIR,
-        filename: 'form.js'
+        filename: '[name].js'
     },
     module: {
         rules: [
