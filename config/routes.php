@@ -39,7 +39,7 @@
 */
 $module = 'datarequest';
 
-$route[$module]                        = 'datarequest';
+$route[$module]                        = 'researchproposal';
 
 
 /* End of file routes.php */
