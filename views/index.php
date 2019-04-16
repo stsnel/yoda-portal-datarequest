@@ -4,7 +4,7 @@
 </script>
 
 <div class="row">
-    <a href="datarequest/add" class="btn btn-default pull-right" role="button">Add data request</a>
+    <a href="/datarequest/researchproposal/add" class="btn btn-default pull-right" role="button">Add research proposal</a>
 </div>
 <div class="row">
     <div class="col-md-12">
