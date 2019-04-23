@@ -15,7 +15,7 @@ $( document ).ready(function() {
 
 function buildFileBrowser()
 {
-    var url = "data";
+    var url = "/datarequest/researchproposal/data";
 
     var fileBrowser = $('#file-browser').DataTable();
 
@@ -34,7 +34,7 @@ function startBrowsing(items)
             "emptyTable": "No research proposals present"
   },
         "ajax": {
-            url: "data",
+            url: "/datarequest/researchproposal/data",
             error: function (xhr, error, thrown) {
                 $("#file-browser_processing").hide()
                 setMessage('error', 'Something went wrong. Please try again or refresh page.');

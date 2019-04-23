@@ -10,7 +10,7 @@ use JsonSchema\SchemaStorage;
 use JsonSchema\Validator;
 use JsonSchema\Constraints\Factory;
 
-class Datarequest extends MY_Controller
+class Researchproposal extends MY_Controller
 {
     public function index() {
         $this->config->load('config');
@@ -25,7 +25,7 @@ class Datarequest extends MY_Controller
             'scriptIncludes' => array(
                 'lib/datatables/js/jquery.dataTables.min.js',
                 'lib/datatables/js/dataTables.bootstrap.min.js',
-                'js/datarequest.js',
+                'js/researchproposal/index.js',
             ),
             'items'        => $items,
             'activeModule' => 'datarequest'
@@ -94,86 +94,30 @@ EORULE;
         $tokenName = $this->security->get_csrf_token_name();
         $tokenHash = $this->security->get_csrf_hash();
 
-	$proposalId = $this->input->get('proposalId');
-
         $viewParams = array(
             'styleIncludes'    => array(
                 'css/datarequest.css',
             ),
-            'proposalId'      => $proposalId,
             'tokenName'        => $tokenName,
             'tokenHash'        => $tokenHash,
             'activeModule'     => 'datarequest'
         );
 
-        loadView('/datarequest/add', $viewParams);
+        loadView('form', $viewParams);
     }
 
     public function store()
     {
         $arrayPost = $this->input->post();
 
-        $this->load->model('Datarequest_model');
+        $this->load->model('Proposal_model');
 
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
-            $result = $this->Datarequest_model->submit($arrayPost['formData'], $arrayPost['proposalId']);
-	    var_dump($result);die;
+            $result = $this->Proposal_model->submit($arrayPost['formData']);
         }
     }
 
     public function data()
-    {
-        $proposalId = $this->input->get('proposalId');
-
-        $schema = '{
-        "description": "Please fill out and submit the form below to submit your data request.",
-        "type": "object",
-        "properties": {
-          "wave": {
-            "type": "array",
-            "title": "Wave",
-            "description": "Please specify the wave(s) from which you would like to obtain data.",
-            "items": {
-              "type": "string",
-              "enum": [
-                "Rondom zw - 20 weeks",
-                "Rondom zw - 30 weeks",
-                "Rondom 0 - 5 mo",
-                "Rondom 0 - 10 mo",
-                "Rondom 3 (not available yet)",
-                "Rondom 6 (not available yet)",
-                "Rondom 9",
-                "Rondom 12 (not available yet)",
-                "Rondom 15 (not available yet)"
-              ]
-            },
-            "uniqueItems": true
-          },
-          "data": {
-            "type": "string",
-            "title": "Data",
-            "description": "Please specify the data you would like to obtain from the selected wave(s)."
-          }
-        }
-      }';
-
-      $uiSchema = '{
-        "wave": {
-          "ui:widget": "checkboxes"
-        },
-        "data": {
-          "ui:widget": "textarea"
-        }}';
-
-      $output = array();
-      $output['schema'] = json_decode($schema);
-      $output['uiSchema'] = json_decode($uiSchema);
-      $output['proposalId'] = $proposalId;
-
-      $this->output->set_content_type('application/json')->set_output(json_encode($output));
-    }
-
-    public function dataREMOVE()
     {
         $this->load->model('Proposal_model');
 
@@ -199,7 +143,7 @@ EORULE;
                     $owner = $row['COLL_OWNER_NAME'];
                     $exploded_path = explode('/', $row['COLL_NAME']);
                     $name = end($exploded_path);
-                    $name = "<a href='researchproposal/view/" . $name . "'>" . $name . "</a>";
+                    $name = "<a href='/datarequest/researchproposal/view/" . $name . "'>" . $name . "</a>";
                     $date = date('Y-m-d H:i:s', $row['COLL_CREATE_TIME']);
                     $status = $row['META_DATA_ATTR_VALUE'];
                     $rows[] = array($owner, $name, $date, $status);

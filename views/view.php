@@ -1,9 +1,12 @@
+<div class="row">
+	<a href="/datarequest/datarequest/add?proposalId=<?php echo html_escape($rpid) ?>" class="btn btn-default pull-right" role="button">Add data request</a>
+</div>
 <div class="container page">
 	<div class="row">
 		<div class=col-md-12>
 			<div class="panel panel-default">
 		                <div class="panel-heading clearfix">
-					<h3 class="panel-title pull-left">Data request: <?php echo html_escape($proposal['general']['title']) ?></h3>
+					<h3 class="panel-title pull-left">Research proposal: <?php echo html_escape($proposal['general']['title']) ?></h3>
 					<div class="pull-right">
 						<a class="btn btn-default" href="/datarequest">Back</a>
 					</div>
@@ -14,7 +17,7 @@
 					<label>Status</label>
 					<p><?php echo $proposalStatus ?></p>
 					<?php if ($proposalStatus == "submitted" && $isBoardMember): ?>
-						<a href="/datarequest/approve/<?php echo $rpid ?>" class="btn btn-info">Approve proposal</a>
+						<a href="/datarequest/approve/<?php echo html_escape($rpid) ?>" class="btn btn-info">Approve proposal</a>
 					<?php endif ?>
 					<h2>Contact person for the proposed study</h2>
 					<label>Name</label>

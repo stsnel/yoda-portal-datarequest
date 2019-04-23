@@ -4,7 +4,7 @@ import { render } from "react-dom";
 import Form from "react-jsonschema-form";
 
 var schema = {
-  "description": "Please fill out and submit the form below to submit your data request.",
+  "description": "Please fill out and submit the form below to submit your research proposal.",
   "type": "object",
   "properties": {
     "general": {
@@ -385,12 +385,12 @@ function submitData(data)
     // Store.
     axios({
         method: 'post',
-        url: "/datarequest/store",
+        url: "store",
         data: bodyFormData,
         config: { headers: {'Content-Type': 'multipart/form-data' }}
         })
         .then(function (response) {
-            window.location.href = "/datarequest";
+            window.location.href = "/datarequest/researchproposal";
         })
         .catch(function (error) {
             //handle error
