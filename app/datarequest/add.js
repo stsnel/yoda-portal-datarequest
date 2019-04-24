@@ -33,7 +33,7 @@ class YodaForm extends React.Component {
 
     render() {
         return (
-            <Form className="form form-horizontal metadata-form"
+            <Form className="form"
                   schema={schema}
                   idPrefix={"yoda"}
                   uiSchema={uiSchema}

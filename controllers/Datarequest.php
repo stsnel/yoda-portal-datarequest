@@ -18,7 +18,6 @@ class Datarequest extends MY_Controller
 
         $viewParams = array(
             'styleIncludes' => array(
-                'css/datarequest.css',
                 'lib/datatables/css/dataTables.bootstrap.min.css',
                 'lib/font-awesome/css/font-awesome.css'
             ),
@@ -65,9 +64,6 @@ EORULE;
         $isBoardMember = $result == 'true' ? true : false;
 
         $viewParams = array(
-            'styleIncludes'  => array(
-                'css/datarequest.css',
-            ),
             'rpid'           => $rpid,
             'proposal'       => $proposal,
             'proposalStatus' => $proposalStatus,
@@ -97,9 +93,6 @@ EORULE;
 	$proposalId = $this->input->get('proposalId');
 
         $viewParams = array(
-            'styleIncludes'    => array(
-                'css/datarequest.css',
-            ),
             'proposalId'      => $proposalId,
             'tokenName'        => $tokenName,
             'tokenHash'        => $tokenHash,

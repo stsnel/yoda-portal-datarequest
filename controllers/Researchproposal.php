@@ -18,7 +18,6 @@ class Researchproposal extends MY_Controller
 
         $viewParams = array(
             'styleIncludes' => array(
-                'css/datarequest.css',
                 'lib/datatables/css/dataTables.bootstrap.min.css',
                 'lib/font-awesome/css/font-awesome.css'
             ),
@@ -65,9 +64,6 @@ EORULE;
         $isBoardMember = $result == 'true' ? true : false;
 
         $viewParams = array(
-            'styleIncludes'  => array(
-                'css/datarequest.css',
-            ),
             'rpid'           => $rpid,
             'proposal'       => $proposal,
             'proposalStatus' => $proposalStatus,
@@ -95,9 +91,6 @@ EORULE;
         $tokenHash = $this->security->get_csrf_hash();
 
         $viewParams = array(
-            'styleIncludes'    => array(
-                'css/datarequest.css',
-            ),
             'tokenName'        => $tokenName,
             'tokenHash'        => $tokenHash,
             'activeModule'     => 'datarequest'
