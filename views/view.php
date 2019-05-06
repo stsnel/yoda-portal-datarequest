@@ -17,7 +17,7 @@
 					<label>Status</label>
 					<p><?php echo $proposalStatus ?></p>
 					<?php if ($proposalStatus == "submitted" && $isBoardMember): ?>
-						<a href="/datarequest/approve/<?php echo html_escape($rpid) ?>" class="btn btn-info">Approve proposal</a>
+						<a href="/datarequest/researchproposal/approve/<?php echo html_escape($rpid) ?>" class="btn btn-info">Approve proposal</a>
 					<?php endif ?>
 					<h2>Contact person for the proposed study</h2>
 					<label>Name</label>
