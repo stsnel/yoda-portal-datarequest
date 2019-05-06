@@ -1,6 +1,13 @@
+<script>
+    var browsePageItems = <?php echo $items; ?>;
+    var proposalId = <?php echo $rpid; ?>;
+    var view = 'browse';
+</script>
+
 <div class="row">
 	<a href="/datarequest/datarequest/add?proposalId=<?php echo html_escape($rpid) ?>" class="btn btn-default pull-right" role="button">Add data request</a>
 </div>
+
 <div class="container page">
 
 	<div class="row">
