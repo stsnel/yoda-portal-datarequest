@@ -33,45 +33,30 @@ class Datarequest extends MY_Controller
         loadView('index', $viewParams);
     }
 
-    public function view($rpid) {
-        $inputParams = array("*researchProposalId" => $rpid);
-        $outputParams = array("*proposalJSON", "*proposalStatus", "*status", "*statusInfo");
-        $rule = $this->irodsrule->make("uuGetProposal", $inputParams, $outputParams);
+    public function view($requestId) {
 
-        $proposal = $rule->execute()["*proposalJSON"];
-        $proposalStatus = $rule->execute()["*proposalStatus"];
-
-        # Check if user is a Board of Directors representative. If not, do
-        # not allow the user to approve the research proposal
-        $rulebody = <<<EORULE
-rule {
-        uuGroupUserExists(*group, "*user#*zone", false, *member);
-        *member = str(*member);
-}
-EORULE;
         $rule = new ProdsRule(
             $this->rodsuser->getRodsAccount(),
-            $rulebody,
-                array(
-                    '*user'  => $this->rodsuser->getUserInfo()['name'],
-                    '*zone'  => $this->rodsuser->getUserInfo()['zone'],
-                    '*group' => 'datarequests-research-board-of-directors'
-                ),
-                array('*member')
-            );
-
-        $result = $rule->execute()['*member'];
-        $isBoardMember = $result == 'true' ? true : false;
-
-        $viewParams = array(
-            'rpid'           => $rpid,
-            'proposal'       => $proposal,
-            'proposalStatus' => $proposalStatus,
-            'isBoardMember'  => $isBoardMember,
-            'activeModule'   => 'datarequest'
+            'rule { uuGetDatarequest(*requestId); }',
+            array('*requestId' => $requestId),
+            array('ruleExecOut')
         );
 
-        loadView('view', $viewParams);
+        $result = json_decode($rule->execute()['ruleExecOut'], true);
+
+        $datarequest = json_decode($result["requestJSON"], true);
+        $datarequestStatus = $result["requestStatus"];
+        $proposalId = $result['proposalId'];
+
+        $viewParams = array(
+            'requestId'     => $requestId,
+            'request'       => $datarequest,
+            'requestStatus' => $datarequestStatus,
+            'proposalId'    => $proposalId,
+            'activeModule'  => 'datarequest'
+        );
+
+        loadView('datarequest/datarequest/view', $viewParams);
     }
 
     public function approve($rpid) {
@@ -191,8 +176,8 @@ EORULE;
             foreach ($data['rows'] as $row) {
                     $owner = $row['DATA_OWNER_NAME'];
                     $exploded_path = explode('/', $row['DATA_NAME']);
-                    $name = end($exploded_path);
-                    $name = "<a href='datarequest/view/" . $name . "'>" . $name . "</a>";
+                    $name = str_replace(".json", "", end($exploded_path));
+                    $name = "<a href='/datarequest/datarequest/view/" . $name . "'>" . $name . "</a>";
                     $date = date('Y-m-d H:i:s', $row['DATA_CREATE_TIME']);
                     $status = $row['META_DATA_ATTR_VALUE'];
                     $rows[] = array($owner, $name, $date, $status);
