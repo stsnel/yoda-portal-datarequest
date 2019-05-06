@@ -166,9 +166,9 @@ EORULE;
       $this->output->set_content_type('application/json')->set_output(json_encode($output));
     }
 
-    public function dataREMOVE()
+    public function overview($proposalId)
     {
-        $this->load->model('Proposal_model');
+        $this->load->model('Datarequest_model');
 
         # Get configured defaults
         $itemsPerPage = $this->config->item('browser-items-per-page');
@@ -180,7 +180,7 @@ EORULE;
         $draw = $this->input->get('draw');
 
         # Fetch data from iRODS
-        $data = $this->Proposal_model->overview($length, $start);
+        $data = $this->Datarequest_model->overview($proposalId, $length, $start);
 
         # Extract summary statistics from data
         $totalItems = $data['summary']['total'];
@@ -189,11 +189,11 @@ EORULE;
         if ($totalItems > 0) {
             # Parse data
             foreach ($data['rows'] as $row) {
-                    $owner = $row['COLL_OWNER_NAME'];
-                    $exploded_path = explode('/', $row['COLL_NAME']);
+                    $owner = $row['DATA_OWNER_NAME'];
+                    $exploded_path = explode('/', $row['DATA_NAME']);
                     $name = end($exploded_path);
-                    $name = "<a href='researchproposal/view/" . $name . "'>" . $name . "</a>";
-                    $date = date('Y-m-d H:i:s', $row['COLL_CREATE_TIME']);
+                    $name = "<a href='datarequest/view/" . $name . "'>" . $name . "</a>";
+                    $date = date('Y-m-d H:i:s', $row['DATA_CREATE_TIME']);
                     $status = $row['META_DATA_ATTR_VALUE'];
                     $rows[] = array($owner, $name, $date, $status);
             }
