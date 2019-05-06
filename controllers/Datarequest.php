@@ -175,8 +175,7 @@ class Datarequest extends MY_Controller
             # Parse data
             foreach ($data['rows'] as $row) {
                     $owner = $row['DATA_OWNER_NAME'];
-                    $exploded_path = explode('/', $row['DATA_NAME']);
-                    $name = str_replace(".json", "", end($exploded_path));
+                    $name = basename($row['DATA_NAME'], ".json");
                     $name = "<a href='/datarequest/datarequest/view/" . $name . "'>" . $name . "</a>";
                     $date = date('Y-m-d H:i:s', $row['DATA_CREATE_TIME']);
                     $status = $row['META_DATA_ATTR_VALUE'];
