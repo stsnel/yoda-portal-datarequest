@@ -34,12 +34,17 @@ class Researchproposal extends MY_Controller
     }
 
     public function view($rpid) {
-        $inputParams = array("*researchProposalId" => $rpid);
-        $outputParams = array("*proposalJSON", "*proposalStatus", "*status", "*statusInfo");
-        $rule = $this->irodsrule->make("uuGetProposal", $inputParams, $outputParams);
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            'rule { uuGetProposal(*researchProposalId); }',
+            array('*researchProposalId' => $rpid),
+            array('ruleExecOut')
+        );
 
-        $proposal = $rule->execute()["*proposalJSON"];
-        $proposalStatus = $rule->execute()["*proposalStatus"];
+        $result = json_decode($rule->execute()['ruleExecOut'], true);
+
+        $proposal = json_decode($result['proposalJSON'], true);
+        $proposalStatus = $result['proposalStatus'];
 
         # Check if user is a Board of Directors representative. If not, do
         # not allow the user to approve the research proposal
@@ -75,9 +80,12 @@ EORULE;
     }
 
     public function approve($rpid) {
-        $inputParams = array("*researchProposalId" => $rpid);
-        $outputParams = array("*status", "*statusInfo");
-        $rule = $this->irodsrule->make("uuApproveProposal", $inputParams, $outputParams);
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            'rule { uuApproveProposal(*researchProposalId); }',
+            array('*researchProposalId' => $rpid),
+            array('ruleExecOut')
+        );        
 
         $results = $rule->execute();
 

@@ -11,10 +11,13 @@ class Proposal_model extends CI_Model
 {
     function submit($data)
     {
-        $outputParams = array('*status', '*statusInfo');
-        $inputParams = array('*data' => $data);
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            'rule { uuSubmitProposal(*data); }',
+            array('*data' => $data),
+            array('ruleExecOut')
+        );
 
-        $rule = $this->irodsrule->make('uuSubmitProposal', $inputParams, $outputParams);
         $result = $rule->execute();
         return $result;
     }

@@ -11,10 +11,13 @@ class Datarequest_model extends CI_Model
 {
     function submit($data, $proposalId)
     {
-        $outputParams = array('*status', '*statusInfo');
-        $inputParams = array('*data' => $data, '*proposalId' => $proposalId);
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            'rule { uuSubmitDatarequest(*data, *proposalId); }',
+            array('*data' => $data, '*proposalId' => $proposalId),
+            array('ruleExecOut')
+        );
 
-        $rule = $this->irodsrule->make('uuSubmitDatarequest', $inputParams, $outputParams);
         $result = $rule->execute();
         return $result;
     }
