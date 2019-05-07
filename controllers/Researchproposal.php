@@ -43,6 +43,15 @@ class Researchproposal extends MY_Controller
 
         $result = json_decode($rule->execute()['ruleExecOut'], true);
 
+        if ($result['status'] != 0) {
+            $viewParams = [
+                'activeModule' => 'datarequest',
+                'rpid' => $rpid
+            ];
+            loadView('view_permission_denied', $viewParams);
+            return;
+        }
+
         $proposal = json_decode($result['proposalJSON'], true);
         $proposalStatus = $result['proposalStatus'];
 
