@@ -109,9 +109,16 @@ EORULE;
             array('ruleExecOut')
         );        
 
-        $results = $rule->execute();
+        $result = json_decode($rule->execute()['ruleExecOut'], true);
 
-        redirect('/datarequest');
+        if ($result['status'] == 0) {
+            redirect('/datarequest');
+        } else {
+            return $this->output
+                        ->set_content_type('application/json')
+                        ->set_status_header(500)
+                        ->set_output(json_encode($result));
+        }
     }
 
     public function add() {
@@ -137,6 +144,17 @@ EORULE;
 
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $result = $this->Proposal_model->submit($arrayPost['formData']);
+
+            if ($result['status'] == 0) {
+                $this->output
+                     ->set_content_type('application/json')
+                     ->set_output(json_encode($result));
+            } else {
+                $this->output
+                     ->set_content_type('application/json')
+                     ->set_status_header(500)
+                     ->set_output(json_encode($result));
+            }
         }
     }
 

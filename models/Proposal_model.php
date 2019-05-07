@@ -18,7 +18,7 @@ class Proposal_model extends CI_Model
             array('ruleExecOut')
         );
 
-        $result = $rule->execute();
+        $result = json_decode($rule->execute()['ruleExecOut'], true);
         return $result;
     }
 
