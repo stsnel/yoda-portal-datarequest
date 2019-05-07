@@ -1,7 +1,37 @@
+<script>
+    var browsePageItems = <?php echo $items; ?>;
+    var proposalId = <?php echo $rpid; ?>;
+    var view = 'browse';
+</script>
+
 <div class="row">
 	<a href="/datarequest/datarequest/add?proposalId=<?php echo html_escape($rpid) ?>" class="btn btn-default pull-right" role="button">Add data request</a>
 </div>
+
 <div class="container page">
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default">
+			<div class="panel-heading clearfix">
+				<h3 class="panel-title pull-left">Data requests</h3>
+			</div>
+			<div class="panel-body">
+				<table id="file-browser" class="table yoda-table table-striped">
+					<thead>
+						<tr>
+							<th>User</th>
+							<th>Name</th>
+							<th>Submission date</th>
+							<th>Status</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+			</div>
+		</div>
+	</div>
+
 	<div class="row">
 		<div class=col-md-12>
 			<div class="panel panel-default">
