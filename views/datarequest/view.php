@@ -13,7 +13,7 @@
 					<label>Wave(s)</label>
 					<p><?php echo html_escape($request['wave'][0]) ?></p>
 					<label>Data requested</label>
-					<p><?php echo $request['data'] ?></p>
+					<p><?php echo html_escape($request['data']) ?></p>
 					<label>Status</label>
 					<p><?php echo $requestStatus ?></p>
 				</div>
