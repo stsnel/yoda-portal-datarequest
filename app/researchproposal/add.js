@@ -374,6 +374,9 @@ render(<Container/>,
 
 function submitData(data)
 {
+    // Disable submit button
+    $("button:submit").attr("disabled", "disabled");
+
     var tokenName = form.dataset.csrf_token_name;
     var tokenHash = form.dataset.csrf_token_hash;
 
