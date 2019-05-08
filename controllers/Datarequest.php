@@ -44,6 +44,13 @@ class Datarequest extends MY_Controller
 
         $result = json_decode($rule->execute()['ruleExecOut'], true);
 
+        if ($result['status'] != 0) {
+            $this->output
+                 ->set_content_type('application/json')
+                 ->set_status_header(500)
+                 ->set_output(json_encode($result));
+        }
+
         $datarequest = json_decode($result["requestJSON"], true);
         $datarequestStatus = $result["requestStatus"];
         $proposalId = $result['proposalId'];
@@ -95,7 +102,17 @@ class Datarequest extends MY_Controller
 
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
             $result = $this->Datarequest_model->submit($arrayPost['formData'], $arrayPost['proposalId']);
-	    var_dump($result);die;
+
+            if ($result['status'] == 0) {
+                $this->output
+                     ->set_content_type('application/json')
+                     ->set_output(json_encode($result));
+            } else {
+                $this->output
+                     ->set_content_type('application/json')
+                     ->set_status_header(500)
+                     ->set_output(json_encode($result));
+            }
         }
     }
 
