@@ -181,11 +181,12 @@ EORULE;
         if ($totalItems > 0) {
             # Parse data
             foreach ($data['rows'] as $row) {
-                    $owner = $row['COLL_OWNER_NAME'];
-                    $exploded_path = explode('/', $row['COLL_NAME']);
-                    $name = end($exploded_path);
-                    $name = "<a href='/datarequest/researchproposal/view/" . $name . "'>" . $name . "</a>";
-                    $date = date('Y-m-d H:i:s', $row['COLL_CREATE_TIME']);
+                    $owner  = $row['COLL_OWNER_NAME'];
+                    $rpid   = basename($row['COLL_NAME'], '.json');
+                    $title  = $row['title'];
+                    $name   = "<a href='/datarequest/researchproposal/view/" .
+                              $rpid . "'>" . $title . "</a>";
+                    $date   = date('Y-m-d H:i:s', $row['COLL_CREATE_TIME']);
                     $status = $row['META_DATA_ATTR_VALUE'];
                     $rows[] = array($owner, $name, $date, $status);
             }
@@ -201,6 +202,7 @@ EORULE;
         );
 
         # Return data to DataTables
-        $this->output->set_content_type('application/json')->set_output(json_encode($output));
+        $this->output->set_content_type('application/json')
+                     ->set_output(json_encode($output));
     }
 }
