@@ -11,6 +11,42 @@ $( document ).ready(function() {
     if ($('#file-browser').length) {
         startBrowsing(browsePageItems, proposalId);
     }
+
+    // Render and show the modal for assigning a research proposal to one or
+    // more DMC members
+    $("body").on("click", "button.assign", function() {
+        // Get list of DMC members
+        $.getJSON("/datarequest/researchproposal/dmcmembers", function (data) {
+            if (data.length > 0) {
+                // Construct the multiselect list of options (i.e. DMC members)
+                for (member in data) {
+                    $("#dmc-members-list").append(new Option(data[member]));
+                }
+            } else {
+                setMessage("error", "No DMC members configured.");
+            }
+        });
+
+        // Show the modal
+        $("#assignForReview").modal("show");
+    });
+
+    // Assign a research proposal to one or more DMC members
+    $("body").on("click", "button.submit-assignment", function(data) {
+        // Get selected assignees
+        assignees = $("#dmc-members-list").val();
+
+        // Submit assignees to controller (which will call the appropriate
+        // iRODS rule)
+        $.post("/datarequest/researchproposal/assignProposal",
+               {"data": assignees, "researchProposalId": proposalId},
+               function (data) {
+                   // Wipe the selection after successful assignment (in case
+                   // the user wants to use the modal again right away, e.g.
+                   // when the assignees were incorrect)
+                   $("#dmc-members-list").html("");
+        });
+    });
 });
 
 function buildFileBrowser()

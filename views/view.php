@@ -4,6 +4,28 @@
     var view = 'browse';
 </script>
 
+<div class="modal" id="assignForReview">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h3>Assign proposal for review by a DMC member</h3>
+                <div class="form-group">
+                    <label for="dmc-members-list">Select DMC member(s) that should review this proposal:</label>
+                    <select multiple class="form-control" id="dmc-members-list">
+                    </select>
+                </div>
+                <div class="help"></div><br />
+                <div class="advice"></div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-default grey cancel" data-dismiss="modal">Close</button>
+                <button class="btn btn-default grey submit-assignment" data-dismiss="modal">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row">
 	<a href="/datarequest/datarequest/add?proposalId=<?php echo html_escape($rpid) ?>" class="btn btn-default pull-right" role="button">Add data request</a>
 </div>
@@ -33,6 +55,17 @@
 	</div>
 
 	<div class="row">
+		<div class="top-information">
+			<div class="row">
+				<div class="col-md-4">
+					<div class="top-info-buttons">
+						<div class="btn-group" role="group">
+							<button type="button" class="btn btn-default pull-right assign" data-path="">Assign for review</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div class=col-md-12>
 			<div class="panel panel-default">
 		                <div class="panel-heading clearfix">
