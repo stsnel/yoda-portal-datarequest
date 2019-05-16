@@ -28,47 +28,33 @@
 
 <div class="row">
 	<a href="/datarequest/datarequest/add?proposalId=<?php echo html_escape($rpid) ?>" class="btn btn-default pull-right" role="button">Add data request</a>
-</div>
-
-<div class="container page">
-
-	<div class="row">
-		<div class="col-md-12">
+	<div class="col-md-12">
+		<div class="row">
 			<div class="panel panel-default">
-			<div class="panel-heading clearfix">
-				<h3 class="panel-title pull-left">Data requests</h3>
-			</div>
-			<div class="panel-body">
-				<table id="file-browser" class="table yoda-table table-striped">
-					<thead>
-						<tr>
-							<th>User</th>
-							<th>Name</th>
-							<th>Submission date</th>
-							<th>Status</th>
-						</tr>
-					</thead>
-				</table>
-			</div>
+				<div class="panel-heading clearfix">
+					<h3 class="panel-title pull-left">Data requests</h3>
+				</div>
+				<div class="panel-body">
+					<table id="file-browser" class="table yoda-table table-striped">
+						<thead>
+							<tr>
+								<th>User</th>
+								<th>Name</th>
+								<th>Submission date</th>
+								<th>Status</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>
 
-	<div class="row">
-		<div class="top-information">
-			<div class="row">
-				<div class="col-md-4">
-					<div class="top-info-buttons">
-						<div class="btn-group" role="group">
-							<button type="button" class="btn btn-default pull-right assign" data-path="">Assign for review</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class=col-md-12>
+	<button type="button" class="btn btn-default pull-right assign" data-path="">Assign for review</button>
+	<div class=col-md-12>
+		<div class="row">
 			<div class="panel panel-default">
-		                <div class="panel-heading clearfix">
+				<div class="panel-heading clearfix">
 					<h3 class="panel-title pull-left">Research proposal: <?php echo html_escape($proposal['general']['title']) ?></h3>
 					<div class="pull-right">
 						<a class="btn btn-default" href="/datarequest">Back</a>
