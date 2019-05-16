@@ -104,7 +104,7 @@ EORULE;
     public function dmcmembers() {
         $rule = new ProdsRule(
             $this->rodsuser->getRodsAccount(),
-            'rule { uuGroupGetMembersAsJSON(*groupName, *members); }',
+            'rule { uuGroupGetMembersAsJson(*groupName, *members); }',
             array('*groupName' => 'datarequests-research-data-management-committee'),
             array('*members')
         );
