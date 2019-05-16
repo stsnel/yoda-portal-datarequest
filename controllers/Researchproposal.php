@@ -101,26 +101,28 @@ EORULE;
         }
 
 
+        # Render page
+
         $this->config->load('config');
         $items = $this->config->item('browser-items-per-page');
 
         $viewParams = array(
-            'rpid'           => $rpid,
-            'proposal'       => $proposal,
-            'proposalStatus' => $proposalStatus,
-            'isBoardMember'  => $isBoardMember,
+            'rpid'            => $rpid,
+            'proposal'        => $proposal,
+            'proposalStatus'  => $proposalStatus,
+            'isBoardMember'   => $isBoardMember,
             'isProposalOwner' => $isProposalOwner,
-            'activeModule'   => 'datarequest',
-            'styleIncludes' => array(
+            'activeModule'    => 'datarequest',
+            'styleIncludes'   => array(
                 'lib/datatables/css/dataTables.bootstrap.min.css',
                 'lib/font-awesome/css/font-awesome.css'
             ),
-            'scriptIncludes' => array(
+            'scriptIncludes'  => array(
                 'lib/datatables/js/jquery.dataTables.min.js',
                 'lib/datatables/js/dataTables.bootstrap.min.js',
                 'js/researchproposal/view.js'
             ),
-            'items'          => $items
+            'items'           => $items
         );
 
         loadView('view', $viewParams);
