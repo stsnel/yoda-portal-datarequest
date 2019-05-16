@@ -123,6 +123,7 @@ class Datarequest extends MY_Controller
         $schema = '{
         "description": "Please fill out and submit the form below to submit your data request.",
         "type": "object",
+        "required": ["wave", "data"],
         "properties": {
           "wave": {
             "type": "array",
