@@ -77,6 +77,30 @@ EORULE;
         $result = $rule->execute()['*member'];
         $isBoardMember = $result == 'true' ? true : false;
 
+
+        # Check if user is the submitter of the research proposal. If so, the
+        # user should not be allowed to approve the proposal
+
+        # Set the default value of $isOwner to true
+        $isProposalOwner = true;
+
+        # Get user ID of proposal owner
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            'rule { uuProposalOwner(*researchProposalId); }',
+            array('*researchProposalId' => $rpid),
+            array('ruleExecOut')
+        );
+        $result = json_decode($rule->execute()['ruleExecOut'], true);
+        $proposalOwnerUserId = $result['proposalOwnerUserId'];
+
+        # Compare user ID of proposal owner to ID of current user
+        if ($result['status'] == 0) {
+            $currentUserId = $this->rodsuser->getUserInfo()['id'];
+            $isProposalOwner = $currentUserId == $proposalOwnerUserId;
+        }
+
+
         $this->config->load('config');
         $items = $this->config->item('browser-items-per-page');
 
@@ -85,6 +109,7 @@ EORULE;
             'proposal'       => $proposal,
             'proposalStatus' => $proposalStatus,
             'isBoardMember'  => $isBoardMember,
+            'isProposalOwner' => $isProposalOwner,
             'activeModule'   => 'datarequest',
             'styleIncludes' => array(
                 'lib/datatables/css/dataTables.bootstrap.min.css',
