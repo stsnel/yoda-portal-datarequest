@@ -18,6 +18,10 @@ $( document ).ready(function() {
         // Get list of DMC members
         $.getJSON("/datarequest/researchproposal/dmcmembers", function (data) {
             if (data.length > 0) {
+                // Wipe the selection in case the user previously made a
+                // selection
+                $("#dmc-members-list").html("");
+
                 // Construct the multiselect list of options (i.e. DMC members)
                 for (member in data) {
                     $("#dmc-members-list").append(new Option(data[member]));
@@ -41,10 +45,6 @@ $( document ).ready(function() {
         $.post("/datarequest/researchproposal/assignProposal",
                {"data": assignees, "researchProposalId": proposalId},
                function (data) {
-                   // Wipe the selection after successful assignment (in case
-                   // the user wants to use the modal again right away, e.g.
-                   // when the assignees were incorrect)
-                   $("#dmc-members-list").html("");
         });
     });
 });
