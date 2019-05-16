@@ -79,7 +79,7 @@ EORULE;
 
 
         # Check if user is the submitter of the research proposal. If so, the
-        # user should not be allowed to approve the proposal
+        # approve button will not be rendered
 
         # Set the default value of $isOwner to true
         $isProposalOwner = true;
