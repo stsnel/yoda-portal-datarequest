@@ -15,7 +15,7 @@ var schema = {
           "type": "string",
           "title": "Title of the study",
           "description": "One request per article.",
-          "maxLength": "2700"
+          "maxLength": 2700
         }
       },
       "required": ["title"]
