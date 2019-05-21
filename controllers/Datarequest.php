@@ -131,15 +131,15 @@ class Datarequest extends MY_Controller
             "items": {
               "type": "string",
               "enum": [
-                "Rondom zw - 20 weeks",
-                "Rondom zw - 30 weeks",
-                "Rondom 0 - 5 mo",
-                "Rondom 0 - 10 mo",
-                "Rondom 3 (not available yet)",
-                "Rondom 6 (not available yet)",
-                "Rondom 9",
-                "Rondom 12 (not available yet)",
-                "Rondom 15 (not available yet)"
+                "Around pregnancy - 20 weeks",
+                "Around pregrancy - 30 weeks",
+                "Around 0 - 5 mo",
+                "Around 0 - 10 mo",
+                "Around 3 (not available yet)",
+                "Around 6 (not available yet)",
+                "Around 9",
+                "Around 12 (not available yet)",
+                "Around 15 (not available yet)"
               ]
             },
             "uniqueItems": true
