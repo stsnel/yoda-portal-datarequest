@@ -101,6 +101,41 @@ EORULE;
         loadView('view', $viewParams);
     }
 
+    public function dmcmembers() {
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            'rule { uuGroupGetMembersAsJson(*groupName, *members); }',
+            array('*groupName' => 'datarequests-research-data-management-committee'),
+            array('*members')
+        );
+
+        $result = $rule->execute()['*members'];
+
+        $this->output
+             ->set_content_type('application/json')
+             ->set_output($result);
+    }
+
+    public function assignProposal() {
+        # Get input parameters
+        $assignees = $this->input->post()['data'];
+        $researchProposalId = $this->input->post()['researchProposalId'];
+
+        # Call uuAssignProposal rule and get status info
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            'rule { uuAssignProposal(*assignees, *researchProposalId); }',
+            array('*assignees' => json_encode($assignees), '*researchProposalId' => $researchProposalId),
+            array('ruleExecOut')
+        );
+        $result = $rule->execute()['ruleExecOut'];
+
+	# Return status info
+        $this->output
+             ->set_content_type('application/json')
+             ->set_output($result);
+    }
+
     public function approve($rpid) {
         $rule = new ProdsRule(
             $this->rodsuser->getRodsAccount(),
