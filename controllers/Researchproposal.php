@@ -77,25 +77,52 @@ EORULE;
         $result = $rule->execute()['*member'];
         $isBoardMember = $result == 'true' ? true : false;
 
+
+        # Check if user is the submitter of the research proposal. If so, the
+        # approve button will not be rendered
+
+        # Set the default value of $isOwner to true
+        $isProposalOwner = true;
+
+        # Get user ID of proposal owner
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            'rule { uuProposalOwner(*researchProposalId); }',
+            array('*researchProposalId' => $rpid),
+            array('ruleExecOut')
+        );
+        $result = json_decode($rule->execute()['ruleExecOut'], true);
+        $proposalOwnerUserId = $result['proposalOwnerUserId'];
+
+        # Compare user ID of proposal owner to ID of current user
+        if ($result['status'] == 0) {
+            $currentUserId = $this->rodsuser->getUserInfo()['id'];
+            $isProposalOwner = $currentUserId == $proposalOwnerUserId;
+        }
+
+
+        # Render page
+
         $this->config->load('config');
         $items = $this->config->item('browser-items-per-page');
 
         $viewParams = array(
-            'rpid'           => $rpid,
-            'proposal'       => $proposal,
-            'proposalStatus' => $proposalStatus,
-            'isBoardMember'  => $isBoardMember,
-            'activeModule'   => 'datarequest',
-            'styleIncludes' => array(
+            'rpid'            => $rpid,
+            'proposal'        => $proposal,
+            'proposalStatus'  => $proposalStatus,
+            'isBoardMember'   => $isBoardMember,
+            'isProposalOwner' => $isProposalOwner,
+            'activeModule'    => 'datarequest',
+            'styleIncludes'   => array(
                 'lib/datatables/css/dataTables.bootstrap.min.css',
                 'lib/font-awesome/css/font-awesome.css'
             ),
-            'scriptIncludes' => array(
+            'scriptIncludes'  => array(
                 'lib/datatables/js/jquery.dataTables.min.js',
                 'lib/datatables/js/dataTables.bootstrap.min.js',
                 'js/researchproposal/view.js'
             ),
-            'items'          => $items
+            'items'           => $items
         );
 
         loadView('view', $viewParams);
