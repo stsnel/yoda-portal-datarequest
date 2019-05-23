@@ -87,17 +87,16 @@ EORULE;
         # Get user ID of proposal owner
         $rule = new ProdsRule(
             $this->rodsuser->getRodsAccount(),
-            'rule { uuProposalOwner(*researchProposalId); }',
-            array('*researchProposalId' => $rpid),
+            'rule { uuIsProposalOwner(*researchProposalId, *currentUserId); }',
+            array('*researchProposalId' => $rpid,
+                  '*currentUserId' => $this->rodsuser->getUserInfo()['id']),
             array('ruleExecOut')
         );
         $result = json_decode($rule->execute()['ruleExecOut'], true);
-        $proposalOwnerUserId = $result['proposalOwnerUserId'];
 
         # Compare user ID of proposal owner to ID of current user
         if ($result['status'] == 0) {
-            $currentUserId = $this->rodsuser->getUserInfo()['id'];
-            $isProposalOwner = $currentUserId == $proposalOwnerUserId;
+            $isProposalOwner = $result['isProposalOwner'];
         }
 
 
@@ -166,8 +165,9 @@ EORULE;
     public function approve($rpid) {
         $rule = new ProdsRule(
             $this->rodsuser->getRodsAccount(),
-            'rule { uuApproveProposal(*researchProposalId); }',
-            array('*researchProposalId' => $rpid),
+            'rule { uuApproveProposal(*researchProposalId, *currentUserId); }',
+            array('*researchProposalId' => $rpid,
+                  '*currentUserId' => $this->rodsuser->getUserInfo()['id']),
             array('ruleExecOut')
         );        
 
