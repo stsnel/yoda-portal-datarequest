@@ -67,7 +67,7 @@ function startBrowsing(items, proposalId)
         "bInfo": false,
         "bLengthChange": false,
         "language": {
-            "emptyTable": "No research proposals present"
+            "emptyTable": "No data requests present"
   },
         "ajax": {
             url: "/datarequest/datarequest/overview" + proposalId,
