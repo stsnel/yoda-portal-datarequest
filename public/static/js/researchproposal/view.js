@@ -43,11 +43,11 @@ $( document ).ready(function() {
         // Submit assignees to controller (which will call the appropriate
         // iRODS rule)
         $.post("/datarequest/researchproposal/assignProposal",
-               {"data": assignees, "researchProposalId": proposalId},
-               function (data) {
-                   // Reload the current page so that the status field is
-                   // updated
-                    location.reload();
+            {"data": assignees, "researchProposalId": proposalId},
+            function (data) {
+                // Reload the current page so that the status field is
+                // updated
+                location.reload();
         });
     });
 });
