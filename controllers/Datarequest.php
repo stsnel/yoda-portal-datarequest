@@ -143,6 +143,7 @@ class Datarequest extends MY_Controller
                 "Around 15 (not available yet)"
               ]
             },
+            "minItems": 1,
             "uniqueItems": true
           },
           "data": {
