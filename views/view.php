@@ -50,7 +50,9 @@
         </div>
     </div>
 
-    <button type="button" class="btn btn-default pull-right assign" data-path="">Assign for review</button>
+    <?php if ($proposalStatus == "submitted" && !$isProposalOwner): ?>
+        <button type="button" class="btn btn-default pull-right assign" data-path="">Assign for review</button>
+    <?php endif ?>
     <div class=col-md-12>
         <div class="row">
             <div class="panel panel-default">
