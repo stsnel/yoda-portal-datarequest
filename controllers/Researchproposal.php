@@ -84,17 +84,16 @@ EORULE;
         # Set the default value of $isOwner to true
         $isProposalOwner = true;
 
-        # Get user ID of proposal owner
+        # Call uuIsProposalOwner and read result
         $rule = new ProdsRule(
             $this->rodsuser->getRodsAccount(),
-            'rule { uuIsProposalOwner(*researchProposalId, *currentUserId); }',
+            'rule { uuIsProposalOwner(*researchProposalId, *currentUserName); }',
             array('*researchProposalId' => $rpid,
-                  '*currentUserId' => $this->rodsuser->getUserInfo()['id']),
+                  '*currentUserName' => $this->rodsuser->getUserInfo()['name']),
             array('ruleExecOut')
         );
         $result = json_decode($rule->execute()['ruleExecOut'], true);
 
-        # Compare user ID of proposal owner to ID of current user
         if ($result['status'] == 0) {
             $isProposalOwner = $result['isProposalOwner'];
         }
@@ -165,9 +164,9 @@ EORULE;
     public function approve($rpid) {
         $rule = new ProdsRule(
             $this->rodsuser->getRodsAccount(),
-            'rule { uuApproveProposal(*researchProposalId, *currentUserId); }',
+            'rule { uuApproveProposal(*researchProposalId, *currentUserName); }',
             array('*researchProposalId' => $rpid,
-                  '*currentUserId' => $this->rodsuser->getUserInfo()['id']),
+                  '*currentUserName' => $this->rodsuser->getUserInfo()['name']),
             array('ruleExecOut')
         );        
 
