@@ -9,12 +9,12 @@
 
 class Datarequest_model extends CI_Model
 {
-    function submit($data, $proposalId)
+    function submit($data)
     {
         $rule = new ProdsRule(
             $this->rodsuser->getRodsAccount(),
-            'rule { uuSubmitDatarequest(*data, *proposalId); }',
-            array('*data' => $data, '*proposalId' => $proposalId),
+            'rule { uuSubmitDatarequest(*data); }',
+            array('*data' => $data),
             array('ruleExecOut')
         );
 

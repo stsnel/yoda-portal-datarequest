@@ -7,15 +7,10 @@ var schema = {};
 var uiSchema = {};
 
 var form = document.getElementById('form');
-var proposalId = form.dataset.proposal_id;
 
-console.log(proposalId);
-
-
-// Get schema and other stuff
-axios.get("/datarequest/datarequest/data")
+// Get schema
+axios.get("/datarequest/datarequest/schema")
     .then(function (response) {
-        console.log(response);
         schema = response.data.schema;
         uiSchema = response.data.uiSchema;
 
@@ -94,7 +89,6 @@ function submitData(data)
     var bodyFormData = new FormData();
     bodyFormData.set(tokenName, tokenHash);
     bodyFormData.set('formData', JSON.stringify(data));
-    bodyFormData.set('proposalId', proposalId);
 
    // Store.
     axios({
@@ -104,7 +98,7 @@ function submitData(data)
         config: { headers: {'Content-Type': 'multipart/form-data' }}
         })
         .then(function (response) {
-            window.location.href = "/datarequest/researchproposal/";
+            window.location.href = "/datarequest";
         })
         .catch(function (error) {
             //handle error
