@@ -53,27 +53,84 @@ class Datarequest extends MY_Controller
 
         $datarequest = json_decode($result["requestJSON"], true);
         $datarequestStatus = $result["requestStatus"];
-        $proposalId = $result['proposalId'];
+
+        # Check if user is a Board of Directors representative. If not, do
+        # not allow the user to approve the datarequest
+        $rulebody = <<<EORULE
+rule {
+        uuGroupUserExists(*group, "*user#*zone", false, *member);
+        *member = str(*member);
+}
+EORULE;
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            $rulebody,
+                array(
+                    '*user'  => $this->rodsuser->getUserInfo()['name'],
+                    '*zone'  => $this->rodsuser->getUserInfo()['zone'],
+                    '*group' => 'datarequests-research-board-of-directors'
+                ),
+                array('*member')
+            );
+
+        $result = $rule->execute()['*member'];
+        $isBoardMember = $result == 'true' ? true : false;
+
+        # Check if user is the owner of the datarequest. If so, the approve
+        # button will not be rendered
+
+        # Set the default value of $isOwner to true
+        $isRequestOwner = true;
+
+        # Get username of datarequest owner
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            'rule { uuIsRequestOwner(*requestId, *currentUserName); }',
+            array('*requestId' => $requestId,
+                  '*currentUserName' => $this->rodsuser->getUserInfo()['name']),
+            array('ruleExecOut')
+        );
+        $result = json_decode($rule->execute()['ruleExecOut'], true);
+
+        # Get results of isRequestOwner call
+        if ($result['status'] == 0) {
+            $isRequestOwner = $result['isRequestOwner'];
+        }
 
         $viewParams = array(
-            'requestId'     => $requestId,
-            'request'       => $datarequest,
-            'requestStatus' => $datarequestStatus,
-            'proposalId'    => $proposalId,
-            'activeModule'  => 'datarequest'
+            'requestId'      => $requestId,
+            'request'        => $datarequest,
+            'requestStatus'  => $datarequestStatus,
+            'isBoardMember'  => $isBoardMember,
+            'isRequestOwner' => $isRequestOwner,
+            'activeModule'   => 'datarequest',
+            'scriptIncludes'  => array(
+                'js/datarequest/view.js'
+            )
         );
 
         loadView('datarequest/datarequest/view', $viewParams);
     }
 
-    public function approve($rpid) {
-        $inputParams = array("*researchProposalId" => $rpid);
-        $outputParams = array("*status", "*statusInfo");
-        $rule = $this->irodsrule->make("uuApproveProposal", $inputParams, $outputParams);
+    public function approve($requestId) {
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            'rule { uuApproveRequest(*requestId, *currentUserName); }',
+            array('*requestId' => $requestId,
+                  '*currentUserName' => $this->rodsuser->getUserInfo()['name']),
+            array('ruleExecOut')
+        );
 
-        $results = $rule->execute();
+        $result = json_decode($rule->execute()['ruleExecOut'], true);
 
-        redirect('/datarequest');
+        if ($result['status'] == 0) {
+            redirect('/datarequest');
+        } else {
+            return $this->output
+                        ->set_content_type('application/json')
+                        ->set_status_header(500)
+                        ->set_output(json_encode($result));
+        }
     }
 
     public function add() {
@@ -556,5 +613,47 @@ class Datarequest extends MY_Controller
         # Return data to DataTables
         $this->output->set_content_type('application/json')
                      ->set_output(json_encode($output));
+    }
+
+    public function dmcmembers() {
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            'rule { uuGroupGetMembersAsJson(*groupName, *members); }',
+            array('*groupName' => 'datarequests-research-data-management-committee'),
+            array('*members')
+        );
+
+        $result = $rule->execute()['*members'];
+
+        $this->output
+             ->set_content_type('application/json')
+             ->set_output($result);
+    }
+
+    public function assignRequest() {
+        # Get input parameters
+        $assignees = $this->input->post()['data'];
+        $requestId = $this->input->post()['requestId'];
+
+        # Call uuAssignRequest rule and get status info
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            'rule { uuAssignRequest(*assignees, *requestId); }',
+            array('*assignees' => json_encode($assignees), '*requestId' => $requestId),
+            array('ruleExecOut')
+        );
+        $result = $rule->execute()['ruleExecOut'];
+
+        # Return status info
+        if (json_decode($result, true)['status'] === 0) {
+            $this->output
+            ->set_content_type('application/json')
+            ->set_output($result);
+        } else {
+            $this->output
+                ->set_content_type('application/json')
+                ->set_status_header(500)
+                ->set_output($result);
+        }
     }
 }
