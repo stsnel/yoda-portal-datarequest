@@ -24,13 +24,13 @@ class Datarequest extends MY_Controller
             'scriptIncludes' => array(
                 'lib/datatables/js/jquery.dataTables.min.js',
                 'lib/datatables/js/dataTables.bootstrap.min.js',
-                'js/datarequest.js',
+                'js/datarequest/index.js',
             ),
             'items'        => $items,
             'activeModule' => 'datarequest'
         );
 
-        loadView('index', $viewParams);
+        loadView('/datarequest/index', $viewParams);
     }
 
     public function view($requestId) {
@@ -508,7 +508,7 @@ class Datarequest extends MY_Controller
         $this->output->set_content_type('application/json')->set_output(json_encode($output));
     }
 
-    public function overview($proposalId)
+    public function overview_data()
     {
         $this->load->model('Datarequest_model');
 
@@ -522,7 +522,7 @@ class Datarequest extends MY_Controller
         $draw = $this->input->get('draw');
 
         # Fetch data from iRODS
-        $data = $this->Datarequest_model->overview($proposalId, $length, $start);
+        $data = $this->Datarequest_model->overview($length, $start);
 
         # Extract summary statistics from data
         $totalItems = $data['summary']['total'];
@@ -531,12 +531,16 @@ class Datarequest extends MY_Controller
         if ($totalItems > 0) {
             # Parse data
             foreach ($data['rows'] as $row) {
-                    $owner = $row['DATA_OWNER_NAME'];
-                    $name = basename($row['DATA_NAME'], ".json");
-                    $name = "<a href='/datarequest/datarequest/view/" . $name . "'>" . $name . "</a>";
-                    $date = date('Y-m-d H:i:s', $row['DATA_CREATE_TIME']);
-                    $status = $row['META_DATA_ATTR_VALUE'];
-                    $rows[] = array($owner, $name, $date, $status);
+                    $owner      = $row['COLL_OWNER_NAME'];
+                    $requestId  = basename($row['COLL_NAME'], '.json');
+                    $title      = $row['title'];
+                    $requestUri = "<a href='view/" . $requestId . "'>" .
+                                  $requestId . "</a>";
+                    $name       = $title;
+                    $date       = date('Y-m-d H:i:s', $row['COLL_CREATE_TIME']);
+                    $status     = $row['META_DATA_ATTR_VALUE'];
+                    $rows[]     = array($owner, $requestUri, $name, $date,
+                                       $status);
             }
         }
 
@@ -550,6 +554,7 @@ class Datarequest extends MY_Controller
         );
 
         # Return data to DataTables
-        $this->output->set_content_type('application/json')->set_output(json_encode($output));
+        $this->output->set_content_type('application/json')
+                     ->set_output(json_encode($output));
     }
 }
