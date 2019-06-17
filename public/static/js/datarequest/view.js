@@ -41,6 +41,9 @@ $(document).ready(function() {
         $.post("/datarequest/datarequest/assignRequest",
                {"data": assignees, "requestId": requestId},
                function (data) {
+                // Reload the current page so that the status field is
+                // updated
+                location.reload();
         });
     });
 });
