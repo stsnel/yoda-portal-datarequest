@@ -5,8 +5,7 @@ var BUILD_DIR = path.resolve(__dirname, 'public/static/js');
 var APP_DIR = path.resolve(__dirname, 'app');
 
 var config = {
-    entry: {'researchproposal/add': APP_DIR + '/researchproposal/add.js',
-            'datarequest/add': APP_DIR + '/datarequest/add.js'},
+    entry: {'datarequest/add': APP_DIR + '/datarequest/add.js'},
     output: {
         path: BUILD_DIR,
         filename: '[name].js'

@@ -15,7 +15,7 @@ $( document ).ready(function() {
 
 function buildFileBrowser()
 {
-    var url = "/datarequest/researchproposal/data";
+    var url = "/datarequest/datarequest/overview_data";
 
     var fileBrowser = $('#file-browser').DataTable();
 

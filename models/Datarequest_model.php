@@ -9,12 +9,12 @@
 
 class Datarequest_model extends CI_Model
 {
-    function submit($data, $proposalId)
+    function submit($data)
     {
         $rule = new ProdsRule(
             $this->rodsuser->getRodsAccount(),
-            'rule { uuSubmitDatarequest(*data, *proposalId); }',
-            array('*data' => $data, '*proposalId' => $proposalId),
+            'rule { uuSubmitDatarequest(*data); }',
+            array('*data' => $data),
             array('ruleExecOut')
         );
 
@@ -22,32 +22,49 @@ class Datarequest_model extends CI_Model
         return $result;
     }
 
-    function overview($proposalId, $limit, $offset = 0)
+    function overview($limit, $offset = 0)
     {
-        $inputParams = array('*proposalId' => $proposalId, '*limit' => (int)$limit, '*offset' => (int)$offset);
+        # Get table data from iRODS
+        $inputParams = array('*limit' => (int)$limit,
+                             '*offset' => (int)$offset);
         $outputParams = array('*result', '*status', '*statusInfo');
-
-        $rule = $this->irodsrule->make('uuGetDatarequests', $inputParams, $outputParams);
-
+        $rule = $this->irodsrule->make('uuGetDatarequests',
+                                       $inputParams, $outputParams);
         $ruleResult = $rule->execute();
 
-        $results = $ruleResult['*result'];
+        # Get additional data (ugly, but multiple queries have to be made
+        # because iRODS lacks support for the OR operator)
+        $inputParams = array('*limit' => (int)$limit, '*offset' => (int)$offset,
+                             '*attributeName' => 'title');
+        $outputParams = array('*result', '*status', '*statusInfo');
+        $ruleAdditional = $this->irodsrule
+                               ->make('uuGetDatarequestsAdditionalFields',
+                                      $inputParams, $outputParams);
+        $ruleAdditionalResult = $ruleAdditional->execute();
 
-        $status = $ruleResult['*status'];
-        $statusInfo = $ruleResult['*statusInfo'];
-
-        $summary = $results[0];
+        # Parse the data that we got from iRODS
+        $results           = $ruleResult['*result'];
+        $resultsAdditional = $ruleAdditionalResult['*result'];
+        unset($resultsAdditional[0]);
+        $status            = $ruleResult['*status'];
+        $statusInfo        = $ruleResult['*statusInfo'];
+        $summary           = $results[0];
         unset($results[0]);
+        $rows              = $results;
 
-        $rows = $results;
+        # Append additional results to $rows
+        $i = 1;
+        foreach ($rows as $row) {
+            $rows[$i]['title'] = $resultsAdditional[$i]['META_DATA_ATTR_VALUE'];
+            $i++;
+        };
 
-        $output = array(
+        # Return results to controller
+        return array(
                 'summary' => $summary,
                 'rows' => $rows,
                 'status' => $status,
                 'statusInfo' => $statusInfo
         );
-
-        return $output;
     }
 }

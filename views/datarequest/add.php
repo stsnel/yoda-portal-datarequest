@@ -11,7 +11,6 @@
                 </div>
                 <div class="panel-body">
                         <div id="form" class="metadata-form"
-                             data-proposal_id="<?php echo rawurlencode($proposalId); ?>"
                              data-csrf_token_name="<?php echo rawurlencode($tokenName); ?>"
                              data-csrf_token_hash="<?php echo rawurlencode($tokenHash); ?>">
                             <p>Loading metadata <i class="fa fa-spinner fa-spin fa-fw"></i></p>
