@@ -76,6 +76,26 @@ EORULE;
         $result = $rule->execute()['*member'];
         $isBoardMember = $result == 'true' ? true : false;
 
+        # Check if user is a data manager
+        $rulebody = <<<EORULE
+        rule {
+            uuGroupUserExists(*group, "*user#*zone", false, *member);
+            *member = str(*member);
+        }
+EORULE;
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            $rulebody,
+                array(
+                    '*user'  => $this->rodsuser->getUserInfo()['name'],
+                    '*zone'  => $this->rodsuser->getUserInfo()['zone'],
+                    '*group' => 'datarequests-research-datamanagers'
+                ),
+                array('*member')
+            );
+        $result = $rule->execute()['*member'];
+        $isDatamanager = $result == 'true' ? true : false;
+
         # Check if user is the owner of the datarequest. If so, the approve
         # button will not be rendered
 
@@ -95,6 +115,20 @@ EORULE;
             $isRequestOwner = $result['isRequestOwner'];
         }
 
+        # Check if user is assigned to review this proposal
+        $isReviewer = false;
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            'rule { uuIsReviewer(*requestId, *currentUserName); }',
+            array('*requestId' => $requestId,
+                  '*currentUserName' => $this->rodsuser->getUserInfo()['name']),
+            array('ruleExecOut')
+        );
+        $result = json_decode($rule->execute()['ruleExecOut'], true);
+        if ($result['status'] == 0) {
+            $isReviewer = $result['isReviewer'];
+        }
+
         # Set view params and render the view
         $viewParams = array(
             'tokenName'      => $tokenName,
@@ -102,7 +136,9 @@ EORULE;
             'requestId'      => $requestId,
             'request'        => $datarequest,
             'requestStatus'  => $datarequestStatus,
+            'isReviewer'     => $isReviewer,
             'isBoardMember'  => $isBoardMember,
+            'isDatamanager'  => $isDatamanager,
             'isRequestOwner' => $isRequestOwner,
             'activeModule'   => 'datarequest',
             'scriptIncludes' => array(
