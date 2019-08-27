@@ -644,11 +644,147 @@ EORULE;
     }
 
     public function assignRequest() {
-        # Get input parameters
-        $assignees = $this->input->post()['data'];
-        $requestId = $this->input->post()['requestId'];
+    public function review($requestId) {
+        // Load CSRF token
+        $tokenName = $this->security->get_csrf_token_name();
+        $tokenHash = $this->security->get_csrf_hash();
 
-        # Call uuAssignRequest rule and get status info
+        $viewParams = array(
+            'tokenName'        => $tokenName,
+            'tokenHash'        => $tokenHash,
+            'activeModule'     => 'datarequest',
+            'requestId'        => $requestId
+        );
+
+        loadView('/datarequest/review', $viewParams);
+    }
+
+    public function reviewSchema()
+    {
+        $schema = '
+        {
+          "type": "object",
+          "required": [
+            "contribution",
+            "informed_consent_fit",
+            "research_question_answerability",
+            "study_quality",
+            "logistical_feasibility",
+            "study_value",
+            "researcher_expertise",
+            "biological_samples"
+          ],
+          "properties": {
+            "contribution": {
+              "type": "string",
+              "title": "How much did the applicant involved contribute to YOUth with respect to recruitment, setup, and continuation of YOUth?"
+            },
+            "informed_consent_fit": {
+              "type": "string",
+              "title": "How does the research question fit with the provided informed consent of the participants of YOUth?"
+            },
+            "research_question_answerability": {
+              "type": "string",
+              "title": "Can the research question be answered with the requested YOUth data?"
+            },
+            "study_quality": {
+              "type": "string",
+              "title": "Is the quality of the proposal good? Is the study design correct?"
+            },
+            "logistical_feasibility": {
+              "type": "string",
+              "title": "Is the proposal logistically feasible?"
+            },
+            "study_value": {
+              "type": "string",
+              "title": "Is the study valuable?"
+            },
+            "researcher_expertise": {
+              "type": "string",
+              "title": "Does the researcher have the expertise necessary to correctly analyze and report on the research question at hand?"
+            },
+            "biological_samples": {
+              "type": "string",
+              "title": "Will biological samples be used?",
+              "enum": [
+                "No",
+                "Yes"
+              ],
+              "default": "No"
+            }
+          },
+          "dependencies": {
+            "biological_samples": {
+              "oneOf": [
+                {
+                  "properties": {
+                    "biological_samples": {
+                      "enum": [
+                        "No"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "biological_samples": {
+                      "enum": [
+                        "Yes"
+                      ]
+                    },
+                    "biological_samples_volume": {
+                      "type": "string",
+                      "title": "Is the volume requested reasonable and does it not seriously deplete the resource?"
+                    },
+                    "biological_samples_committee_approval": {
+                      "type": "string",
+                      "title": "Does the committee agree to the use of these samples for the specific research question?"
+                    }
+                  },
+                  "required": [
+                    "biological_samples_volume",
+                    "biological_samples_committee_approval"
+                  ]
+                }
+              ]
+            }
+          }
+        }';
+
+        $output = array();
+        $output['schema'] = json_decode($schema);
+
+        $this->output->set_content_type('application/json')->set_output(json_encode($output));
+    }
+
+    public function store_review()
+    {
+        $arrayPost = $this->input->post();
+
+        if ($this->input->server('REQUEST_METHOD') == 'POST') {
+            $rule = new ProdsRule(
+                $this->rodsuser->getRodsAccount(),
+                'rule { uuSubmitReview(*data, *requestId); }',
+                array('*data' => $arrayPost['formData'],
+                      '*requestId' => $arrayPost['requestId']),
+                array('ruleExecOut')
+            );
+
+            $result = json_decode($rule->execute()['ruleExecOut'], true);
+
+            if ($result['status'] == 0) {
+                $this->output
+                     ->set_content_type('application/json')
+                     ->set_output(json_encode($result));
+            } else {
+                $this->output
+                     ->set_content_type('application/json')
+                     ->set_status_header(500)
+                     ->set_output(json_encode($result));
+            }
+        }
+    }
+
         $rule = new ProdsRule(
             $this->rodsuser->getRodsAccount(),
             'rule { uuAssignRequest(*assignees, *requestId); }',
