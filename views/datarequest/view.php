@@ -68,6 +68,7 @@
 
 <?php if ($requestStatus == "dta_signed" && $isDatamanager): ?>
     <a href="/datarequest/download_signed_dta/<?php echo html_escape($requestId) ?>" class="btn btn-default pull-right">Download signed DTA</a>
+    <a href="/datarequest/data_ready/<?php echo html_escape($requestId) ?>" class="btn btn-default pull-right" role="button">Data ready</a>
 <?php endif ?>
 <?php if ($requestStatus == "dta_ready" && $isRequestOwner): ?>
     <a href="/datarequest/download_dta/<?php echo html_escape($requestId) ?>" class="btn btn-default pull-right">Download DTA</a>

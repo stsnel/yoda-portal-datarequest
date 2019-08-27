@@ -1165,6 +1165,24 @@ EORULE;
         $this->filesystem->download($rodsaccount, $filePath);
     }
 
+    public function data_ready($requestId) {
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            'rule { uuRequestDataReady(*requestId, *currentUserName); }',
+            array('*requestId' => $requestId,
+                  '*currentUserName' => $this->rodsuser->getUserInfo()['name']),
+            array('ruleExecOut')
+        );
+
+        $result = json_decode($rule->execute()['ruleExecOut'], true);
+
+        if ($result['status'] == 0) {
+            redirect('/datarequest/view/' . $requestId);
+        } else {
+            return $this->output
+                        ->set_content_type('application/json')
+                        ->set_status_header(500)
+                        ->set_output(json_encode($result));
         }
     }
 }
