@@ -34,6 +34,9 @@ class Datarequest extends MY_Controller
     }
 
     public function view($requestId) {
+        // Load CSRF token
+        $tokenName = $this->security->get_csrf_token_name();
+        $tokenHash = $this->security->get_csrf_hash();
 
         # Get the data request and data request status from iRODS
         $rule = new ProdsRule(
@@ -94,6 +97,8 @@ EORULE;
 
         # Set view params and render the view
         $viewParams = array(
+            'tokenName'      => $tokenName,
+            'tokenHash'      => $tokenHash,
             'requestId'      => $requestId,
             'request'        => $datarequest,
             'requestStatus'  => $datarequestStatus,
