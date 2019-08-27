@@ -565,6 +565,19 @@ EORULE;
         $this->output->set_content_type('application/json')->set_output(json_encode($output));
     }
 
+    public function data($requestId) {
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            'rule { uuGetDatarequest(*requestId); }',
+            array('*requestId' => $requestId),
+            array('ruleExecOut')
+        );
+
+        $formData = json_decode($rule->execute()['ruleExecOut'], true)['requestJSON'];
+
+        $this->output->set_content_type('application/json')->set_output($formData);
+    }
+
     public function overview_data()
     {
         $this->load->model('Datarequest_model');
