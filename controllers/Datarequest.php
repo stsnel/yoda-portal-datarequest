@@ -112,27 +112,6 @@ EORULE;
         loadView('datarequest/datarequest/view', $viewParams);
     }
 
-    public function approve($requestId) {
-        $rule = new ProdsRule(
-            $this->rodsuser->getRodsAccount(),
-            'rule { uuApproveRequest(*requestId, *currentUserName); }',
-            array('*requestId' => $requestId,
-                  '*currentUserName' => $this->rodsuser->getUserInfo()['name']),
-            array('ruleExecOut')
-        );
-
-        $result = json_decode($rule->execute()['ruleExecOut'], true);
-
-        if ($result['status'] == 0) {
-            redirect('/datarequest');
-        } else {
-            return $this->output
-                        ->set_content_type('application/json')
-                        ->set_status_header(500)
-                        ->set_output(json_encode($result));
-        }
-    }
-
     public function add() {
 
         // Load CSRF token
