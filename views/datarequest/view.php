@@ -32,8 +32,9 @@
     <a href="/datarequest/review/<?php echo html_escape($requestId) ?>" class="btn btn-default pull-right" role="button">Review data request</a>
 <?php endif ?>
     <a href="/datarequest/datarequest/approve/<?php echo html_escape($requestId) ?>" class="btn btn-default pull-right">Approve request</a>
+<?php if ($requestStatus == "submitted" && $isDatamanager): ?>
+    <button type="button" class="btn btn-default pull-right assign" data-path="">Assign for review</button>
 <?php endif ?>
-<button type="button" class="btn btn-default pull-right assign" data-path="">Assign for review</button>
 <div class="row">
     <div class=col-md-12>
         <div class="panel panel-default">

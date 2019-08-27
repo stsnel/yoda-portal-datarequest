@@ -644,6 +644,63 @@ EORULE;
     }
 
     public function assignRequest() {
+        # Check if user is a data manager
+        $rulebody = <<<EORULE
+        rule {
+            uuGroupUserExists(*group, "*user#*zone", false, *member);
+            *member = str(*member);
+        }
+EORULE;
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            $rulebody,
+                array(
+                    '*user'  => $this->rodsuser->getUserInfo()['name'],
+                    '*zone'  => $this->rodsuser->getUserInfo()['zone'],
+                    '*group' => 'datarequests-research-datamanagers'
+                ),
+                array('*member')
+            );
+        $result = $rule->execute()['*member'];
+        $isDatamanager = $result == 'true' ? true : false;
+
+        if ($isDatamanager) {
+            # Get input parameters
+            $assignees = $this->input->post()['data'];
+            $requestId = $this->input->post()['requestId'];
+
+            # Call uuAssignRequest rule and get status info
+            $rule = new ProdsRule(
+                $this->rodsuser->getRodsAccount(),
+                'rule { uuAssignRequest(*assignees, *requestId); }',
+                array('*assignees' => json_encode($assignees), '*requestId' => $requestId),
+                array('ruleExecOut')
+            );
+            $result = $rule->execute()['ruleExecOut'];
+
+            # Return status info
+            if (json_decode($result, true)['status'] === 0) {
+                $this->output
+                ->set_content_type('application/json')
+                ->set_output($result);
+            } else {
+                $this->output
+                    ->set_content_type('application/json')
+                    ->set_status_header(500)
+                    ->set_output($result);
+            }
+        }
+        else {
+            $output['status']     = -2;
+            $output['statusInfo'] = "Uploading user is not a datamanager.";
+
+            return $this->output
+                        ->set_content_type('application/json')
+                        ->set_status_header(403)
+                        ->set_output(json_encode($output));
+        }
+    }
+
     public function review($requestId) {
         // Load CSRF token
         $tokenName = $this->security->get_csrf_token_name();

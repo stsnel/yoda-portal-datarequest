@@ -33,6 +33,46 @@ $(document).ready(function() {
                 document.getElementById("datarequest")
             );
         }));
+
+    // Render and show the modal for assigning a data request to one or
+    // more DMC members
+    $("body").on("click", "button.assign", function() {
+        // Get list of DMC members
+        $.getJSON("/datarequest/datarequest/dmcmembers", function (data) {
+            if (data.length > 0) {
+                // Wipe the selection in case the user previously made a
+                // selection
+                $("#dmc-members-list").html("");
+
+                // Construct the multiselect list of options (i.e. DMC members)
+                for (let member of data) {
+                    console.log(member);
+                    $("#dmc-members-list").append(new Option(member));
+                }
+            } else {
+                setMessage("error", "No DMC members configured.");
+            }
+        });
+
+        // Show the modal
+        $("#assignForReview").modal("show");
+    });
+
+    // Assign a data request to one or more DMC members
+    $("body").on("click", "button.submit-assignment", function(data) {
+        // Get selected assignees
+        let assignees = $("#dmc-members-list").val();
+
+        // Submit assignees to controller (which will call the appropriate
+        // iRODS rule)
+        $.post("/datarequest/datarequest/assignRequest",
+               {"data": assignees, "requestId": requestId},
+               function (data) {
+                // Reload the current page so that the status field is
+                // updated
+                location.reload();
+        });
+    });
 });
 
 class YodaFormReadonly extends React.Component {
