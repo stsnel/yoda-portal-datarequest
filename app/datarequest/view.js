@@ -73,6 +73,42 @@ $(document).ready(function() {
                 location.reload();
         });
     });
+
+    // Render and show the modal for uploading a DTA
+    $("body").on("click", "button.upload_dta", function() {
+        $("#uploadDTA").modal("show");
+    });
+
+    $("body").on("click", "button.submit_dta", function(data) {
+        // Upload data
+        var xhr = new XMLHttpRequest();
+        var fd = new FormData(document.getElementById('dta'));
+
+        fd.append(YodaPortal.csrf.tokenName, YodaPortal.csrf.tokenValue);
+
+        xhr.open("POST", "/datarequest/datarequest/upload_dta/" + requestId);
+        xhr.onload = location.reload();
+
+        xhr.send(fd);
+    });
+
+    // Render and show the modal for uploading a signed DTA
+    $("body").on("click", "button.upload_signed_dta", function() {
+        $("#uploadSignedDTA").modal("show");
+    });
+
+    $("body").on("click", "button.submit_signed_dta", function(data) {
+        // Upload data
+        var xhr = new XMLHttpRequest();
+        var fd = new FormData(document.getElementById('signed_dta'));
+
+        fd.append(YodaPortal.csrf.tokenName, YodaPortal.csrf.tokenValue);
+
+        xhr.open("POST", "/datarequest/datarequest/upload_signed_dta/" + requestId);
+        xhr.onload = location.reload();
+
+        xhr.send(fd);
+    });
 });
 
 class YodaFormReadonly extends React.Component {

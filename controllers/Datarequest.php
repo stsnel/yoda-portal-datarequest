@@ -966,6 +966,205 @@ EORULE;
         }
     }
 
+    public function upload_dta($requestId) {
+        # Check if user is a data manager
+        $rulebody = <<<EORULE
+        rule {
+            uuGroupUserExists(*group, "*user#*zone", false, *member);
+            *member = str(*member);
+        }
+EORULE;
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            $rulebody,
+                array(
+                    '*user'  => $this->rodsuser->getUserInfo()['name'],
+                    '*zone'  => $this->rodsuser->getUserInfo()['zone'],
+                    '*group' => 'datarequests-research-datamanagers'
+                ),
+                array('*member')
+            );
+        $result = $rule->execute()['*member'];
+        $isDatamanager = $result == 'true' ? true : false;
+
+        if ($isDatamanager) {
+            # Load Filesystem model
+            $this->load->model('filesystem');
+
+            # Replace original filename with "dta.pdf" for easier retrieval
+            # later on
+            $new_filename = "dta.pdf";
+            $_FILES["file"]["name"] = $new_filename;
+
+            # Construct path to data request directory (in which the document will
+            # be stored)
+            $filePath = '/tempZone/home/datarequests-research/' . $requestId . '/';
+            $rodsaccount = $this->rodsuser->getRodsAccount();
+
+            # Upload the document
+            $output = $this->filesystem->upload($rodsaccount, $filePath,
+                                                $_FILES["file"]);
+
+            # Give the researcher that owns the data request read permissions on
+            # the DTA document so he can download it
+            $rule = new ProdsRule(
+                $this->rodsuser->getRodsAccount(),
+                'rule { uuDTAGrantReadPermissions(*requestId, *username); }',
+                array('*requestId' => $requestId, '*username' => $this->rodsuser->getUserInfo()['name']),
+                array('ruleExecOut')
+            );
+
+            $result = json_decode($rule->execute()['ruleExecOut'], true);
+
+            # If upload succeeded, set status to "dta_ready", else return error
+            if ($output["status"] == "OK") {
+                # Set status to "dta_ready"
+                $rule = new ProdsRule(
+                    $this->rodsuser->getRodsAccount(),
+                    'rule { uuRequestDTAReady(*requestId, *currentUserName); }',
+                    array('*requestId' => $requestId,
+                          '*currentUserName' => $this->rodsuser->getUserInfo()['name']),
+                    array('ruleExecOut')
+                );
+
+                $result = json_decode($rule->execute()['ruleExecOut'], true);
+
+                if ($result['status'] == 0) {
+                    redirect('/datarequest/view/' + $requestId);
+                } else {
+                    return $this->output
+                                ->set_content_type('application/json')
+                                ->set_status_header(500)
+                                ->set_output(json_encode($result));
+                }
+            } else {
+                return $this->output
+                            ->set_content_type("application/json")
+                            ->set_status_header(500)
+                            ->set_output(json_encode($output));
+            }
+        } else {
+            $output['status']     = -2;
+            $output['statusInfo'] = "Uploading user is not a datamanager.";
+
+            return $this->output
+                        ->set_content_type('application/json')
+                        ->set_status_header(403)
+                        ->set_output(json_encode($output));
+        }
+    }
+
+    public function download_dta($requestId)
+    {
+        # Load Filesystem model
+        $this->load->model('filesystem');
+
+        $rodsaccount = $this->rodsuser->getRodsAccount();
+        $filePath = '/tempZone/home/datarequests-research/' . $requestId . '/dta.pdf';
+
+        $this->filesystem->download($rodsaccount, $filePath);
+    }
+
+    public function upload_signed_dta($requestId) {
+        # Check if user is the owner of the datarequest. If so, the approve
+        # button will not be rendered
+
+        # Set the default value of $isOwner to true
+        $isRequestOwner = true;
+        # Get username of datarequest owner
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            'rule { uuIsRequestOwner(*requestId, *currentUserName); }',
+            array('*requestId' => $requestId,
+                  '*currentUserName' => $this->rodsuser->getUserInfo()['name']),
+            array('ruleExecOut')
+        );
+        $result = json_decode($rule->execute()['ruleExecOut'], true);
+
+        # Get results of isRequestOwner call
+        if ($result['status'] == 0) {
+            $isRequestOwner = $result['isRequestOwner'];
+        }
+
+        if ($isRequestOwner) {
+            # Load Filesystem model
+            $this->load->model('filesystem');
+
+            # Replace original filename with "signed_dta.pdf" for easier
+            # retrieval later on
+            $new_filename = "signed_dta.pdf";
+            $_FILES["file"]["name"] = $new_filename;
+
+            # Construct path to data request directory (in which the document will
+            # be stored)
+            $filePath = '/tempZone/home/datarequests-research/' . $requestId . '/';
+            $rodsaccount = $this->rodsuser->getRodsAccount();
+
+            # Upload the document
+            $output = $this->filesystem->upload($rodsaccount, $filePath,
+                                                $_FILES["file"]);
+
+            # Give the data manager read permissions on the signed DTA so he can
+            # download it
+            $rule = new ProdsRule(
+                $this->rodsuser->getRodsAccount(),
+                'rule { uuSignedDTAGrantReadPermissions(*requestId, *username); }',
+                array('*requestId' => $requestId, '*username' => $this->rodsuser->getUserInfo()['name']),
+                array('ruleExecOut')
+            );
+
+            $result = json_decode($rule->execute()['ruleExecOut'], true);
+
+            # If upload succeeded, set status to "dta_signed", else return error
+            if ($output["status"] == "OK") {
+                # Set status to "dta_signed"
+                $rule = new ProdsRule(
+                    $this->rodsuser->getRodsAccount(),
+                    'rule { uuRequestDTASigned(*requestId, *currentUserName); }',
+                    array('*requestId' => $requestId,
+                          '*currentUserName' => $this->rodsuser->getUserInfo()['name']),
+                    array('ruleExecOut')
+                );
+
+                $result = json_decode($rule->execute()['ruleExecOut'], true);
+
+                if ($result['status'] == 0) {
+                    redirect('/datarequest/view/' . $requestId);
+                } else {
+                    return $this->output
+                                ->set_content_type('application/json')
+                                ->set_status_header(500)
+                                ->set_output(json_encode($result));
+                }
+            } else {
+                return $this->output
+                            ->set_content_type("application/json")
+                            ->set_status_header(500)
+                            ->set_output(json_encode($output));
+            }
+        } else {
+            $output['status']     = -2;
+            $output['statusInfo'] = "Uploading user does not own the data " +
+                                    "request.";
+
+            return $this->output
+                        ->set_content_type('application/json')
+                        ->set_status_header(403)
+                        ->set_output(json_encode($output));
+        }
+    }
+
+    public function download_signed_dta($requestId)
+    {
+        # Load Filesystem model
+        $this->load->model('filesystem');
+
+        $rodsaccount = $this->rodsuser->getRodsAccount();
+        $filePath = '/tempZone/home/datarequests-research/' . $requestId . '/signed_dta.pdf';
+
+        $this->filesystem->download($rodsaccount, $filePath);
+    }
+
         }
     }
 }
