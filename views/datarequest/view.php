@@ -96,7 +96,59 @@
                 </div>
             </div>
             <div class="panel-body">
+                <div class="row bs-wizard" style="border-bottom:0;">
+                    <div class="col-xs-3 bs-wizard-step <?php if (in_array($requestStatus, array("submitted", "assigned", "reviewed", "approved", "rejected", "dta_ready", "dta_signed", "data_ready"))): ?>complete<?php else: ?>disabled<?php endif ?>">
+                      <div class="text-center bs-wizard-stepnum">Submission</div>
+                      <div class="progress"><div class="progress-bar"></div></div>
+                      <a href="#" class="bs-wizard-dot"></a>
+                      <div class="bs-wizard-info text-center">The researcher submits the data request.</div>
+                    </div>
 
+                    <div class="col-xs-3 bs-wizard-step <?php if (in_array($requestStatus, array("assigned", "reviewed", "approved", "rejected", "dta_ready", "dta_signed", "data_ready"))): ?>complete<?php else: ?>disabled<?php endif ?>">
+                      <div class="text-center bs-wizard-stepnum">Under review</div>
+                      <div class="progress"><div class="progress-bar"></div></div>
+                      <a href="#" class="bs-wizard-dot"></a>
+                      <div class="bs-wizard-info text-center">The YOUth data manager has assigned the data request for review to one or more members of the YOUth Data Management Committee.</div>
+                    </div>
+
+                    <div class="col-xs-3 bs-wizard-step <?php if (in_array($requestStatus, array("reviewed", "approved", "rejected", "dta_ready", "dta_signed", "data_ready"))): ?>complete<?php else: ?>disabled<?php endif ?>">
+                      <div class="text-center bs-wizard-stepnum">Reviewed</div>
+                      <div class="progress"><div class="progress-bar"></div></div>
+                      <a href="#" class="bs-wizard-dot"></a>
+                      <div class="bs-wizard-info text-center">The data request has been reviewed.</div>
+                    </div>
+
+                    <div class="col-xs-3 bs-wizard-step <?php if (in_array($requestStatus, array("approved", "rejected", "dta_ready", "dta_signed", "data_ready"))): ?>complete<?php else: ?>disabled<?php endif ?>">
+                      <div class="text-center bs-wizard-stepnum">Approved</div>
+                      <div class="progress"><div class="progress-bar"></div></div>
+                      <a href="#" class="bs-wizard-dot"></a>
+                      <div class="bs-wizard-info text-center">The YOUth Board of Directors has approved the proposal.</div>
+                    </div>
+                </div>
+                <div class="row bs-wizard col-md-offset-2" style="border-bottom:0;">
+                    <div class="col-xs-3 bs-wizard-step <?php if (in_array($requestStatus, array("dta_ready", "dta_signed", "data_ready"))): ?>complete<?php else: ?>disabled<?php endif ?>">
+                      <div class="text-center bs-wizard-stepnum">DTA ready</div>
+                      <div class="progress"><div class="progress-bar"></div></div>
+                      <a href="#" class="bs-wizard-dot"></a>
+                      <div class="bs-wizard-info text-center">The YOUth data manager will create a Data Transfer Agreement, stipulating the terms and conditions under which the researcher is allowed to use the data.</div>
+                    </div>
+
+                    <div class="col-xs-3 bs-wizard-step <?php if (in_array($requestStatus, array("dta_signed", "data_ready"))): ?>complete<?php else: ?>disabled<?php endif ?>">
+                      <div class="text-center bs-wizard-stepnum">DTA signed</div>
+                      <div class="progress"><div class="progress-bar"></div></div>
+                      <a href="#" class="bs-wizard-dot"></a>
+                      <div class="bs-wizard-info text-center">The researcher has submitted a signed copy of the DTA.</div>
+                    </div>
+
+                    <div class="col-xs-3 bs-wizard-step <?php if (in_array($requestStatus, array("data_ready"))): ?>complete<?php else: ?>disabled<?php endif ?>">
+                      <div class="text-center bs-wizard-stepnum">Data ready</div>
+                      <div class="progress"><div class="progress-bar"></div></div>
+                      <a href="#" class="bs-wizard-dot"></a>
+                      <div class="bs-wizard-info text-center">The researcher may now download the requested data.</div>
+                    </div>
+                </div>
+
+                <hr>
 
                     <div id="datarequest" class="metadata-form"
                          data-csrf_token_name="<?php echo rawurlencode($tokenName); ?>"

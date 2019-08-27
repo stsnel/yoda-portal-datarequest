@@ -106,6 +106,9 @@ EORULE;
             'activeModule'   => 'datarequest',
             'scriptIncludes'  => array(
                 'js/datarequest/view.js'
+            ),
+            'styleIncludes'  => array(
+                'css/datarequest/view.css'
             )
         );
 
