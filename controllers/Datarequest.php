@@ -152,59 +152,8 @@ EORULE;
     public function schema()
     {
         $schema = '{
-          "description": "Please complete and submit this form to register your data request.",
           "type": "object",
           "properties": {
-            "datarequest": {
-              "type": "object",
-              "title": "Requested data",
-              "properties": {
-                "wave": {
-                  "type": "array",
-                  "title": "Wave",
-                  "description": "Please specify the wave(s) from which you would like to obtain data.",
-                  "items": {
-                    "type": "string",
-                    "enum": [
-                      "Around pregnancy - 20 weeks",
-                      "Around pregrancy - 30 weeks",
-                      "Around 0 - 5 mo",
-                      "Around 0 - 10 mo",
-                      "Around 3 (not available yet)",
-                      "Around 6 (not available yet)",
-                      "Around 9",
-                      "Around 12 (not available yet)",
-                      "Around 15 (not available yet)"
-                    ]
-                  },
-                  "minItems": 1,
-                  "uniqueItems": true
-                },
-                "data": {
-                  "type": "string",
-                  "title": "Data",
-                  "description": "Please specify the data you would like to obtain from the selected wave(s)."
-                }
-              },
-              "required": [
-                "wave", "data"
-              ]
-            },
-            "general": {
-              "type": "object",
-              "title": "General",
-              "properties": {
-                "title": {
-                  "type": "string",
-                  "title": "Title of the study",
-                  "description": "One request per article.",
-                  "maxLength": 2700
-                }
-              },
-              "required": [
-                "title"
-              ]
-            },
             "contact": {
               "type": "object",
               "title": "Contact person for the proposed study",
@@ -249,9 +198,75 @@ EORULE;
                 "home_address"
               ]
             },
+            "datarequest": {
+              "type": "object",
+              "title": "Requested data",
+              "properties": {
+                "wave": {
+                  "type": "array",
+                  "title": "Wave",
+                  "description": "Please specify the wave(s) from which you would like to obtain data.",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "Around pregnancy - 20 weeks",
+                      "Around pregrancy - 30 weeks",
+                      "Around 0 - 5 mo",
+                      "Around 0 - 10 mo",
+                      "Around 3 (not available yet)",
+                      "Around 6 (not available yet)",
+                      "Around 9",
+                      "Around 12 (not available yet)",
+                      "Around 15 (not available yet)"
+                    ]
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                },
+                "purpose": {
+                  "type": "array",
+                  "title": "Purpose",
+                  "description": "Data request for the purpose of:",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "Analyses in order to publish (e.g. article, report, thesis, etc.)",
+                      "Analyses for data quality control only (data will not be published)",
+                      "Analyses for descriptive data only, e.g. in order to determine good datasets (data will not be published)"
+                    ]
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                },
+                "data": {
+                  "type": "string",
+                  "title": "Data",
+                  "description": "Please specify the data you would like to obtain from the selected wave(s)."
+                }
+              },
+              "required": [
+                "wave", "purpose", "data"
+              ]
+            },
+            "general": {
+              "type": "object",
+              "title": "General",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "title": "Title of the study",
+                  "description": "One request per article.",
+                  "maxLength": 2700
+                }
+              },
+              "required": [
+                "title"
+              ]
+            },
             "research_proposal": {
               "type": "object",
-              "title": "Data request",
+              "title": "Research proposal",
+              "description": "We ask you to provide us with a clear background, methods section and data-analysis plan. These parts of the proposal will be publicly displayed for reference.",
               "properties": {
                 "background": {
                   "type": "string",
@@ -332,6 +347,31 @@ EORULE;
                 "timeline",
                 "output",
                 "proposed_authors"
+              ]
+            },
+            "website": {
+              "type": "object",
+              "title": "Website",
+              "description": "All approved data requests will be made publicly available on our website. Please provide your website summary below.",
+              "properties": {
+                "project_title": {
+                  "type": "string",
+                  "title": "Project title"
+                },
+                "research_question_summary": {
+                  "type": "string",
+                  "title": "Website summary of research question of your project (max. 200 words)"
+                },
+                "requested_data_summary": {
+                  "type": "string",
+                  "title": "Website summary of the data requested for your project",
+                  "description": "Please indicate which data you requested to answer your research question"
+                }
+              },
+              "required": [
+                "project_title",
+                "research_question_summary",
+                "requested_data_summary"
               ]
             },
             "contribution": {
@@ -482,6 +522,10 @@ EORULE;
           "datarequest": {
             "wave": {
               "ui:widget": "checkboxes"
+            },
+            "purpose": {
+              "ui:widget": "checkboxes",
+              "ui:help": "DISCLAIMER DATA ACCESS QUALITY CONTROL AND DESCRIPTIVE DATA: These data can only be used for data quality control analyses or descriptive data analyses only and may not be made public, for example by publishing them or otherwise making them available to others. If you want to use data for disclosure, permission of the YOUth data committee is required, and this data request protocol must be followed for analyses in order to publish."
             },
             "data": {
               "ui:widget": "textarea"
