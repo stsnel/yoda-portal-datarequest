@@ -785,24 +785,130 @@ EORULE;
         }
     }
 
+    public function reviewData($requestId) {
         $rule = new ProdsRule(
             $this->rodsuser->getRodsAccount(),
-            'rule { uuAssignRequest(*assignees, *requestId); }',
-            array('*assignees' => json_encode($assignees), '*requestId' => $requestId),
+            'rule { uuGetReview(*requestId); }',
+            array('*requestId' => $requestId),
             array('ruleExecOut')
         );
-        $result = $rule->execute()['ruleExecOut'];
 
-        # Return status info
-        if (json_decode($result, true)['status'] === 0) {
-            $this->output
-            ->set_content_type('application/json')
-            ->set_output($result);
+        $formData = json_decode($rule->execute()['ruleExecOut'], true)['reviewJSON'];
+
+        $this->output->set_content_type('application/json')->set_output($formData);
+    }
+
+    public function evaluate($requestId) {
+        // Load CSRF token
+        $tokenName = $this->security->get_csrf_token_name();
+        $tokenHash = $this->security->get_csrf_hash();
+
+        $viewParams = array(
+            'tokenName'        => $tokenName,
+            'tokenHash'        => $tokenHash,
+            'activeModule'     => 'datarequest',
+            'requestId'        => $requestId
+        );
+
+        loadView('/datarequest/evaluate', $viewParams);
+    }
+
+    public function evaluationSchema()
+    {
+        $schema = '
+        {
+          "type": "object",
+          "required": [
+            "evaluation"
+          ],
+          "properties": {
+            "evaluation": {
+              "type": "string",
+              "title": "This data request is",
+              "enum": [
+                "Accepted",
+                "Rejected"
+              ],
+              "default": "Rejected"
+            },
+            "remarks": {
+              "type": "string",
+              "title": "Rationale for evaluation"
+            }
+          }
+        }';
+
+        $uiSchema = '
+        {
+          "remarks": {
+            "ui:widget": "textarea"
+          }
+        }';
+
+        $output = array();
+        $output['schema'] = json_decode($schema);
+        $output['uiSchema'] = json_decode($uiSchema);
+
+        $this->output->set_content_type('application/json')->set_output(json_encode($output));
+    }
+
+    public function store_evaluation()
+    {
+        # Check if user is a Board of Directors representative. If not, do
+        # not allow the user to approve the datarequest
+        $rulebody = <<<EORULE
+        rule {
+            uuGroupUserExists(*group, "*user#*zone", false, *member);
+            *member = str(*member);
+        }
+EORULE;
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            $rulebody,
+                array(
+                    '*user'  => $this->rodsuser->getUserInfo()['name'],
+                    '*zone'  => $this->rodsuser->getUserInfo()['zone'],
+                    '*group' => 'datarequests-research-board-of-directors'
+                ),
+                array('*member')
+            );
+        $result = $rule->execute()['*member'];
+        $isBoardMember = $result == 'true' ? true : false;
+
+        if ($isBoardMember) {
+            $arrayPost = $this->input->post();
+            if ($this->input->server('REQUEST_METHOD') == 'POST') {
+                $rule = new ProdsRule(
+                    $this->rodsuser->getRodsAccount(),
+                    'rule { uuSubmitEvaluation(*data, *requestId); }',
+                    array('*data' => $arrayPost['formData'],
+                          '*requestId' => $arrayPost['requestId']),
+                    array('ruleExecOut')
+                );
+                $result = json_decode($rule->execute()['ruleExecOut'], true);
+                if ($result['status'] == 0) {
+                    $this->output
+                         ->set_content_type('application/json')
+                         ->set_output(json_encode($result));
+                } else {
+                    $this->output
+                         ->set_content_type('application/json')
+                         ->set_status_header(500)
+                         ->set_output(json_encode($result));
+                }
+            }
         } else {
-            $this->output
-                ->set_content_type('application/json')
-                ->set_status_header(500)
-                ->set_output($result);
+            $output['status']     = -2;
+            $output['statusInfo'] = "Uploading user is not a member of the " +
+                                    "Board of Directors.";
+
+            return $this->output
+                        ->set_content_type('application/json')
+                        ->set_status_header(403)
+                        ->set_output(json_encode($output));
+        }
+    }
+
         }
     }
 }

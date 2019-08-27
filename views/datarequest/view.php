@@ -25,6 +25,9 @@
 </div>
 
 <?php if ($requestStatus == "assigned" && $isBoardMember && !$isRequestOwner): ?>
+<?php if ($requestStatus == "reviewed" && $isBoardMember): ?>
+    <a href="/datarequest/evaluate/<?php echo html_escape($requestId) ?>" class="btn btn-default pull-right" role="button">Evaluate data request</a>
+<?php endif ?>
 <?php if ($requestStatus == "assigned" && $isReviewer): ?>
     <a href="/datarequest/review/<?php echo html_escape($requestId) ?>" class="btn btn-default pull-right" role="button">Review data request</a>
 <?php endif ?>
