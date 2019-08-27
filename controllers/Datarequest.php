@@ -35,32 +35,30 @@ class Datarequest extends MY_Controller
 
     public function view($requestId) {
 
+        # Get the data request and data request status from iRODS
         $rule = new ProdsRule(
             $this->rodsuser->getRodsAccount(),
             'rule { uuGetDatarequest(*requestId); }',
             array('*requestId' => $requestId),
             array('ruleExecOut')
         );
-
         $result = json_decode($rule->execute()['ruleExecOut'], true);
-
         if ($result['status'] != 0) {
             $this->output
                  ->set_content_type('application/json')
                  ->set_status_header(500)
                  ->set_output(json_encode($result));
         }
-
         $datarequest = json_decode($result["requestJSON"], true);
         $datarequestStatus = $result["requestStatus"];
 
         # Check if user is a Board of Directors representative. If not, do
         # not allow the user to approve the datarequest
         $rulebody = <<<EORULE
-rule {
-        uuGroupUserExists(*group, "*user#*zone", false, *member);
-        *member = str(*member);
-}
+        rule {
+            uuGroupUserExists(*group, "*user#*zone", false, *member);
+            *member = str(*member);
+        }
 EORULE;
         $rule = new ProdsRule(
             $this->rodsuser->getRodsAccount(),
@@ -72,7 +70,6 @@ EORULE;
                 ),
                 array('*member')
             );
-
         $result = $rule->execute()['*member'];
         $isBoardMember = $result == 'true' ? true : false;
 
@@ -81,7 +78,6 @@ EORULE;
 
         # Set the default value of $isOwner to true
         $isRequestOwner = true;
-
         # Get username of datarequest owner
         $rule = new ProdsRule(
             $this->rodsuser->getRodsAccount(),
@@ -91,12 +87,12 @@ EORULE;
             array('ruleExecOut')
         );
         $result = json_decode($rule->execute()['ruleExecOut'], true);
-
         # Get results of isRequestOwner call
         if ($result['status'] == 0) {
             $isRequestOwner = $result['isRequestOwner'];
         }
 
+        # Set view params and render the view
         $viewParams = array(
             'requestId'      => $requestId,
             'request'        => $datarequest,
@@ -104,14 +100,13 @@ EORULE;
             'isBoardMember'  => $isBoardMember,
             'isRequestOwner' => $isRequestOwner,
             'activeModule'   => 'datarequest',
-            'scriptIncludes'  => array(
+            'scriptIncludes' => array(
                 'js/datarequest/view.js'
             ),
             'styleIncludes'  => array(
                 'css/datarequest/view.css'
             )
         );
-
         loadView('datarequest/datarequest/view', $viewParams);
     }
 
