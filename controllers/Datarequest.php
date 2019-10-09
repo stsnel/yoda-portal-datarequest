@@ -34,33 +34,34 @@ class Datarequest extends MY_Controller
     }
 
     public function view($requestId) {
+        // Load CSRF token
+        $tokenName = $this->security->get_csrf_token_name();
+        $tokenHash = $this->security->get_csrf_hash();
 
+        # Get the data request and data request status from iRODS
         $rule = new ProdsRule(
             $this->rodsuser->getRodsAccount(),
             'rule { uuGetDatarequest(*requestId); }',
             array('*requestId' => $requestId),
             array('ruleExecOut')
         );
-
         $result = json_decode($rule->execute()['ruleExecOut'], true);
-
         if ($result['status'] != 0) {
             $this->output
                  ->set_content_type('application/json')
                  ->set_status_header(500)
                  ->set_output(json_encode($result));
         }
-
         $datarequest = json_decode($result["requestJSON"], true);
         $datarequestStatus = $result["requestStatus"];
 
         # Check if user is a Board of Directors representative. If not, do
         # not allow the user to approve the datarequest
         $rulebody = <<<EORULE
-rule {
-        uuGroupUserExists(*group, "*user#*zone", false, *member);
-        *member = str(*member);
-}
+        rule {
+            uuGroupUserExists(*group, "*user#*zone", false, *member);
+            *member = str(*member);
+        }
 EORULE;
         $rule = new ProdsRule(
             $this->rodsuser->getRodsAccount(),
@@ -72,16 +73,34 @@ EORULE;
                 ),
                 array('*member')
             );
-
         $result = $rule->execute()['*member'];
         $isBoardMember = $result == 'true' ? true : false;
+
+        # Check if user is a data manager
+        $rulebody = <<<EORULE
+        rule {
+            uuGroupUserExists(*group, "*user#*zone", false, *member);
+            *member = str(*member);
+        }
+EORULE;
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            $rulebody,
+                array(
+                    '*user'  => $this->rodsuser->getUserInfo()['name'],
+                    '*zone'  => $this->rodsuser->getUserInfo()['zone'],
+                    '*group' => 'datarequests-research-datamanagers'
+                ),
+                array('*member')
+            );
+        $result = $rule->execute()['*member'];
+        $isDatamanager = $result == 'true' ? true : false;
 
         # Check if user is the owner of the datarequest. If so, the approve
         # button will not be rendered
 
         # Set the default value of $isOwner to true
         $isRequestOwner = true;
-
         # Get username of datarequest owner
         $rule = new ProdsRule(
             $this->rodsuser->getRodsAccount(),
@@ -91,46 +110,45 @@ EORULE;
             array('ruleExecOut')
         );
         $result = json_decode($rule->execute()['ruleExecOut'], true);
-
         # Get results of isRequestOwner call
         if ($result['status'] == 0) {
             $isRequestOwner = $result['isRequestOwner'];
         }
 
-        $viewParams = array(
-            'requestId'      => $requestId,
-            'request'        => $datarequest,
-            'requestStatus'  => $datarequestStatus,
-            'isBoardMember'  => $isBoardMember,
-            'isRequestOwner' => $isRequestOwner,
-            'activeModule'   => 'datarequest',
-            'scriptIncludes'  => array(
-                'js/datarequest/view.js'
-            )
-        );
-
-        loadView('datarequest/datarequest/view', $viewParams);
-    }
-
-    public function approve($requestId) {
+        # Check if user is assigned to review this proposal
+        $isReviewer = false;
         $rule = new ProdsRule(
             $this->rodsuser->getRodsAccount(),
-            'rule { uuApproveRequest(*requestId, *currentUserName); }',
+            'rule { uuIsReviewer(*requestId, *currentUserName); }',
             array('*requestId' => $requestId,
                   '*currentUserName' => $this->rodsuser->getUserInfo()['name']),
             array('ruleExecOut')
         );
-
         $result = json_decode($rule->execute()['ruleExecOut'], true);
-
         if ($result['status'] == 0) {
-            redirect('/datarequest');
-        } else {
-            return $this->output
-                        ->set_content_type('application/json')
-                        ->set_status_header(500)
-                        ->set_output(json_encode($result));
+            $isReviewer = $result['isReviewer'];
         }
+
+        # Set view params and render the view
+        $viewParams = array(
+            'tokenName'      => $tokenName,
+            'tokenHash'      => $tokenHash,
+            'requestId'      => $requestId,
+            'request'        => $datarequest,
+            'requestStatus'  => $datarequestStatus,
+            'isReviewer'     => $isReviewer,
+            'isBoardMember'  => $isBoardMember,
+            'isDatamanager'  => $isDatamanager,
+            'isRequestOwner' => $isRequestOwner,
+            'activeModule'   => 'datarequest',
+            'scriptIncludes' => array(
+                'js/datarequest/view.js'
+            ),
+            'styleIncludes'  => array(
+                'css/datarequest/view.css'
+            )
+        );
+        loadView('datarequest/datarequest/view', $viewParams);
     }
 
     public function add() {
@@ -173,59 +191,8 @@ EORULE;
     public function schema()
     {
         $schema = '{
-          "description": "Please complete and submit this form to register your data request.",
           "type": "object",
           "properties": {
-            "datarequest": {
-              "type": "object",
-              "title": "Requested data",
-              "properties": {
-                "wave": {
-                  "type": "array",
-                  "title": "Wave",
-                  "description": "Please specify the wave(s) from which you would like to obtain data.",
-                  "items": {
-                    "type": "string",
-                    "enum": [
-                      "Around pregnancy - 20 weeks",
-                      "Around pregrancy - 30 weeks",
-                      "Around 0 - 5 mo",
-                      "Around 0 - 10 mo",
-                      "Around 3 (not available yet)",
-                      "Around 6 (not available yet)",
-                      "Around 9",
-                      "Around 12 (not available yet)",
-                      "Around 15 (not available yet)"
-                    ]
-                  },
-                  "minItems": 1,
-                  "uniqueItems": true
-                },
-                "data": {
-                  "type": "string",
-                  "title": "Data",
-                  "description": "Please specify the data you would like to obtain from the selected wave(s)."
-                }
-              },
-              "required": [
-                "wave", "data"
-              ]
-            },
-            "general": {
-              "type": "object",
-              "title": "General",
-              "properties": {
-                "title": {
-                  "type": "string",
-                  "title": "Title of the study",
-                  "description": "One request per article.",
-                  "maxLength": 2700
-                }
-              },
-              "required": [
-                "title"
-              ]
-            },
             "contact": {
               "type": "object",
               "title": "Contact person for the proposed study",
@@ -270,9 +237,75 @@ EORULE;
                 "home_address"
               ]
             },
+            "datarequest": {
+              "type": "object",
+              "title": "Requested data",
+              "properties": {
+                "wave": {
+                  "type": "array",
+                  "title": "Wave",
+                  "description": "Please specify the wave(s) from which you would like to obtain data.",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "Around pregnancy - 20 weeks",
+                      "Around pregrancy - 30 weeks",
+                      "Around 0 - 5 mo",
+                      "Around 0 - 10 mo",
+                      "Around 3 (not available yet)",
+                      "Around 6 (not available yet)",
+                      "Around 9",
+                      "Around 12 (not available yet)",
+                      "Around 15 (not available yet)"
+                    ]
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                },
+                "purpose": {
+                  "type": "array",
+                  "title": "Purpose",
+                  "description": "Data request for the purpose of:",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "Analyses in order to publish (e.g. article, report, thesis, etc.)",
+                      "Analyses for data quality control only (data will not be published)",
+                      "Analyses for descriptive data only, e.g. in order to determine good datasets (data will not be published)"
+                    ]
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                },
+                "data": {
+                  "type": "string",
+                  "title": "Data",
+                  "description": "Please specify the data you would like to obtain from the selected wave(s)."
+                }
+              },
+              "required": [
+                "wave", "purpose", "data"
+              ]
+            },
+            "general": {
+              "type": "object",
+              "title": "General",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "title": "Title of the study",
+                  "description": "One request per article.",
+                  "maxLength": 2700
+                }
+              },
+              "required": [
+                "title"
+              ]
+            },
             "research_proposal": {
               "type": "object",
-              "title": "Data request",
+              "title": "Research proposal",
+              "description": "We ask you to provide us with a clear background, methods section and data-analysis plan. These parts of the proposal will be publicly displayed for reference.",
               "properties": {
                 "background": {
                   "type": "string",
@@ -353,6 +386,31 @@ EORULE;
                 "timeline",
                 "output",
                 "proposed_authors"
+              ]
+            },
+            "website": {
+              "type": "object",
+              "title": "Website",
+              "description": "All approved data requests will be made publicly available on our website. Please provide your website summary below.",
+              "properties": {
+                "project_title": {
+                  "type": "string",
+                  "title": "Project title"
+                },
+                "research_question_summary": {
+                  "type": "string",
+                  "title": "Website summary of research question of your project (max. 200 words)"
+                },
+                "requested_data_summary": {
+                  "type": "string",
+                  "title": "Website summary of the data requested for your project",
+                  "description": "Please indicate which data you requested to answer your research question"
+                }
+              },
+              "required": [
+                "project_title",
+                "research_question_summary",
+                "requested_data_summary"
               ]
             },
             "contribution": {
@@ -504,6 +562,10 @@ EORULE;
             "wave": {
               "ui:widget": "checkboxes"
             },
+            "purpose": {
+              "ui:widget": "checkboxes",
+              "ui:help": "DISCLAIMER DATA ACCESS QUALITY CONTROL AND DESCRIPTIVE DATA: These data can only be used for data quality control analyses or descriptive data analyses only and may not be made public, for example by publishing them or otherwise making them available to others. If you want to use data for disclosure, permission of the YOUth data committee is required, and this data request protocol must be followed for analyses in order to publish."
+            },
             "data": {
               "ui:widget": "textarea"
             }
@@ -563,6 +625,19 @@ EORULE;
         $output['uiSchema'] = json_decode($uiSchema);
 
         $this->output->set_content_type('application/json')->set_output(json_encode($output));
+    }
+
+    public function data($requestId) {
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            'rule { uuGetDatarequest(*requestId); }',
+            array('*requestId' => $requestId),
+            array('ruleExecOut')
+        );
+
+        $formData = json_decode($rule->execute()['ruleExecOut'], true)['requestJSON'];
+
+        $this->output->set_content_type('application/json')->set_output($formData);
     }
 
     public function overview_data()
@@ -631,29 +706,545 @@ EORULE;
     }
 
     public function assignRequest() {
-        # Get input parameters
-        $assignees = $this->input->post()['data'];
-        $requestId = $this->input->post()['requestId'];
-
-        # Call uuAssignRequest rule and get status info
+        # Check if user is a data manager
+        $rulebody = <<<EORULE
+        rule {
+            uuGroupUserExists(*group, "*user#*zone", false, *member);
+            *member = str(*member);
+        }
+EORULE;
         $rule = new ProdsRule(
             $this->rodsuser->getRodsAccount(),
-            'rule { uuAssignRequest(*assignees, *requestId); }',
-            array('*assignees' => json_encode($assignees), '*requestId' => $requestId),
+            $rulebody,
+                array(
+                    '*user'  => $this->rodsuser->getUserInfo()['name'],
+                    '*zone'  => $this->rodsuser->getUserInfo()['zone'],
+                    '*group' => 'datarequests-research-datamanagers'
+                ),
+                array('*member')
+            );
+        $result = $rule->execute()['*member'];
+        $isDatamanager = $result == 'true' ? true : false;
+
+        if ($isDatamanager) {
+            # Get input parameters
+            $assignees = $this->input->post()['data'];
+            $requestId = $this->input->post()['requestId'];
+
+            # Call uuAssignRequest rule and get status info
+            $rule = new ProdsRule(
+                $this->rodsuser->getRodsAccount(),
+                'rule { uuAssignRequest(*assignees, *requestId); }',
+                array('*assignees' => json_encode($assignees), '*requestId' => $requestId),
+                array('ruleExecOut')
+            );
+            $result = $rule->execute()['ruleExecOut'];
+
+            # Return status info
+            if (json_decode($result, true)['status'] === 0) {
+                $this->output
+                ->set_content_type('application/json')
+                ->set_output($result);
+            } else {
+                $this->output
+                    ->set_content_type('application/json')
+                    ->set_status_header(500)
+                    ->set_output($result);
+            }
+        }
+        else {
+            $output['status']     = -2;
+            $output['statusInfo'] = "Uploading user is not a datamanager.";
+
+            return $this->output
+                        ->set_content_type('application/json')
+                        ->set_status_header(403)
+                        ->set_output(json_encode($output));
+        }
+    }
+
+    public function review($requestId) {
+        // Load CSRF token
+        $tokenName = $this->security->get_csrf_token_name();
+        $tokenHash = $this->security->get_csrf_hash();
+
+        $viewParams = array(
+            'tokenName'        => $tokenName,
+            'tokenHash'        => $tokenHash,
+            'activeModule'     => 'datarequest',
+            'requestId'        => $requestId
+        );
+
+        loadView('/datarequest/review', $viewParams);
+    }
+
+    public function reviewSchema()
+    {
+        $schema = '
+        {
+          "type": "object",
+          "required": [
+            "contribution",
+            "informed_consent_fit",
+            "research_question_answerability",
+            "study_quality",
+            "logistical_feasibility",
+            "study_value",
+            "researcher_expertise",
+            "biological_samples"
+          ],
+          "properties": {
+            "contribution": {
+              "type": "string",
+              "title": "How much did the applicant involved contribute to YOUth with respect to recruitment, setup, and continuation of YOUth?"
+            },
+            "informed_consent_fit": {
+              "type": "string",
+              "title": "How does the research question fit with the provided informed consent of the participants of YOUth?"
+            },
+            "research_question_answerability": {
+              "type": "string",
+              "title": "Can the research question be answered with the requested YOUth data?"
+            },
+            "study_quality": {
+              "type": "string",
+              "title": "Is the quality of the proposal good? Is the study design correct?"
+            },
+            "logistical_feasibility": {
+              "type": "string",
+              "title": "Is the proposal logistically feasible?"
+            },
+            "study_value": {
+              "type": "string",
+              "title": "Is the study valuable?"
+            },
+            "researcher_expertise": {
+              "type": "string",
+              "title": "Does the researcher have the expertise necessary to correctly analyze and report on the research question at hand?"
+            },
+            "biological_samples": {
+              "type": "string",
+              "title": "Will biological samples be used?",
+              "enum": [
+                "No",
+                "Yes"
+              ],
+              "default": "No"
+            }
+          },
+          "dependencies": {
+            "biological_samples": {
+              "oneOf": [
+                {
+                  "properties": {
+                    "biological_samples": {
+                      "enum": [
+                        "No"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "biological_samples": {
+                      "enum": [
+                        "Yes"
+                      ]
+                    },
+                    "biological_samples_volume": {
+                      "type": "string",
+                      "title": "Is the volume requested reasonable and does it not seriously deplete the resource?"
+                    },
+                    "biological_samples_committee_approval": {
+                      "type": "string",
+                      "title": "Does the committee agree to the use of these samples for the specific research question?"
+                    }
+                  },
+                  "required": [
+                    "biological_samples_volume",
+                    "biological_samples_committee_approval"
+                  ]
+                }
+              ]
+            }
+          }
+        }';
+
+        $output = array();
+        $output['schema'] = json_decode($schema);
+
+        $this->output->set_content_type('application/json')->set_output(json_encode($output));
+    }
+
+    public function store_review()
+    {
+        $arrayPost = $this->input->post();
+
+        if ($this->input->server('REQUEST_METHOD') == 'POST') {
+            $rule = new ProdsRule(
+                $this->rodsuser->getRodsAccount(),
+                'rule { uuSubmitReview(*data, *requestId); }',
+                array('*data' => $arrayPost['formData'],
+                      '*requestId' => $arrayPost['requestId']),
+                array('ruleExecOut')
+            );
+
+            $result = json_decode($rule->execute()['ruleExecOut'], true);
+
+            if ($result['status'] == 0) {
+                $this->output
+                     ->set_content_type('application/json')
+                     ->set_output(json_encode($result));
+            } else {
+                $this->output
+                     ->set_content_type('application/json')
+                     ->set_status_header(500)
+                     ->set_output(json_encode($result));
+            }
+        }
+    }
+
+    public function reviewData($requestId) {
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            'rule { uuGetReview(*requestId); }',
+            array('*requestId' => $requestId),
             array('ruleExecOut')
         );
-        $result = $rule->execute()['ruleExecOut'];
 
-        # Return status info
-        if (json_decode($result, true)['status'] === 0) {
-            $this->output
-            ->set_content_type('application/json')
-            ->set_output($result);
+        $formData = json_decode($rule->execute()['ruleExecOut'], true)['reviewJSON'];
+
+        $this->output->set_content_type('application/json')->set_output($formData);
+    }
+
+    public function evaluate($requestId) {
+        // Load CSRF token
+        $tokenName = $this->security->get_csrf_token_name();
+        $tokenHash = $this->security->get_csrf_hash();
+
+        $viewParams = array(
+            'tokenName'        => $tokenName,
+            'tokenHash'        => $tokenHash,
+            'activeModule'     => 'datarequest',
+            'requestId'        => $requestId
+        );
+
+        loadView('/datarequest/evaluate', $viewParams);
+    }
+
+    public function evaluationSchema()
+    {
+        $schema = '
+        {
+          "type": "object",
+          "required": [
+            "evaluation"
+          ],
+          "properties": {
+            "evaluation": {
+              "type": "string",
+              "title": "This data request is",
+              "enum": [
+                "Accepted",
+                "Rejected"
+              ],
+              "default": "Rejected"
+            },
+            "remarks": {
+              "type": "string",
+              "title": "Rationale for evaluation"
+            }
+          }
+        }';
+
+        $uiSchema = '
+        {
+          "remarks": {
+            "ui:widget": "textarea"
+          }
+        }';
+
+        $output = array();
+        $output['schema'] = json_decode($schema);
+        $output['uiSchema'] = json_decode($uiSchema);
+
+        $this->output->set_content_type('application/json')->set_output(json_encode($output));
+    }
+
+    public function store_evaluation()
+    {
+        # Check if user is a Board of Directors representative. If not, do
+        # not allow the user to approve the datarequest
+        $rulebody = <<<EORULE
+        rule {
+            uuGroupUserExists(*group, "*user#*zone", false, *member);
+            *member = str(*member);
+        }
+EORULE;
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            $rulebody,
+                array(
+                    '*user'  => $this->rodsuser->getUserInfo()['name'],
+                    '*zone'  => $this->rodsuser->getUserInfo()['zone'],
+                    '*group' => 'datarequests-research-board-of-directors'
+                ),
+                array('*member')
+            );
+        $result = $rule->execute()['*member'];
+        $isBoardMember = $result == 'true' ? true : false;
+
+        if ($isBoardMember) {
+            $arrayPost = $this->input->post();
+            if ($this->input->server('REQUEST_METHOD') == 'POST') {
+                $rule = new ProdsRule(
+                    $this->rodsuser->getRodsAccount(),
+                    'rule { uuSubmitEvaluation(*data, *requestId); }',
+                    array('*data' => $arrayPost['formData'],
+                          '*requestId' => $arrayPost['requestId']),
+                    array('ruleExecOut')
+                );
+                $result = json_decode($rule->execute()['ruleExecOut'], true);
+                if ($result['status'] == 0) {
+                    $this->output
+                         ->set_content_type('application/json')
+                         ->set_output(json_encode($result));
+                } else {
+                    $this->output
+                         ->set_content_type('application/json')
+                         ->set_status_header(500)
+                         ->set_output(json_encode($result));
+                }
+            }
         } else {
-            $this->output
-                ->set_content_type('application/json')
-                ->set_status_header(500)
-                ->set_output($result);
+            $output['status']     = -2;
+            $output['statusInfo'] = "Uploading user is not a member of the " +
+                                    "Board of Directors.";
+
+            return $this->output
+                        ->set_content_type('application/json')
+                        ->set_status_header(403)
+                        ->set_output(json_encode($output));
+        }
+    }
+
+    public function upload_dta($requestId) {
+        # Check if user is a data manager
+        $rulebody = <<<EORULE
+        rule {
+            uuGroupUserExists(*group, "*user#*zone", false, *member);
+            *member = str(*member);
+        }
+EORULE;
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            $rulebody,
+                array(
+                    '*user'  => $this->rodsuser->getUserInfo()['name'],
+                    '*zone'  => $this->rodsuser->getUserInfo()['zone'],
+                    '*group' => 'datarequests-research-datamanagers'
+                ),
+                array('*member')
+            );
+        $result = $rule->execute()['*member'];
+        $isDatamanager = $result == 'true' ? true : false;
+
+        if ($isDatamanager) {
+            # Load Filesystem model
+            $this->load->model('filesystem');
+
+            # Replace original filename with "dta.pdf" for easier retrieval
+            # later on
+            $new_filename = "dta.pdf";
+            $_FILES["file"]["name"] = $new_filename;
+
+            # Construct path to data request directory (in which the document will
+            # be stored)
+            $filePath = '/tempZone/home/datarequests-research/' . $requestId . '/';
+            $rodsaccount = $this->rodsuser->getRodsAccount();
+
+            # Upload the document
+            $output = $this->filesystem->upload($rodsaccount, $filePath,
+                                                $_FILES["file"]);
+
+            # Give the researcher that owns the data request read permissions on
+            # the DTA document so he can download it
+            $rule = new ProdsRule(
+                $this->rodsuser->getRodsAccount(),
+                'rule { uuDTAGrantReadPermissions(*requestId, *username); }',
+                array('*requestId' => $requestId, '*username' => $this->rodsuser->getUserInfo()['name']),
+                array('ruleExecOut')
+            );
+
+            $result = json_decode($rule->execute()['ruleExecOut'], true);
+
+            # If upload succeeded, set status to "dta_ready", else return error
+            if ($output["status"] == "OK") {
+                # Set status to "dta_ready"
+                $rule = new ProdsRule(
+                    $this->rodsuser->getRodsAccount(),
+                    'rule { uuRequestDTAReady(*requestId, *currentUserName); }',
+                    array('*requestId' => $requestId,
+                          '*currentUserName' => $this->rodsuser->getUserInfo()['name']),
+                    array('ruleExecOut')
+                );
+
+                $result = json_decode($rule->execute()['ruleExecOut'], true);
+
+                if ($result['status'] == 0) {
+                    redirect('/datarequest/view/' + $requestId);
+                } else {
+                    return $this->output
+                                ->set_content_type('application/json')
+                                ->set_status_header(500)
+                                ->set_output(json_encode($result));
+                }
+            } else {
+                return $this->output
+                            ->set_content_type("application/json")
+                            ->set_status_header(500)
+                            ->set_output(json_encode($output));
+            }
+        } else {
+            $output['status']     = -2;
+            $output['statusInfo'] = "Uploading user is not a datamanager.";
+
+            return $this->output
+                        ->set_content_type('application/json')
+                        ->set_status_header(403)
+                        ->set_output(json_encode($output));
+        }
+    }
+
+    public function download_dta($requestId)
+    {
+        # Load Filesystem model
+        $this->load->model('filesystem');
+
+        $rodsaccount = $this->rodsuser->getRodsAccount();
+        $filePath = '/tempZone/home/datarequests-research/' . $requestId . '/dta.pdf';
+
+        $this->filesystem->download($rodsaccount, $filePath);
+    }
+
+    public function upload_signed_dta($requestId) {
+        # Check if user is the owner of the datarequest. If so, the approve
+        # button will not be rendered
+
+        # Set the default value of $isOwner to true
+        $isRequestOwner = true;
+        # Get username of datarequest owner
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            'rule { uuIsRequestOwner(*requestId, *currentUserName); }',
+            array('*requestId' => $requestId,
+                  '*currentUserName' => $this->rodsuser->getUserInfo()['name']),
+            array('ruleExecOut')
+        );
+        $result = json_decode($rule->execute()['ruleExecOut'], true);
+
+        # Get results of isRequestOwner call
+        if ($result['status'] == 0) {
+            $isRequestOwner = $result['isRequestOwner'];
+        }
+
+        if ($isRequestOwner) {
+            # Load Filesystem model
+            $this->load->model('filesystem');
+
+            # Replace original filename with "signed_dta.pdf" for easier
+            # retrieval later on
+            $new_filename = "signed_dta.pdf";
+            $_FILES["file"]["name"] = $new_filename;
+
+            # Construct path to data request directory (in which the document will
+            # be stored)
+            $filePath = '/tempZone/home/datarequests-research/' . $requestId . '/';
+            $rodsaccount = $this->rodsuser->getRodsAccount();
+
+            # Upload the document
+            $output = $this->filesystem->upload($rodsaccount, $filePath,
+                                                $_FILES["file"]);
+
+            # Give the data manager read permissions on the signed DTA so he can
+            # download it
+            $rule = new ProdsRule(
+                $this->rodsuser->getRodsAccount(),
+                'rule { uuSignedDTAGrantReadPermissions(*requestId, *username); }',
+                array('*requestId' => $requestId, '*username' => $this->rodsuser->getUserInfo()['name']),
+                array('ruleExecOut')
+            );
+
+            $result = json_decode($rule->execute()['ruleExecOut'], true);
+
+            # If upload succeeded, set status to "dta_signed", else return error
+            if ($output["status"] == "OK") {
+                # Set status to "dta_signed"
+                $rule = new ProdsRule(
+                    $this->rodsuser->getRodsAccount(),
+                    'rule { uuRequestDTASigned(*requestId, *currentUserName); }',
+                    array('*requestId' => $requestId,
+                          '*currentUserName' => $this->rodsuser->getUserInfo()['name']),
+                    array('ruleExecOut')
+                );
+
+                $result = json_decode($rule->execute()['ruleExecOut'], true);
+
+                if ($result['status'] == 0) {
+                    redirect('/datarequest/view/' . $requestId);
+                } else {
+                    return $this->output
+                                ->set_content_type('application/json')
+                                ->set_status_header(500)
+                                ->set_output(json_encode($result));
+                }
+            } else {
+                return $this->output
+                            ->set_content_type("application/json")
+                            ->set_status_header(500)
+                            ->set_output(json_encode($output));
+            }
+        } else {
+            $output['status']     = -2;
+            $output['statusInfo'] = "Uploading user does not own the data " +
+                                    "request.";
+
+            return $this->output
+                        ->set_content_type('application/json')
+                        ->set_status_header(403)
+                        ->set_output(json_encode($output));
+        }
+    }
+
+    public function download_signed_dta($requestId)
+    {
+        # Load Filesystem model
+        $this->load->model('filesystem');
+
+        $rodsaccount = $this->rodsuser->getRodsAccount();
+        $filePath = '/tempZone/home/datarequests-research/' . $requestId . '/signed_dta.pdf';
+
+        $this->filesystem->download($rodsaccount, $filePath);
+    }
+
+    public function data_ready($requestId) {
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            'rule { uuRequestDataReady(*requestId, *currentUserName); }',
+            array('*requestId' => $requestId,
+                  '*currentUserName' => $this->rodsuser->getUserInfo()['name']),
+            array('ruleExecOut')
+        );
+
+        $result = json_decode($rule->execute()['ruleExecOut'], true);
+
+        if ($result['status'] == 0) {
+            redirect('/datarequest/view/' . $requestId);
+        } else {
+            return $this->output
+                        ->set_content_type('application/json')
+                        ->set_status_header(500)
+                        ->set_output(json_encode($result));
         }
     }
 }
