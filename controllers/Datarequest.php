@@ -57,7 +57,7 @@ class Datarequest extends MY_Controller
 
         # Check if user is a Board of Directors representative. If not, do
         # not allow the user to approve the datarequest
-        $isBoardMember = $this->user->$isBoardMember();
+        $isBoardMember = $this->user->isBoardMember();
 
         # Check if user is a data manager
         $isDatamanager = $this->user->isDatamanager();
@@ -924,7 +924,7 @@ class Datarequest extends MY_Controller
     {
         # Check if user is a Board of Directors representative. If not, do
         # not allow the user to approve the datarequest
-        $isBoardMember = $this->user->$isBoardMember();
+        $isBoardMember = $this->user->isBoardMember();
 
         if ($isBoardMember) {
             $arrayPost = $this->input->post();
