@@ -1,6 +1,5 @@
 <script>
     var browsePageItems = <?php echo $items; ?>;
-    var view = 'browse';
 </script>
 
 <div class="row">
