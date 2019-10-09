@@ -1,6 +1,5 @@
 <script>
     var requestId = <?php echo $requestId; ?>;
-    var view = 'browse';
 </script>
 
 <div class="row">
@@ -50,6 +49,4 @@
 
 </div>
 
-<script type="text/javascript">
-</script>
 <script src="/datarequest/static/js/datarequest/evaluate.js" type="text/javascript"></script>
