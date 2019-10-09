@@ -20,6 +20,4 @@
         </div>
     </div>
 
-<script type="text/javascript">
-</script>
 <script src="/datarequest/static/js/datarequest/add.js" type="text/javascript"></script>
