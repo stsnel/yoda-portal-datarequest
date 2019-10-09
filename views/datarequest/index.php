@@ -11,11 +11,11 @@
             <table id="file-browser" class="table yoda-table table-striped">
                 <thead>
                     <tr>
-			<th>User</th>
+                        <th>User</th>
                         <th>Request ID</th>
                         <th>Research proposal</th>
                         <th>Submission date</th>
-			<th>Status</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
             </table>
