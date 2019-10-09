@@ -193,53 +193,149 @@ EORULE;
         $schema = '{
           "type": "object",
           "properties": {
-            "contact": {
+            "introduction": {
               "type": "object",
-              "title": "Contact person for the proposed study",
-              "description": "Please note that this should be level postdoc or higher.",
+              "title": "Introduction",
+              "description": "The information you provide here will be used by the YOUth Data Management Committee to evaluate your data request. Details on this evaluation procedure can be found in the Data Access Protocol. /// Moreover, your data request will be stored in an online repository available to all researchers who submit or have submitted a data request. The aim of this repository is to provide a searchable overview of past, current, and pending data requests. By default, we will publish the following information from your request on our researcher’s website: • After submission of a data request: the names and institutions of the contact person and participating researchers (Section 1) and the research context (Section 2). • After approval of a data request: the complete request (Section 1-5). /// Exception: If you believe that publishing the complete request could do harm (e.g. when you propose to use a novel analysis technique) you can object to publishing the complete request. This should be indicated on the data request form with a rationale (Section 5). The YOUth Data Management Committee will review your matter and advise the YOUth Executive Board whether or not to publish the complete request. If you do not agree with the YOUth Data Management Committee about publishing the complete request, you have the possibility to withdraw your data request."
+            },
+            "researchers": {
+              "type": "object",
+              "title": "Researchers",
+              "description": "In this section, please provide information about the researchers involved with this data request. • Name, affiliation and contact information of the contact person • Name and details of participating researchers (e.g. intended co-authors) • Name and details of the contact person within YOUth",
               "properties": {
-                "name": {
-                  "type": "string",
-                  "title": "Name"
+                "contacts": {
+                  "type": "array",
+                  "title": "Contact person for the proposed study",
+                  "description": "Please note that this should be level postdoc or higher.",
+                  "minItems": 1,
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "title": "Name"
+                      },
+                      "institution": {
+                        "type": "string",
+                        "title": "Institution"
+                      },
+                      "department": {
+                        "type": "string",
+                        "title": "Department"
+                      },
+                      "work_address": {
+                        "type": "string",
+                        "title": "Address"
+                      },
+                      "email": {
+                        "type": "string",
+                        "title": "Email"
+                      },
+                      "phone": {
+                        "type": "string",
+                        "title": "Phone"
+                      }
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "institution",
+                    "department",
+                    "work_address",
+                    "email",
+                    "phone"
+                  ]
                 },
-                "institution": {
+                "dmc_contact": {
                   "type": "string",
-                  "title": "Institution"
+                  "title": "Contact person in YOUth Data Management Committee",
+                  "enum": [
+                    "Prof. Dr. M.J.N.L. Benders / Wilhelmina Children\'s Hospital, UMCU / Neonatology / m.benders@umcutrecht.nl",
+                    "Prof. Dr. M. Dekovic / Utrecht University / Clinical Child and Family Studies / M.Dekovic@uu.nl",
+                    "Prof. Dr. S. Durston / UMCU / Psychiatry / s.durston@umcutrecht.nl",
+                    "Prof. Dr. H.E. Hulshoff Pol / UMCU / Psychiatry / h.e.hulshoff@umcutrecht.nl",
+                    "Prof. Dr. R.W.J. Kager / Utrecht University / Utrecht Institute of Linguistics OTS / R.W.J.Kager@uu.nl",
+                    "Prof. Dr. R. Kahn / Icahn School of Medicine, Mount Sinai, NY / Psychiatry / rkahn@umcutrecht.nl",
+                    "Prof. Dr. C. Kemner / Utrecht University / Developmental Psychology / C.Kemner@uu.nl",
+                    "Prof. Dr. P.M. Valkenburg / University of Amsterdam / Media, Youth and Society / P.M.Valkenburg@uva.nl",
+                    "Prof. Dr. W.A.M. Vollebergh / Utrecht University / Social Sciences / W.A.M.Vollebergh@uu.nl"
+                  ],
+                  "default": "Prof. Dr. M.J.N.L. Benders / Wilhelmina Children\'s Hospital, UMCU / Neonatology / m.benders@umcutrecht.nl"
+                }
+              }
+            },
+            "research_context": {
+              "type": "object",
+              "title": "Research context",
+              "description": "In this section, please briefly describe the context for your research plans. This section should logically introduce the next section (hypotheses). As mentioned, please note that this section will be made publicly available on our researcher’s website after submission of your request. /// Please provide: • The title of your research plan • A very brief background for the topic of your research plan • The rationale for and relevance of your specific research plan • The specific research question(s) or aim(s) of your research (Please also provide a brief specification) • A short description of the data you request /// References can be added at the end of this section (optional).",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "title": "Title of the study",
+                  "maxLength": 2700
                 },
-                "department": {
+                "background": {
                   "type": "string",
-                  "title": "Department"
+                  "title": "Background of the topic of your research plan, rationale, relevance (max. 500 words)"
                 },
-                "work_address": {
+                "research_question": {
                   "type": "string",
-                  "title": "Address"
+                  "title": "The specific research question(s) or aim(s) of your research"
                 },
-                "email": {
+                "requested_data_summary": {
                   "type": "string",
-                  "title": "Email"
+                  "title": "Summary of the data requested for your project",
+                  "description": "Please indicate which data you request to answer your research question."
                 },
-                "phone": {
+                "references": {
                   "type": "string",
-                  "title": "Phone"
-                },
-                "home_address": {
-                  "type": "string",
-                  "title": "Address (personal)"
+                  "title": "References",
+                  "description": "Optional"
                 }
               },
-              "required": [
-                "name",
-                "institution",
-                "department",
-                "work_address",
-                "email",
-                "phone",
-                "home_address"
-              ]
+              "required": ["title", "background", "research_question", "requested_data_summary"]
+            },
+            "hypotheses": {
+              "type": "object",
+              "title": "Hypotheses",
+              "description": "In this section, please provide your research hypotheses. For each hypothesis: • Be as specific as possible • Provide the anticipated outcomes for accepting and/or rejecting a hypothesis (or explain why this does not apply to your project, e.g. when using Bayesian statistics) /// Exception: if you plan a hypotheses-free project, please use this section to explain why you don’t formulate specific hypotheses.",
+              "properties": {
+                "hypotheses": {
+                  "type": "string",
+                  "title": "Hypotheses"
+                }
+              }
+            },
+            "methods": {
+              "type": "object",
+              "title": "Methods",
+              "description": "In this section, you should make clear how the hypotheses are tested. Be as specific as possible. /// Please describe: • The study design and study population (Which data do you require from which subjects?) • The general processing steps (to prepare the data for analysis) • The analysis steps (How are the data analysed to address the hypotheses? If possible, link each description to a specific hypothesis) • Any additional aspects that need to be described to clarify the methodological approach (optional)",
+              "properties": {
+                "design": {
+                  "type": "string",
+                  "title": "Study design, study population and sample size",
+                  "description": "E.g. cross-sectional or longitudinal; entire population or a subset; substantiate your choices."
+                },
+                "preparation": {
+                  "type": "string",
+                  "title": "General processing steps to prepare the data for analysis"
+                },
+                "processing": {
+                  "type": "string",
+                  "title": "Specific processing and analysis steps"
+                },
+                "additional_methodological_aspects": {
+                  "type": "string",
+                  "title": "Additional methodological aspects",
+                  "description": "Optional"
+                }
+              },
+              "required": ["design", "preparation", "processing"]
             },
             "datarequest": {
               "type": "object",
               "title": "Requested data",
+              "description": "In this section, please specify as detailed as possible which data (and from which subjects) you request. Include information regarding: • Which wave(s) • Which experiments, questionnaires, etc. • How many sets (sample-size) • Purpose of your data request • Other aspects relevant to your data request (optional).",
               "properties": {
                 "wave": {
                   "type": "array",
@@ -262,6 +358,20 @@ EORULE;
                   "minItems": 1,
                   "uniqueItems": true
                 },
+                "data": {
+                  "type": "string",
+                  "title": "Additional specifications",
+                  "description": "If necessary, please provide additional specifications on the data you would like to obtain (e.g. only of children of which the mother smoked during pregnancy)."
+                },
+                "experiments_and_number_of_sets": {
+                  "type": "string",
+                  "title": "Experiments and number of sets you request"
+                },
+                "other_remarks": {
+                  "type": "string",
+                  "title": "Other aspects relevant to your data request",
+                  "description": "Optional"
+                },
                 "purpose": {
                   "type": "array",
                   "title": "Purpose",
@@ -277,140 +387,18 @@ EORULE;
                   "minItems": 1,
                   "uniqueItems": true
                 },
-                "data": {
-                  "type": "string",
-                  "title": "Data",
-                  "description": "Please specify the data you would like to obtain from the selected wave(s)."
+                "data_lock_notification": {
+                  "type": "boolean",
+                  "title": "Would you like to be notified when a new data lock is available?",
+                  "description": "In principle, data will be made available in data locks twice a year. This means that twice a year, the data is locked on a specific date and that all approved data request projects will receive the same locked data set."
+                },
+                "publication_approval": {
+                  "type": "boolean",
+                  "title": "Do you agree with publishing the complete request on our researcher’s website after it is approved (by default)?"
                 }
               },
               "required": [
-                "wave", "purpose", "data"
-              ]
-            },
-            "general": {
-              "type": "object",
-              "title": "General",
-              "properties": {
-                "title": {
-                  "type": "string",
-                  "title": "Title of the study",
-                  "description": "One request per article.",
-                  "maxLength": 2700
-                }
-              },
-              "required": [
-                "title"
-              ]
-            },
-            "research_proposal": {
-              "type": "object",
-              "title": "Research proposal",
-              "description": "We ask you to provide us with a clear background, methods section and data-analysis plan. These parts of the proposal will be publicly displayed for reference.",
-              "properties": {
-                "background": {
-                  "type": "string",
-                  "title": "Background of the project",
-                  "description": "Please provide a short background including the rational of your study as you would do in an introduction of the paper."
-                },
-                "research_question": {
-                  "type": "string",
-                  "title": "Research question"
-                },
-                "methods": {
-                  "type": "string",
-                  "title": "Methods",
-                  "description": "Describe the methods as in the paper in which the data will be presented, according to the categories below, with a total maximum of 1500 words. For a description of task, methods etc. refer to the website, if possible."
-                },
-                "design": {
-                  "type": "string",
-                  "title": "Design of the study",
-                  "description": "For instance cross-sectional, longitudinal etc.; substantiate your choices."
-                },
-                "population": {
-                  "type": "string",
-                  "title": "Study population and sample-size",
-                  "description": "Entire population or a subset; substantiate your choices e.g. Provide a rationale for the requested sample-size, for instance using a power calculation."
-                },
-                "processing": {
-                  "type": "string",
-                  "title": "Data processing and preparation",
-                  "description": "Including necessary recoding of data etc."
-                },
-                "missing_data": {
-                  "type": "string",
-                  "title": "Handling missing data",
-                  "description": "Describe how you will detect and handle missingness in the data."
-                },
-                "analysis_methods": {
-                  "type": "string",
-                  "title": "Data analysis methods",
-                  "description": "Including statistical design and statistical analysis plan. If it is not possible to provide a detailed statistical plan, as this does not fit in with the research questions formulated above, please explain."
-                },
-                "subgroup_analyses": {
-                  "type": "string",
-                  "title": "Planned subgroup analyses",
-                  "description": "If applicable. Substantiate your choices."
-                },
-                "sensitivity_analyses": {
-                  "type": "string",
-                  "title": "Planned sensitivity analyses",
-                  "description": "Sensitivity analyses are analyses that you plan beforehand to test whether certain factors have a major influence on your results."
-                },
-                "timeline": {
-                  "type": "string",
-                  "title": "Timeline and milestones",
-                  "description": "Including dates of when to analyze/write up."
-                },
-                "output": {
-                  "type": "string",
-                  "title": "Output",
-                  "description": "e.g. article, report, thesis, etc."
-                },
-                "proposed_authors": {
-                  "type": "string",
-                  "title": "Proposed authors and their affiliations",
-                  "description": "Please note that the YOUth Data Access Committee can request certain authors to be included."
-                }
-              },
-              "required": [
-                "background",
-                "research_question",
-                "methods",
-                "design",
-                "population",
-                "processing",
-                "missing_data",
-                "analysis_methods",
-                "subgroup_analyses",
-                "sensitivity_analyses",
-                "timeline",
-                "output",
-                "proposed_authors"
-              ]
-            },
-            "website": {
-              "type": "object",
-              "title": "Website",
-              "description": "All approved data requests will be made publicly available on our website. Please provide your website summary below.",
-              "properties": {
-                "project_title": {
-                  "type": "string",
-                  "title": "Project title"
-                },
-                "research_question_summary": {
-                  "type": "string",
-                  "title": "Website summary of research question of your project (max. 200 words)"
-                },
-                "requested_data_summary": {
-                  "type": "string",
-                  "title": "Website summary of the data requested for your project",
-                  "description": "Please indicate which data you requested to answer your research question"
-                }
-              },
-              "required": [
-                "project_title",
-                "research_question_summary",
-                "requested_data_summary"
+                "wave", "purpose", "experiments_and_number_of_sets", "data_lock_notification", "publication_approval"
               ]
             },
             "contribution": {
@@ -558,6 +546,43 @@ EORULE;
           "title": {
             "ui:autofocus": true
           },
+          "researchers": {
+            "contacts": {
+              "ui:options": {
+                "orderable": false
+              }
+            }
+          },
+          "research_context": {
+            "background": {
+              "ui:widget": "textarea"
+            },
+            "research_question": {
+              "ui:widget": "textarea"
+            },
+            "requested_data_summary": {
+              "ui:widget": "textarea"
+            },
+            "references": {
+              "ui:widget": "textarea"
+            }
+          },
+          "hypotheses": {
+            "hypotheses": {
+              "ui:widget": "textarea"
+            }
+          },
+          "methods": {
+            "design": {
+              "ui:widget": "textarea"
+            },
+            "preparation": {
+              "ui:widget": "textarea"
+            },
+            "processing": {
+              "ui:widget": "textarea"
+            }
+          },
           "datarequest": {
             "wave": {
               "ui:widget": "checkboxes"
@@ -568,44 +593,12 @@ EORULE;
             },
             "data": {
               "ui:widget": "textarea"
-            }
-          },
-          "research_proposal": {
-            "background": {
-              "ui:widget": "textarea"
             },
-            "methods": {
-              "ui:widget": "textarea"
+            "data_lock_notification": {
+              "ui:widget": "radio"
             },
-            "design": {
-              "ui:widget": "textarea"
-            },
-            "population": {
-              "ui:widget": "textarea"
-            },
-            "processing": {
-              "ui:widget": "textarea"
-            },
-            "missing_data": {
-              "ui:widget": "textarea"
-            },
-            "analysis_methods": {
-              "ui:widget": "textarea"
-            },
-            "subgroup_analyses": {
-              "ui:widget": "textarea"
-            },
-            "sensitivity_analyses": {
-              "ui:widget": "textarea"
-            },
-            "timeline": {
-              "ui:widget": "textarea"
-            },
-            "output": {
-              "ui:widget": "textarea"
-            },
-            "proposed_authors": {
-              "ui:widget": "textarea"
+            "publication_approval": {
+              "ui:widget": "radio"
             }
           },
           "person": {
