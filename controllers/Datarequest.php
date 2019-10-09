@@ -57,44 +57,10 @@ class Datarequest extends MY_Controller
 
         # Check if user is a Board of Directors representative. If not, do
         # not allow the user to approve the datarequest
-        $rulebody = <<<EORULE
-        rule {
-            uuGroupUserExists(*group, "*user#*zone", false, *member);
-            *member = str(*member);
-        }
-EORULE;
-        $rule = new ProdsRule(
-            $this->rodsuser->getRodsAccount(),
-            $rulebody,
-                array(
-                    '*user'  => $this->rodsuser->getUserInfo()['name'],
-                    '*zone'  => $this->rodsuser->getUserInfo()['zone'],
-                    '*group' => 'datarequests-research-board-of-directors'
-                ),
-                array('*member')
-            );
-        $result = $rule->execute()['*member'];
-        $isBoardMember = $result == 'true' ? true : false;
+        $isBoardMember = $this->user->isBoardMember();
 
         # Check if user is a data manager
-        $rulebody = <<<EORULE
-        rule {
-            uuGroupUserExists(*group, "*user#*zone", false, *member);
-            *member = str(*member);
-        }
-EORULE;
-        $rule = new ProdsRule(
-            $this->rodsuser->getRodsAccount(),
-            $rulebody,
-                array(
-                    '*user'  => $this->rodsuser->getUserInfo()['name'],
-                    '*zone'  => $this->rodsuser->getUserInfo()['zone'],
-                    '*group' => 'datarequests-research-datamanagers'
-                ),
-                array('*member')
-            );
-        $result = $rule->execute()['*member'];
-        $isDatamanager = $result == 'true' ? true : false;
+        $isDatamanager = $this->user->isDatamanager();
 
         # Check if user is the owner of the datarequest. If so, the approve
         # button will not be rendered
@@ -700,24 +666,7 @@ EORULE;
 
     public function assignRequest() {
         # Check if user is a data manager
-        $rulebody = <<<EORULE
-        rule {
-            uuGroupUserExists(*group, "*user#*zone", false, *member);
-            *member = str(*member);
-        }
-EORULE;
-        $rule = new ProdsRule(
-            $this->rodsuser->getRodsAccount(),
-            $rulebody,
-                array(
-                    '*user'  => $this->rodsuser->getUserInfo()['name'],
-                    '*zone'  => $this->rodsuser->getUserInfo()['zone'],
-                    '*group' => 'datarequests-research-datamanagers'
-                ),
-                array('*member')
-            );
-        $result = $rule->execute()['*member'];
-        $isDatamanager = $result == 'true' ? true : false;
+        $isDatamanager = $this->user->isDatamanager();
 
         if ($isDatamanager) {
             # Get input parameters
@@ -968,24 +917,7 @@ EORULE;
     {
         # Check if user is a Board of Directors representative. If not, do
         # not allow the user to approve the datarequest
-        $rulebody = <<<EORULE
-        rule {
-            uuGroupUserExists(*group, "*user#*zone", false, *member);
-            *member = str(*member);
-        }
-EORULE;
-        $rule = new ProdsRule(
-            $this->rodsuser->getRodsAccount(),
-            $rulebody,
-                array(
-                    '*user'  => $this->rodsuser->getUserInfo()['name'],
-                    '*zone'  => $this->rodsuser->getUserInfo()['zone'],
-                    '*group' => 'datarequests-research-board-of-directors'
-                ),
-                array('*member')
-            );
-        $result = $rule->execute()['*member'];
-        $isBoardMember = $result == 'true' ? true : false;
+        $isBoardMember = $this->user->isBoardMember();
 
         if ($isBoardMember) {
             $arrayPost = $this->input->post();
@@ -1023,24 +955,7 @@ EORULE;
 
     public function upload_dta($requestId) {
         # Check if user is a data manager
-        $rulebody = <<<EORULE
-        rule {
-            uuGroupUserExists(*group, "*user#*zone", false, *member);
-            *member = str(*member);
-        }
-EORULE;
-        $rule = new ProdsRule(
-            $this->rodsuser->getRodsAccount(),
-            $rulebody,
-                array(
-                    '*user'  => $this->rodsuser->getUserInfo()['name'],
-                    '*zone'  => $this->rodsuser->getUserInfo()['zone'],
-                    '*group' => 'datarequests-research-datamanagers'
-                ),
-                array('*member')
-            );
-        $result = $rule->execute()['*member'];
-        $isDatamanager = $result == 'true' ? true : false;
+        $isDatamanager = $this->user->isDatamanager();
 
         if ($isDatamanager) {
             # Load Filesystem model
