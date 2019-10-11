@@ -92,7 +92,7 @@
             <div class="panel-heading clearfix">
                 <h3 class="panel-title pull-left">Data request: <?php echo html_escape($requestId) ?></h3>
                 <div class="pull-right">
-                    <a class="btn btn-default" href="datarequest">Back</a>
+                    <a class="btn btn-default" href="/datarequest">Back</a>
                 </div>
             </div>
             <div class="panel-body">
