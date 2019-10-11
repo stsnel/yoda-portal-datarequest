@@ -34,6 +34,8 @@ class Datarequest extends MY_Controller
     }
 
     public function view($requestId) {
+        $this->load->model('user');
+
         // Load CSRF token
         $tokenName = $this->security->get_csrf_token_name();
         $tokenHash = $this->security->get_csrf_hash();
@@ -665,6 +667,8 @@ class Datarequest extends MY_Controller
     }
 
     public function assignRequest() {
+        $this->load->model('user');
+
         # Check if user is a data manager
         $isDatamanager = $this->user->isDatamanager();
 
@@ -915,6 +919,8 @@ class Datarequest extends MY_Controller
 
     public function store_evaluation()
     {
+        $this->load->model('user');
+
         # Check if user is a Board of Directors representative. If not, do
         # not allow the user to approve the datarequest
         $isBoardMember = $this->user->isBoardMember();
@@ -954,6 +960,8 @@ class Datarequest extends MY_Controller
     }
 
     public function upload_dta($requestId) {
+        $this->load->model('user');
+
         # Check if user is a data manager
         $isDatamanager = $this->user->isDatamanager();
 
