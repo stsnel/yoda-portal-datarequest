@@ -6,9 +6,6 @@
  * @copyright  Copyright (c) 2019, Utrecht University. All rights reserved.
  * @license    GPLv3, see LICENSE.
  */
-use JsonSchema\SchemaStorage;
-use JsonSchema\Validator;
-use JsonSchema\Constraints\Factory;
 
 class Datarequest extends MY_Controller
 {
