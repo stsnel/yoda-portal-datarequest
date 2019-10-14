@@ -1,13 +1,13 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /**
- * Proposal model
+ * Datarequest model
  *
  * @package    Yoda
  * @copyright  Copyright (c) 2019, Utrecht University. All rights reserved.
  * @license    GPLv3, see LICENSE.
  */
 
-class Datarequest_model extends CI_Model
+class Datarequest extends CI_Model
 {
     function submit($data)
     {
