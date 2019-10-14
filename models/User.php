@@ -61,4 +61,29 @@ EORULE;
 
         return $result == 'true' ? true : false;
     }
+
+    /**
+     * Check if user is the owner of a datarequest.
+     */
+    function isRequestOwner($requestId)
+    {
+        $isRequestOwner = false;
+
+        # Get username of datarequest owner.
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            'rule { uuIsRequestOwner(*requestId, *currentUserName); }',
+            array('*requestId' => $requestId,
+                  '*currentUserName' => $this->rodsuser->getUserInfo()['name']),
+            array('ruleExecOut')
+        );
+        $result = json_decode($rule->execute()['ruleExecOut'], true);
+
+        # Get results of isRequestOwner call.
+        if ($result['status'] == 0) {
+            $isRequestOwner = $result['isRequestOwner'];
+        }
+
+        return $isRequestOwner;
+    }
 }

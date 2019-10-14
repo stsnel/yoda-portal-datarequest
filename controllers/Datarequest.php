@@ -63,22 +63,7 @@ class Datarequest extends MY_Controller
 
         # Check if user is the owner of the datarequest. If so, the approve
         # button will not be rendered
-
-        # Set the default value of $isOwner to true
-        $isRequestOwner = true;
-        # Get username of datarequest owner
-        $rule = new ProdsRule(
-            $this->rodsuser->getRodsAccount(),
-            'rule { uuIsRequestOwner(*requestId, *currentUserName); }',
-            array('*requestId' => $requestId,
-                  '*currentUserName' => $this->rodsuser->getUserInfo()['name']),
-            array('ruleExecOut')
-        );
-        $result = json_decode($rule->execute()['ruleExecOut'], true);
-        # Get results of isRequestOwner call
-        if ($result['status'] == 0) {
-            $isRequestOwner = $result['isRequestOwner'];
-        }
+        $isRequestOwner = $this->user->isRequestOwner($requestId);
 
         # Check if user is assigned to review this proposal
         $isReviewer = false;
@@ -1043,23 +1028,7 @@ class Datarequest extends MY_Controller
     public function upload_signed_dta($requestId) {
         # Check if user is the owner of the datarequest. If so, the approve
         # button will not be rendered
-
-        # Set the default value of $isOwner to true
-        $isRequestOwner = true;
-        # Get username of datarequest owner
-        $rule = new ProdsRule(
-            $this->rodsuser->getRodsAccount(),
-            'rule { uuIsRequestOwner(*requestId, *currentUserName); }',
-            array('*requestId' => $requestId,
-                  '*currentUserName' => $this->rodsuser->getUserInfo()['name']),
-            array('ruleExecOut')
-        );
-        $result = json_decode($rule->execute()['ruleExecOut'], true);
-
-        # Get results of isRequestOwner call
-        if ($result['status'] == 0) {
-            $isRequestOwner = $result['isRequestOwner'];
-        }
+        $isRequestOwner = $this->user->isRequestOwner($requestId);
 
         if ($isRequestOwner) {
             # Load Filesystem model
