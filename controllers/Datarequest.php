@@ -65,19 +65,8 @@ class Datarequest extends MY_Controller
         # button will not be rendered
         $isRequestOwner = $this->user->isRequestOwner($requestId);
 
-        # Check if user is assigned to review this proposal
-        $isReviewer = false;
-        $rule = new ProdsRule(
-            $this->rodsuser->getRodsAccount(),
-            'rule { uuIsReviewer(*requestId, *currentUserName); }',
-            array('*requestId' => $requestId,
-                  '*currentUserName' => $this->rodsuser->getUserInfo()['name']),
-            array('ruleExecOut')
-        );
-        $result = json_decode($rule->execute()['ruleExecOut'], true);
-        if ($result['status'] == 0) {
-            $isReviewer = $result['isReviewer'];
-        }
+        # Check if user is assigned to review this proposal.
+        $isReviewer = $this->user->isReviewer($requestId);
 
         # Set view params and render the view
         $viewParams = array(
