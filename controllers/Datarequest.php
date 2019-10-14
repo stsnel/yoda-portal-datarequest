@@ -6,9 +6,6 @@
  * @copyright  Copyright (c) 2019, Utrecht University. All rights reserved.
  * @license    GPLv3, see LICENSE.
  */
-use JsonSchema\SchemaStorage;
-use JsonSchema\Validator;
-use JsonSchema\Constraints\Factory;
 
 class Datarequest extends MY_Controller
 {
@@ -66,36 +63,10 @@ class Datarequest extends MY_Controller
 
         # Check if user is the owner of the datarequest. If so, the approve
         # button will not be rendered
+        $isRequestOwner = $this->user->isRequestOwner($requestId);
 
-        # Set the default value of $isOwner to true
-        $isRequestOwner = true;
-        # Get username of datarequest owner
-        $rule = new ProdsRule(
-            $this->rodsuser->getRodsAccount(),
-            'rule { uuIsRequestOwner(*requestId, *currentUserName); }',
-            array('*requestId' => $requestId,
-                  '*currentUserName' => $this->rodsuser->getUserInfo()['name']),
-            array('ruleExecOut')
-        );
-        $result = json_decode($rule->execute()['ruleExecOut'], true);
-        # Get results of isRequestOwner call
-        if ($result['status'] == 0) {
-            $isRequestOwner = $result['isRequestOwner'];
-        }
-
-        # Check if user is assigned to review this proposal
-        $isReviewer = false;
-        $rule = new ProdsRule(
-            $this->rodsuser->getRodsAccount(),
-            'rule { uuIsReviewer(*requestId, *currentUserName); }',
-            array('*requestId' => $requestId,
-                  '*currentUserName' => $this->rodsuser->getUserInfo()['name']),
-            array('ruleExecOut')
-        );
-        $result = json_decode($rule->execute()['ruleExecOut'], true);
-        if ($result['status'] == 0) {
-            $isReviewer = $result['isReviewer'];
-        }
+        # Check if user is assigned to review this proposal.
+        $isReviewer = $this->user->isReviewer($requestId);
 
         # Set view params and render the view
         $viewParams = array(
@@ -138,10 +109,10 @@ class Datarequest extends MY_Controller
     {
         $arrayPost = $this->input->post();
 
-        $this->load->model('Datarequest_model');
+        $this->load->model('Datarequest');
 
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
-            $result = $this->Datarequest_model->submit($arrayPost['formData']);
+            $result = $this->Datarequest->submit($arrayPost['formData']);
 
             if ($result['status'] == 0) {
                 $this->output
@@ -603,7 +574,7 @@ class Datarequest extends MY_Controller
 
     public function overview_data()
     {
-        $this->load->model('Datarequest_model');
+        $this->load->model('Datarequest');
 
         # Get configured defaults
         $itemsPerPage = $this->config->item('browser-items-per-page');
@@ -615,7 +586,7 @@ class Datarequest extends MY_Controller
         $draw = $this->input->get('draw');
 
         # Fetch data from iRODS
-        $data = $this->Datarequest_model->overview($length, $start);
+        $data = $this->Datarequest->overview($length, $start);
 
         # Extract summary statistics from data
         $totalItems = $data['summary']['total'];
@@ -1046,23 +1017,7 @@ class Datarequest extends MY_Controller
     public function upload_signed_dta($requestId) {
         # Check if user is the owner of the datarequest. If so, the approve
         # button will not be rendered
-
-        # Set the default value of $isOwner to true
-        $isRequestOwner = true;
-        # Get username of datarequest owner
-        $rule = new ProdsRule(
-            $this->rodsuser->getRodsAccount(),
-            'rule { uuIsRequestOwner(*requestId, *currentUserName); }',
-            array('*requestId' => $requestId,
-                  '*currentUserName' => $this->rodsuser->getUserInfo()['name']),
-            array('ruleExecOut')
-        );
-        $result = json_decode($rule->execute()['ruleExecOut'], true);
-
-        # Get results of isRequestOwner call
-        if ($result['status'] == 0) {
-            $isRequestOwner = $result['isRequestOwner'];
-        }
+        $isRequestOwner = $this->user->isRequestOwner($requestId);
 
         if ($isRequestOwner) {
             # Load Filesystem model
