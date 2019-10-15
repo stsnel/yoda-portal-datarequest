@@ -109,10 +109,10 @@ class Datarequest extends MY_Controller
     {
         $arrayPost = $this->input->post();
 
-        $this->load->model('Datarequest');
+        $this->load->model('Datarequest_model');
 
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
-            $result = $this->Datarequest->submit($arrayPost['formData']);
+            $result = $this->Datarequest_model->submit($arrayPost['formData']);
 
             if ($result['status'] == 0) {
                 $this->output
@@ -574,7 +574,7 @@ class Datarequest extends MY_Controller
 
     public function overview_data()
     {
-        $this->load->model('Datarequest');
+        $this->load->model('Datarequest_model');
 
         # Get configured defaults
         $itemsPerPage = $this->config->item('browser-items-per-page');
@@ -586,7 +586,7 @@ class Datarequest extends MY_Controller
         $draw = $this->input->get('draw');
 
         # Fetch data from iRODS
-        $data = $this->Datarequest->overview($length, $start);
+        $data = $this->Datarequest_model->overview($length, $start);
 
         # Extract summary statistics from data
         $totalItems = $data['summary']['total'];
