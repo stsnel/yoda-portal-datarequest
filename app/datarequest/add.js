@@ -32,11 +32,20 @@ class YodaForm extends React.Component {
                   schema={schema}
                   idPrefix={"yoda"}
                   uiSchema={uiSchema}
+                  fields={fields}
                   onSubmit={onSubmit}>
                 <button ref={(btn) => {this.submitButton=btn;}} className="hidden" />
             </Form>
         );
     }
+};
+
+const CustomDescriptionField = ({id, description}) => {
+  return <div id={id} dangerouslySetInnerHTML={{ __html: description }}></div>;
+};
+
+const fields = {
+  DescriptionField: CustomDescriptionField
 };
 
 class YodaButtons extends React.Component {

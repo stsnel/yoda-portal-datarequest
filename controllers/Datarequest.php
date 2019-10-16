@@ -135,12 +135,12 @@ class Datarequest extends MY_Controller
             "introduction": {
               "type": "object",
               "title": "Introduction",
-              "description": "The information you provide here will be used by the YOUth Data Management Committee to evaluate your data request. Details on this evaluation procedure can be found in the Data Access Protocol. /// Moreover, your data request will be stored in an online repository available to all researchers who submit or have submitted a data request. The aim of this repository is to provide a searchable overview of past, current, and pending data requests. By default, we will publish the following information from your request on our researcher’s website: • After submission of a data request: the names and institutions of the contact person and participating researchers (Section 1) and the research context (Section 2). • After approval of a data request: the complete request (Section 1-5). /// Exception: If you believe that publishing the complete request could do harm (e.g. when you propose to use a novel analysis technique) you can object to publishing the complete request. This should be indicated on the data request form with a rationale (Section 5). The YOUth Data Management Committee will review your matter and advise the YOUth Executive Board whether or not to publish the complete request. If you do not agree with the YOUth Data Management Committee about publishing the complete request, you have the possibility to withdraw your data request."
+              "description": "The information you provide here will be used by the YOUth Data Management Committee to evaluate your data request. Details on this evaluation procedure can be found in the Data Access Protocol.<br/><br/>Moreover, your data request will be stored in an online repository available to all researchers who submit or have submitted a data request. The aim of this repository is to provide a searchable overview of past, current, and pending data requests. By default, we will publish the following information from your request on our researcher’s website:<br/><ul><li><u>After submission of a data request</u>: the names and institutions of the contact person and participating researchers (<b>Section 1</b>) and the research context (<b>Section 2</b>).</li><li><u>After approval of a data request</u>: the complete request (<b>Section 1-5</b>).<br><i>Exception</i>: If you believe that publishing the complete request could do harm (e.g. when you propose to use a novel analysis technique) you can object to publishing the complete request. This should be indicated on the data request form with a rationale (<b>Section 5</b>). The YOUth Data Management Committee will review your matter and advise the YOUth Executive Board whether or not to publish the complete request. If you do not agree with the YOUth Data Management Committee about publishing the complete request, you have the possibility to withdraw your data request.</li></ul>"
             },
             "researchers": {
               "type": "object",
               "title": "Researchers",
-              "description": "In this section, please provide information about the researchers involved with this data request. • Name, affiliation and contact information of the contact person • Name and details of participating researchers (e.g. intended co-authors) • Name and details of the contact person within YOUth",
+              "description": "In this section, please provide information about the researchers involved with this data request.</br><ul><li>Name, affiliation and contact information of the contact person</li><li>Name and details of participating researchers (e.g. intended co-authors)</li><li>Name and details of the contact person within YOUth</li></ul>",
               "properties": {
                 "contacts": {
                   "type": "array",
@@ -206,7 +206,7 @@ class Datarequest extends MY_Controller
             "research_context": {
               "type": "object",
               "title": "Research context",
-              "description": "In this section, please briefly describe the context for your research plans. This section should logically introduce the next section (hypotheses). As mentioned, please note that this section will be made publicly available on our researcher’s website after submission of your request. /// Please provide: • The title of your research plan • A very brief background for the topic of your research plan • The rationale for and relevance of your specific research plan • The specific research question(s) or aim(s) of your research (Please also provide a brief specification) • A short description of the data you request /// References can be added at the end of this section (optional).",
+              "description": "In this section, please briefly describe the context for your research plans. This section should logically introduce the next section (hypotheses). As mentioned, please note that this section will be made publicly available on our researcher’s website after submission of your request.<br/>Please provide:<br/><ul><li>The title of your research plan</li><li>A very brief background for the topic of your research plan</li><li>The rationale for and relevance of your specific research plan</li><li>The specific research question(s) or aim(s) of your research (Please also provide a brief specification)</li><li>A short description of the data you request</li></ul>References can be added at the end of this section (optional).",
               "properties": {
                 "title": {
                   "type": "string",
@@ -237,7 +237,7 @@ class Datarequest extends MY_Controller
             "hypotheses": {
               "type": "object",
               "title": "Hypotheses",
-              "description": "In this section, please provide your research hypotheses. For each hypothesis: • Be as specific as possible • Provide the anticipated outcomes for accepting and/or rejecting a hypothesis (or explain why this does not apply to your project, e.g. when using Bayesian statistics) /// Exception: if you plan a hypotheses-free project, please use this section to explain why you don’t formulate specific hypotheses.",
+              "description": "In this section, please provide your research hypotheses. For each hypothesis:<ul><li>Be as specific as possible</li><li>Provide the anticipated outcomes for accepting and/or rejecting a hypothesis (or explain why this does not apply to your project, e.g. when using Bayesian statistics)</li></ul><i>Exception</i>: if you plan a hypotheses-free project, please use this section to explain why you don’t formulate specific hypotheses.",
               "properties": {
                 "hypotheses": {
                   "type": "string",
@@ -248,7 +248,7 @@ class Datarequest extends MY_Controller
             "methods": {
               "type": "object",
               "title": "Methods",
-              "description": "In this section, you should make clear how the hypotheses are tested. Be as specific as possible. /// Please describe: • The study design and study population (Which data do you require from which subjects?) • The general processing steps (to prepare the data for analysis) • The analysis steps (How are the data analysed to address the hypotheses? If possible, link each description to a specific hypothesis) • Any additional aspects that need to be described to clarify the methodological approach (optional)",
+              "description": "In this section, you should make clear how the hypotheses are tested. Be as specific as possible.<br/>Please describe:<ul><li>The study design and study population (Which data do you require from which subjects?)</li><li>The general processing steps (to prepare the data for analysis)</li>The analysis steps (How are the data analysed to address the hypotheses? If possible, link each description to a specific hypothesis)</li><li>Any additional aspects that need to be described to clarify the methodological approach (optional)</li></ul>",
               "properties": {
                 "design": {
                   "type": "string",
@@ -274,7 +274,7 @@ class Datarequest extends MY_Controller
             "datarequest": {
               "type": "object",
               "title": "Requested data",
-              "description": "In this section, please specify as detailed as possible which data (and from which subjects) you request. Include information regarding: • Which wave(s) • Which experiments, questionnaires, etc. • How many sets (sample-size) • Purpose of your data request • Other aspects relevant to your data request (optional).",
+              "description": "In this section, please specify as detailed as possible which data (and from which subjects) you request. Include information regarding:<ul><li>Which wave(s)</li><li>Which experiments, questionnaires, etc.</li><li>How many sets (sample-size)</li><li>Purpose of your data request</li><li>Other aspects relevant to your data request (optional).</li></ul>",
               "properties": {
                 "wave": {
                   "type": "array",
