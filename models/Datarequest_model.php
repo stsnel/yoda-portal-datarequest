@@ -7,7 +7,7 @@
  * @license    GPLv3, see LICENSE.
  */
 
-class Datarequest extends CI_Model
+class Datarequest_model extends CI_Model
 {
     function submit($data)
     {
