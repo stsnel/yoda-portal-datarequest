@@ -677,7 +677,7 @@ class Datarequest extends MY_Controller
               "type": "string",
               "title": "This data request is",
               "enum": [
-                "Accepted",
+                "Accepted for review",
                 "Rejected"
               ]
             },
