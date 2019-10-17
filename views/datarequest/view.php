@@ -83,6 +83,9 @@
 <?php if ($requestStatus == "assigned" && $isReviewer): ?>
     <a href="/datarequest/review/<?php echo html_escape($requestId) ?>" class="btn btn-default pull-right" role="button">Review data request</a>
 <?php endif ?>
+<?php if ($requestStatus == "accepted_for_review" && $isDatamanager): ?>
+    <a href="/datarequest/datamanagerreview/<?php echo html_escape($requestId) ?>" class="btn btn-default pull-right" role="button">Data manager review</a>
+<?php endif ?>
 <?php if ($requestStatus == "submitted" && $isBoardMember): ?>
     <a href="/datarequest/preliminaryreview/<?php echo html_escape($requestId) ?>" class="btn btn-default pull-right" role="button">Preliminary review</a>
 <?php endif ?>
