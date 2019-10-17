@@ -745,6 +745,134 @@ class Datarequest extends MY_Controller
         $this->output->set_content_type('application/json')->set_output(json_encode($output));
     }
 
+    public function preliminaryReviewData($requestId) {
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            'rule { uuGetPreliminaryReview(*requestId); }',
+            array('*requestId' => $requestId),
+            array('ruleExecOut')
+        );
+
+        $formData = json_decode($rule->execute()['ruleExecOut'], true)['preliminaryReviewJSON'];
+
+        $this->output->set_content_type('application/json')->set_output($formData);
+    }
+
+    public function datamanagerReview($requestId) {
+        // Load CSRF token
+        $tokenName = $this->security->get_csrf_token_name();
+        $tokenHash = $this->security->get_csrf_hash();
+
+        $viewParams = array(
+            'tokenName'        => $tokenName,
+            'tokenHash'        => $tokenHash,
+            'activeModule'     => 'datarequest',
+            'requestId'        => $requestId
+        );
+
+        loadView('/datarequest/datamanagerreview', $viewParams);
+    }
+
+    public function storeDatamanagerReview()
+    {
+        $arrayPost = $this->input->post();
+
+        if ($this->input->server('REQUEST_METHOD') == 'POST') {
+            $rule = new ProdsRule(
+                $this->rodsuser->getRodsAccount(),
+                'rule { uuSubmitDatamanagerReview(*data, *requestId); }',
+                array('*data' => $arrayPost['formData'],
+                      '*requestId' => $arrayPost['requestId']),
+                array('ruleExecOut')
+            );
+
+            $result = json_decode($rule->execute()['ruleExecOut'], true);
+
+            if ($result['status'] == 0) {
+                $this->output
+                     ->set_content_type('application/json')
+                     ->set_output(json_encode($result));
+            } else {
+                $this->output
+                     ->set_content_type('application/json')
+                     ->set_status_header(500)
+                     ->set_output(json_encode($result));
+            }
+        }
+    }
+
+    public function datamanagerReviewSchema()
+    {
+        $schema = '
+        {
+          "type": "object",
+          "title": "Data manager review",
+          "properties": {
+            "datamanager_review": {
+              "type": "string",
+              "title": "I advise that this data request be",
+              "enum": [
+                "Accepted",
+                "Rejected"
+              ]
+            },
+            "datamanager_remarks": {
+              "type": "string",
+              "title": "Data manager remarks",
+              "description": "Any advisory remarks about the data request go here. In case of rejection, an explanation is mandatory. The researcher cannot read these remarks."
+            }
+          },
+          "dependencies": {
+            "datamanager_review": {
+              "oneOf": [
+                {
+                  "properties": {
+                    "datamanager_review": {
+                      "enum": [
+                        "Accepted"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "datamanager_review": {
+                      "enum": [
+                        "Rejected"
+                      ]
+                    },
+                    "datamanager_remarks": {
+                      "type": "string",
+                      "title": "Data manager remarks",
+                      "description": "Any advisory remarks about the data request go here. In case of rejection, an explanation is mandatory. The researcher cannot read these remarks."
+                    }
+                  },
+                  "required": [
+                    "datamanager_remarks"
+                  ]
+                }
+              ]
+            }
+          },
+          "required": [
+            "datamanager_review"
+          ]
+        }';
+
+        $uiSchema = '
+        {
+          "datamanager_remarks": {
+            "ui:widget": "textarea"
+          }
+        }';
+
+        $output = array();
+        $output['schema'] = json_decode($schema);
+        $output['uiSchema'] = json_decode($uiSchema);
+
+        $this->output->set_content_type('application/json')->set_output(json_encode($output));
+    }
+
     public function dmcmembers() {
         $rule = new ProdsRule(
             $this->rodsuser->getRodsAccount(),
