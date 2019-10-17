@@ -873,6 +873,19 @@ class Datarequest extends MY_Controller
         $this->output->set_content_type('application/json')->set_output(json_encode($output));
     }
 
+    public function datamanagerReviewData($requestId) {
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            'rule { uuGetDatamanagerReview(*requestId); }',
+            array('*requestId' => $requestId),
+            array('ruleExecOut')
+        );
+
+        $formData = json_decode($rule->execute()['ruleExecOut'], true)['datamanagerReviewJSON'];
+
+        $this->output->set_content_type('application/json')->set_output($formData);
+    }
+
     public function dmcmembers() {
         $rule = new ProdsRule(
             $this->rodsuser->getRodsAccount(),
@@ -886,6 +899,111 @@ class Datarequest extends MY_Controller
         $this->output
              ->set_content_type('application/json')
              ->set_output($result);
+    }
+
+    public function assign($requestId) {
+        // Load CSRF token
+        $tokenName = $this->security->get_csrf_token_name();
+        $tokenHash = $this->security->get_csrf_hash();
+
+        $viewParams = array(
+            'tokenName'        => $tokenName,
+            'tokenHash'        => $tokenHash,
+            'activeModule'     => 'datarequest',
+            'requestId'        => $requestId
+        );
+
+        loadView('/datarequest/assign', $viewParams);
+    }
+
+    public function storeAssign()
+    {
+        $arrayPost = $this->input->post();
+
+        if ($this->input->server('REQUEST_METHOD') == 'POST') {
+            $rule = new ProdsRule(
+                $this->rodsuser->getRodsAccount(),
+                'rule { uuSubmitAssignment(*data, *requestId); }',
+                array('*data' => $arrayPost['formData'],
+                      '*requestId' => $arrayPost['requestId']),
+                array('ruleExecOut')
+            );
+
+            $result = json_decode($rule->execute()['ruleExecOut'], true);
+
+            if ($result['status'] == 0) {
+                $this->output
+                     ->set_content_type('application/json')
+                     ->set_output(json_encode($result));
+            } else {
+                $this->output
+                     ->set_content_type('application/json')
+                     ->set_status_header(500)
+                     ->set_output(json_encode($result));
+            }
+        }
+    }
+
+    public function assignSchema()
+    {
+        $schema = '
+        {
+          "type": "object",
+          "title": "Assignment",
+          "description": "Please consider carefully the remarks of the data manager, if any.",
+          "properties": {
+            "decision": {
+              "type": "string",
+              "title": "This data request is:",
+              "enum": [
+                "Accepted",
+                "Rejected"
+              ]
+            },
+            "response_to_dm_remarks": {
+              "type": "string",
+              "title": "Response to data manager remarks (if any)"
+            },
+            "assign_to": {
+              "type": "array",
+              "title": "Please select the DMC member(s) to whom the data request should be assigned for review.",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "Prof. Dr. M.J.N.L. Benders / Wilhelmina Children\'s Hospital, UMCU / Neonatology / m.benders@umcutrecht.nl",
+                  "Prof. Dr. M. Dekovic / Utrecht University / Clinical Child and Family Studies / M.Dekovic@uu.nl",
+                  "Prof. Dr. S. Durston / UMCU / Psychiatry / s.durston@umcutrecht.nl",
+                  "Prof. Dr. H.E. Hulshoff Pol / UMCU / Psychiatry / h.e.hulshoff@umcutrecht.nl",
+                  "Prof. Dr. R.W.J. Kager / Utrecht University / Utrecht Institute of Linguistics OTS / R.W.J.Kager@uu.nl",
+                  "Prof. Dr. R. Kahn / Icahn School of Medicine, Mount Sinai, NY / Psychiatry / rkahn@umcutrecht.nl",
+                  "Prof. Dr. C. Kemner / Utrecht University / Developmental Psychology / C.Kemner@uu.nl",
+                  "Prof. Dr. P.M. Valkenburg / University of Amsterdam / Media, Youth and Society / P.M.Valkenburg@uva.nl",
+                  "Prof. Dr. W.A.M. Vollebergh / Utrecht University / Social Sciences / W.A.M.Vollebergh@uu.nl"
+                ]
+              },
+              "uniqueItems": true
+            }
+          },
+          "required": [
+            "decision", "assign_to"
+          ]
+        }';
+
+        $uiSchema = '
+        {
+          "response_to_dm_remarks": {
+            "ui:widget": "textarea"
+          },
+          "assign_to": {
+            "ui:widget": "checkboxes"
+          }
+        }';
+
+        $output = array();
+        $output['schema'] = json_decode($schema);
+        $output['uiSchema'] = json_decode($uiSchema);
+
+        $this->output->set_content_type('application/json')->set_output(json_encode($output));
     }
 
     public function assignRequest() {
