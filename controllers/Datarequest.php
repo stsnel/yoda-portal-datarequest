@@ -16,7 +16,8 @@ class Datarequest extends MY_Controller
         $viewParams = array(
             'styleIncludes' => array(
                 'lib/datatables/css/dataTables.bootstrap.min.css',
-                'lib/font-awesome/css/font-awesome.css'
+                'lib/font-awesome/css/font-awesome.css',
+                'css/datarequest/index.css'
             ),
             'scriptIncludes' => array(
                 'lib/datatables/js/jquery.dataTables.min.js',
