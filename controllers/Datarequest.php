@@ -635,7 +635,6 @@ class Datarequest extends MY_Controller
         );
 
         loadView('/datarequest/preliminaryreview', $viewParams);
-
     }
 
     public function storePreliminaryReview()
