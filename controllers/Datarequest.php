@@ -964,29 +964,64 @@ class Datarequest extends MY_Controller
             "response_to_dm_remarks": {
               "type": "string",
               "title": "Response to data manager remarks (if any)"
-            },
-            "assign_to": {
-              "type": "array",
-              "title": "Please select the DMC member(s) to whom the data request should be assigned for review.",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "Prof. Dr. M.J.N.L. Benders / Wilhelmina Children\'s Hospital, UMCU / Neonatology / m.benders@umcutrecht.nl",
-                  "Prof. Dr. M. Dekovic / Utrecht University / Clinical Child and Family Studies / M.Dekovic@uu.nl",
-                  "Prof. Dr. S. Durston / UMCU / Psychiatry / s.durston@umcutrecht.nl",
-                  "Prof. Dr. H.E. Hulshoff Pol / UMCU / Psychiatry / h.e.hulshoff@umcutrecht.nl",
-                  "Prof. Dr. R.W.J. Kager / Utrecht University / Utrecht Institute of Linguistics OTS / R.W.J.Kager@uu.nl",
-                  "Prof. Dr. R. Kahn / Icahn School of Medicine, Mount Sinai, NY / Psychiatry / rkahn@umcutrecht.nl",
-                  "Prof. Dr. C. Kemner / Utrecht University / Developmental Psychology / C.Kemner@uu.nl",
-                  "Prof. Dr. P.M. Valkenburg / University of Amsterdam / Media, Youth and Society / P.M.Valkenburg@uva.nl",
-                  "Prof. Dr. W.A.M. Vollebergh / Utrecht University / Social Sciences / W.A.M.Vollebergh@uu.nl"
-                ]
-              },
-              "uniqueItems": true
+            }
+          },
+          "dependencies": {
+            "decision": {
+              "oneOf": [
+                {
+                  "properties": {
+                    "decision": {
+                      "enum": [
+                        "Accepted for DMC review"
+                      ]
+                    },
+                    "assign_to": {
+                      "type": "array",
+                      "title": "Please select the DMC member(s) to whom the data request should be assigned for review.",
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "Prof. Dr. M.J.N.L. Benders / Wilhelmina Children\'s Hospital, UMCU / Neonatology / m.benders@umcutrecht.nl",
+                          "Prof. Dr. M. Dekovic / Utrecht University / Clinical Child and Family Studies / M.Dekovic@uu.nl",
+                          "Prof. Dr. S. Durston / UMCU / Psychiatry / s.durston@umcutrecht.nl",
+                          "Prof. Dr. H.E. Hulshoff Pol / UMCU / Psychiatry / h.e.hulshoff@umcutrecht.nl",
+                          "Prof. Dr. R.W.J. Kager / Utrecht University / Utrecht Institute of Linguistics OTS / R.W.J.Kager@uu.nl",
+                          "Prof. Dr. R. Kahn / Icahn School of Medicine, Mount Sinai, NY / Psychiatry / rkahn@umcutrecht.nl",
+                          "Prof. Dr. C. Kemner / Utrecht University / Developmental Psychology / C.Kemner@uu.nl",
+                          "Prof. Dr. P.M. Valkenburg / University of Amsterdam / Media, Youth and Society / P.M.Valkenburg@uva.nl",
+                          "Prof. Dr. W.A.M. Vollebergh / Utrecht University / Social Sciences / W.A.M.Vollebergh@uu.nl"
+                        ]
+                      },
+                      "uniqueItems": true
+                    }
+                  },
+                  "required": [
+                    "assign_to"
+                  ]
+                },
+                {
+                  "properties": {
+                    "decision": {
+                      "enum": [
+                        "Rejected"
+                      ]
+                    },
+                    "feedback_for_researcher": {
+                      "type": "string",
+                      "title": "Feedback for researcher",
+                      "description": "Please provide feedback to the researcher in case of rejection here. This feedback will be included with the rejection email."
+                    }
+                  },
+                  "required": [
+                    "feedback_for_researcher"
+                  ]
+                }
+              ]
             }
           },
           "required": [
-            "decision", "assign_to"
+            "decision"
           ]
         }';
 
@@ -997,6 +1032,9 @@ class Datarequest extends MY_Controller
           },
           "assign_to": {
             "ui:widget": "checkboxes"
+          },
+          "feedback_for_researcher": {
+            "ui:widget": "textarea"
           }
         }';
 
