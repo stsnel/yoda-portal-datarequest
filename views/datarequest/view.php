@@ -83,7 +83,7 @@
 <?php if ($requestStatus == "assigned" && $isReviewer): ?>
     <a href="/datarequest/review/<?php echo html_escape($requestId) ?>" class="btn btn-default pull-right" role="button">Review data request</a>
 <?php endif ?>
-<?php if ($requestStatus == "dm_accepted" && $isBoardMember): ?>
+<?php if (in_array($requestStatus, array("dm_accepted", "dm_rejected")) && $isBoardMember): ?>
     <a href="/datarequest/assign/<?php echo html_escape($requestId) ?>" class="btn btn-default pull-right" role="button">Assign</a>
 <?php endif ?>
 <?php if ($requestStatus == "accepted_for_review" && $isDatamanager): ?>
