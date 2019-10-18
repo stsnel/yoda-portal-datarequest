@@ -1436,6 +1436,8 @@ class Datarequest extends MY_Controller
     }
 
     public function upload_signed_dta($requestId) {
+        $this->load->model('user');
+
         # Check if user is the owner of the datarequest. If so, the approve
         # button will not be rendered
         $isRequestOwner = $this->user->isRequestOwner($requestId);
