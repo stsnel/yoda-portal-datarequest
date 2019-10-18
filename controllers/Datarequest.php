@@ -677,7 +677,7 @@ class Datarequest extends MY_Controller
               "type": "string",
               "title": "This data request is",
               "enum": [
-                "Accepted for review",
+                "Accepted for data manager review",
                 "Rejected"
               ]
             },
@@ -694,7 +694,7 @@ class Datarequest extends MY_Controller
                   "properties": {
                     "preliminary_review": {
                       "enum": [
-                        "Accepted"
+                        "Accepted for data manager review"
                       ]
                     }
                   }
@@ -957,7 +957,7 @@ class Datarequest extends MY_Controller
               "type": "string",
               "title": "This data request is:",
               "enum": [
-                "Accepted",
+                "Accepted for DMC review",
                 "Rejected"
               ]
             },
