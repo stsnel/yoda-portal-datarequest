@@ -714,7 +714,7 @@ class Datarequest extends MY_Controller
                     "feedback_for_researcher": {
                       "type": "string",
                       "title": "Feedback for researcher",
-                      "description": "Please provide feedback to the researcher in case of rejection here. This feedback will be included with the rejection email."
+                      "description": "Please provide feedback to the researcher in case of rejection here. This feedback will be included in the rejection email."
                     }
                   },
                   "required": [
@@ -1010,7 +1010,7 @@ class Datarequest extends MY_Controller
                     "feedback_for_researcher": {
                       "type": "string",
                       "title": "Feedback for researcher",
-                      "description": "Please provide feedback to the researcher in case of rejection here. This feedback will be included with the rejection email."
+                      "description": "Please provide feedback to the researcher in case of rejection here. This feedback will be included in the rejection email."
                     }
                   },
                   "required": [
