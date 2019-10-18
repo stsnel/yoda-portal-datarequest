@@ -86,7 +86,7 @@
 <?php if (in_array($requestStatus, array("dm_accepted", "dm_rejected")) && $isBoardMember): ?>
     <a href="/datarequest/assign/<?php echo html_escape($requestId) ?>" class="btn btn-default pull-right" role="button">Assign</a>
 <?php endif ?>
-<?php if ($requestStatus == "accepted_for_review" && $isDatamanager): ?>
+<?php if ($requestStatus == "accepted_for_dm_review" && $isDatamanager): ?>
     <a href="/datarequest/datamanagerreview/<?php echo html_escape($requestId) ?>" class="btn btn-default pull-right" role="button">Data manager review</a>
 <?php endif ?>
 <?php if ($requestStatus == "submitted" && $isBoardMember): ?>
@@ -103,25 +103,25 @@
             </div>
             <div class="panel-body">
                 <div class="row bs-wizard" style="border-bottom:0;">
-                    <div class="col-xs-3 bs-wizard-step <?php if (in_array($requestStatus, array("submitted", "accepted_for_review", "dm_accepted", "dm_rejected", "assigned", "reviewed", "approved", "rejected", "dta_ready", "dta_signed", "data_ready"))): ?>complete<?php else: ?>disabled<?php endif ?>">
+                    <div class="col-xs-3 bs-wizard-step <?php if (in_array($requestStatus, array("submitted", "accepted_for_dm_review", "dm_accepted", "dm_rejected", "assigned", "reviewed", "approved", "dta_ready", "dta_signed", "data_ready"))): ?>complete<?php else: ?>disabled<?php endif ?>">
                       <div class="text-center bs-wizard-stepnum">Submission</div>
                       <div class="progress"><div class="progress-bar"></div></div>
                       <a href="#" class="bs-wizard-dot"></a>
                     </div>
 
-                    <div class="col-xs-3 bs-wizard-step <?php if (in_array($requestStatus, array("assigned", "reviewed", "approved", "rejected", "dta_ready", "dta_signed", "data_ready"))): ?>complete<?php else: ?>disabled<?php endif ?>">
+                    <div class="col-xs-3 bs-wizard-step <?php if (in_array($requestStatus, array("assigned", "reviewed", "approved", "dta_ready", "dta_signed", "data_ready"))): ?>complete<?php else: ?>disabled<?php endif ?>">
                       <div class="text-center bs-wizard-stepnum">Under review</div>
                       <div class="progress"><div class="progress-bar"></div></div>
                       <a href="#" class="bs-wizard-dot"></a>
                     </div>
 
-                    <div class="col-xs-3 bs-wizard-step <?php if (in_array($requestStatus, array("reviewed", "approved", "rejected", "dta_ready", "dta_signed", "data_ready"))): ?>complete<?php else: ?>disabled<?php endif ?>">
+                    <div class="col-xs-3 bs-wizard-step <?php if (in_array($requestStatus, array("reviewed", "approved", "dta_ready", "dta_signed", "data_ready"))): ?>complete<?php else: ?>disabled<?php endif ?>">
                       <div class="text-center bs-wizard-stepnum">Reviewed</div>
                       <div class="progress"><div class="progress-bar"></div></div>
                       <a href="#" class="bs-wizard-dot"></a>
                     </div>
 
-                    <div class="col-xs-3 bs-wizard-step <?php if (in_array($requestStatus, array("approved", "rejected", "dta_ready", "dta_signed", "data_ready"))): ?>complete<?php else: ?>disabled<?php endif ?>">
+                    <div class="col-xs-3 bs-wizard-step <?php if (in_array($requestStatus, array("approved", "dta_ready", "dta_signed", "data_ready"))): ?>complete<?php else: ?>disabled<?php endif ?>">
                       <div class="text-center bs-wizard-stepnum">Approved</div>
                       <div class="progress"><div class="progress-bar"></div></div>
                       <a href="#" class="bs-wizard-dot"></a>
@@ -146,6 +146,10 @@
                       <a href="#" class="bs-wizard-dot"></a>
                     </div>
                 </div>
+
+                <?php if (in_array($requestStatus, array("preliminary_reject", "rejected_after_data_manager_review", "rejected"))): ?>
+                    <div class="rejected"><h3>Proposal rejected</h3></div>
+                <?php endif ?>
 
                 <hr>
 
