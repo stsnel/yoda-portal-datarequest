@@ -3,25 +3,70 @@ import axios from 'axios';
 import { render } from "react-dom";
 import Form from "react-jsonschema-form";
 
-var datarequestSchema = {};
+var datarequestSchema   = {};
 var datarequestUiSchema = {};
 var datarequestFormData = {};
+var prSchema            = {};
+var prUiSchema          = {};
+var prFormData          = {};
+var dmrSchema           = {};
+var dmrUiSchema         = {};
+var dmrFormData         = {};
+var assignSchema        = {};
+var assignUiSchema      = {};
+var assignFormData      = {};
 
 // Get the schema, uiSchema and formData of the data request to be evaluated.
 // Then render the data as a disabled form
 axios.all([
     axios.get("/datarequest/datarequest/schema"),
-    axios.get("/datarequest/datarequest/data/" + requestId)
+    axios.get("/datarequest/datarequest/data/" + requestId),
+    axios.get("/datarequest/datarequest/preliminaryReviewSchema"),
+    axios.get("/datarequest/datarequest/preliminaryReviewData/" + requestId),
+    axios.get("/datarequest/datarequest/datamanagerReviewSchema"),
+    axios.get("/datarequest/datarequest/datamanagerReviewData/" + requestId),
+    axios.get("/datarequest/datarequest/assignSchema"),
+    axios.get("/datarequest/datarequest/assignData/" + requestId)
     ])
-    .then(axios.spread((schemaresponse, dataresponse) => {
+    .then(axios.spread((schemaresponse, dataresponse,
+                        prschemaresponse, prdataresponse,
+                        dmrschemaresponse, dmrdataresponse,
+                        assignschemaresponse, assigndataresponse) => {
         datarequestFormData = dataresponse.data;
         datarequestSchema   = schemaresponse.data.schema;
         datarequestUiSchema = schemaresponse.data.uiSchema;
+        prFormData          = prdataresponse.data;
+        prSchema            = prschemaresponse.data.schema;
+        prUiSchema          = prschemaresponse.data.uiSchema;
+        dmrFormData         = dmrdataresponse.data;
+        dmrSchema           = dmrschemaresponse.data.schema;
+        dmrUiSchema         = dmrschemaresponse.data.uiSchema;
+        assignFormData      = assigndataresponse.data;
+        assignSchema        = assignschemaresponse.data.schema;
+        assignUiSchema      = assignschemaresponse.data.uiSchema;
 
         render(<ContainerReadonly schema={datarequestSchema}
                                   uiSchema={datarequestUiSchema}
                                   formData={datarequestFormData} />,
             document.getElementById("datarequest")
+        );
+
+        render(<ContainerReadonly schema={prSchema}
+                                  uiSchema={prUiSchema}
+                                  formData={prFormData} />,
+            document.getElementById("preliminaryReview")
+        );
+
+        render(<ContainerReadonly schema={dmrSchema}
+                                  uiSchema={dmrUiSchema}
+                                  formData={dmrFormData} />,
+            document.getElementById("datamanagerReview")
+        );
+
+        render(<ContainerReadonly schema={assignSchema}
+                                  uiSchema={assignUiSchema}
+                                  formData={assignFormData} />,
+            document.getElementById("assign")
         );
     }));
 
