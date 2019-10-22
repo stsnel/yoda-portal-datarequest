@@ -622,6 +622,130 @@ class Datarequest extends MY_Controller
                      ->set_output(json_encode($output));
     }
 
+    public function preliminaryReview($requestId) {
+        // Load CSRF token
+        $tokenName = $this->security->get_csrf_token_name();
+        $tokenHash = $this->security->get_csrf_hash();
+
+        $viewParams = array(
+            'tokenName'        => $tokenName,
+            'tokenHash'        => $tokenHash,
+            'activeModule'     => 'datarequest',
+            'requestId'        => $requestId
+        );
+
+        loadView('/datarequest/preliminaryreview', $viewParams);
+
+    }
+
+    public function storePreliminaryReview()
+    {
+        $arrayPost = $this->input->post();
+
+        if ($this->input->server('REQUEST_METHOD') == 'POST') {
+            $rule = new ProdsRule(
+                $this->rodsuser->getRodsAccount(),
+                'rule { uuSubmitPreliminaryReview(*data, *requestId); }',
+                array('*data' => $arrayPost['formData'],
+                      '*requestId' => $arrayPost['requestId']),
+                array('ruleExecOut')
+            );
+
+            $result = json_decode($rule->execute()['ruleExecOut'], true);
+
+            if ($result['status'] == 0) {
+                $this->output
+                     ->set_content_type('application/json')
+                     ->set_output(json_encode($result));
+            } else {
+                $this->output
+                     ->set_content_type('application/json')
+                     ->set_status_header(500)
+                     ->set_output(json_encode($result));
+            }
+        }
+    }
+
+    public function preliminaryReviewSchema()
+    {
+        $schema = '
+        {
+          "type": "object",
+          "title": "Preliminary review",
+          "properties": {
+            "preliminary_review": {
+              "type": "string",
+              "title": "This data request is",
+              "enum": [
+                "Accepted",
+                "Rejected"
+              ]
+            },
+            "internal_remarks": {
+              "type": "string",
+              "title": "Internal remarks",
+              "description": "Any remarks about the data request go here. In case of rejection, please provide a rationale here. The researcher cannot read these remarks."
+            }
+          },
+          "dependencies": {
+            "preliminary_review": {
+              "oneOf": [
+                {
+                  "properties": {
+                    "preliminary_review": {
+                      "enum": [
+                        "Accepted"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "preliminary_review": {
+                      "enum": [
+                        "Rejected"
+                      ]
+                    },
+                    "internal_remarks": {
+                      "type": "string",
+                      "title": "Internal remarks",
+                      "description": "Any remarks about the data request go here. In case of rejection, please provide a rationale here. The researcher cannot read these remarks."
+                    },
+                    "feedback_for_researcher": {
+                      "type": "string",
+                      "title": "Feedback for researcher",
+                      "description": "Please provide feedback to the researcher in case of rejection here. This feedback will be included with the rejection email."
+                    }
+                  },
+                  "required": [
+                    "internal_remarks", "feedback_for_researcher"
+                  ]
+                }
+              ]
+            }
+          },
+          "required": [
+            "preliminary_review"
+          ]
+        }';
+
+        $uiSchema = '
+        {
+          "internal_remarks": {
+            "ui:widget": "textarea"
+          },
+          "feedback_for_researcher": {
+            "ui:widget": "textarea"
+          }
+        }';
+
+        $output = array();
+        $output['schema'] = json_decode($schema);
+        $output['uiSchema'] = json_decode($uiSchema);
+
+        $this->output->set_content_type('application/json')->set_output(json_encode($output));
+    }
+
     public function dmcmembers() {
         $rule = new ProdsRule(
             $this->rodsuser->getRodsAccount(),
