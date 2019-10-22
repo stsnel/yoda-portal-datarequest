@@ -83,8 +83,8 @@
 <?php if ($requestStatus == "assigned" && $isReviewer): ?>
     <a href="/datarequest/review/<?php echo html_escape($requestId) ?>" class="btn btn-default pull-right" role="button">Review data request</a>
 <?php endif ?>
-<?php if ($requestStatus == "submitted" && $isDatamanager): ?>
-    <button type="button" class="btn btn-default pull-right assign" data-path="">Assign for review</button>
+<?php if ($requestStatus == "submitted" && $isBoardMember): ?>
+    <a href="/datarequest/preliminaryreview/<?php echo html_escape($requestId) ?>" class="btn btn-default pull-right" role="button">Preliminary review</a>
 <?php endif ?>
 <div class="row">
     <div class=col-md-12>
@@ -92,7 +92,7 @@
             <div class="panel-heading clearfix">
                 <h3 class="panel-title pull-left">Data request: <?php echo html_escape($requestId) ?></h3>
                 <div class="pull-right">
-                    <a class="btn btn-default" href="datarequest">Back</a>
+                    <a class="btn btn-default" href="/datarequest">Back</a>
                 </div>
             </div>
             <div class="panel-body">
