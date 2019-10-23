@@ -95,11 +95,20 @@ class YodaFormReadonly extends React.Component {
                   idPrefix={"yoda"}
                   uiSchema={this.props.uiSchema}
                   formData={this.props.formData}
+                  fields={fields}
                   disabled>
                   <button className="hidden" />
             </Form>
         );
     }
+};
+
+const CustomDescriptionField = ({id, description}) => {
+  return <div id={id} dangerouslySetInnerHTML={{ __html: description }}></div>;
+};
+
+const fields = {
+  DescriptionField: CustomDescriptionField
 };
 
 const onSubmit = ({formData}) => submitData(formData);
