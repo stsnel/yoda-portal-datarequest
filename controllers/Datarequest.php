@@ -1050,6 +1050,19 @@ class Datarequest extends MY_Controller
         }
     }
 
+    public function assignData($requestId) {
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            'rule { uuGetAssignment(*requestId); }',
+            array('*requestId' => $requestId),
+            array('ruleExecOut')
+        );
+
+        $formData = json_decode($rule->execute()['ruleExecOut'], true)['assignmentJSON'];
+
+        $this->output->set_content_type('application/json')->set_output($formData);
+    }
+
     public function review($requestId) {
         // Load CSRF token
         $tokenName = $this->security->get_csrf_token_name();

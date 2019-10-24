@@ -103,7 +103,7 @@
             </div>
             <div class="panel-body">
                 <div class="row bs-wizard" style="border-bottom:0;">
-                    <div class="col-xs-3 bs-wizard-step <?php if (in_array($requestStatus, array("submitted", "assigned", "reviewed", "approved", "rejected", "dta_ready", "dta_signed", "data_ready"))): ?>complete<?php else: ?>disabled<?php endif ?>">
+                    <div class="col-xs-3 bs-wizard-step <?php if (in_array($requestStatus, array("submitted", "accepted_for_review", "dm_accepted", "dm_rejected", "assigned", "reviewed", "approved", "rejected", "dta_ready", "dta_signed", "data_ready"))): ?>complete<?php else: ?>disabled<?php endif ?>">
                       <div class="text-center bs-wizard-stepnum">Submission</div>
                       <div class="progress"><div class="progress-bar"></div></div>
                       <a href="#" class="bs-wizard-dot"></a>
