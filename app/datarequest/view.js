@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from 'axios';
 import { render } from "react-dom";
 import Form from "react-jsonschema-form";
+import DataSelection, { DataSelectionCart } from "./DataSelection.js";
 
 $(document).ajaxSend(function(e, request, settings) {
     // Append a CSRF token to all AJAX POST requests.
@@ -136,7 +137,8 @@ const CustomDescriptionField = ({id, description}) => {
 };
 
 const fields = {
-  DescriptionField: CustomDescriptionField
+  DescriptionField: CustomDescriptionField,
+  DataSelection: DataSelectionCart
 };
 
 class ContainerReadonly extends React.Component {

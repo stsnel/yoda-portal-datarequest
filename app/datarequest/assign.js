@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from 'axios';
 import { render } from "react-dom";
 import Form from "react-jsonschema-form";
+import DataSelection, { DataSelectionCart } from "./DataSelection.js";
 
 var datarequestSchema   = {};
 var datarequestUiSchema = {};
@@ -116,7 +117,8 @@ const CustomDescriptionField = ({id, description}) => {
 };
 
 const fields = {
-  DescriptionField: CustomDescriptionField
+  DescriptionField: CustomDescriptionField,
+  DataSelection: DataSelectionCart
 };
 
 const onSubmit = ({formData}) => submitData(formData);

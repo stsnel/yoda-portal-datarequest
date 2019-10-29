@@ -277,35 +277,14 @@ class Datarequest extends MY_Controller
               "title": "Requested data",
               "description": "In this section, please specify as detailed as possible which data (and from which subjects) you request. Include information regarding:<ul><li>Which wave(s)</li><li>Which experiments, questionnaires, etc.</li><li>How many sets (sample-size)</li><li>Purpose of your data request</li><li>Other aspects relevant to your data request (optional).</li></ul>",
               "properties": {
-                "wave": {
-                  "type": "array",
-                  "title": "Wave",
-                  "description": "Please specify the wave(s) from which you would like to obtain data.",
-                  "items": {
-                    "type": "string",
-                    "enum": [
-                      "Around pregnancy - 20 weeks",
-                      "Around pregrancy - 30 weeks",
-                      "Around 0 - 5 mo",
-                      "Around 0 - 10 mo",
-                      "Around 3 (not available yet)",
-                      "Around 6 (not available yet)",
-                      "Around 9",
-                      "Around 12 (not available yet)",
-                      "Around 15 (not available yet)"
-                    ]
-                  },
-                  "minItems": 1,
-                  "uniqueItems": true
-                },
                 "data": {
+                  "type": "object",
+                  "title": "Data"
+                },
+                "additional_specifications": {
                   "type": "string",
                   "title": "Additional specifications",
                   "description": "If necessary, please provide additional specifications on the data you would like to obtain (e.g. only of children of which the mother smoked during pregnancy)."
-                },
-                "experiments_and_number_of_sets": {
-                  "type": "string",
-                  "title": "Experiments and number of sets you request"
                 },
                 "other_remarks": {
                   "type": "string",
@@ -338,7 +317,7 @@ class Datarequest extends MY_Controller
                 }
               },
               "required": [
-                "wave", "purpose", "experiments_and_number_of_sets", "data_lock_notification", "publication_approval"
+                "data", "purpose", "data_lock_notification", "publication_approval"
               ]
             },
             "contribution": {
@@ -524,8 +503,8 @@ class Datarequest extends MY_Controller
             }
           },
           "datarequest": {
-            "wave": {
-              "ui:widget": "checkboxes"
+            "data": {
+              "ui:field": "DataSelection"
             },
             "purpose": {
               "ui:widget": "checkboxes",
