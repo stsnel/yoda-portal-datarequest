@@ -1204,6 +1204,7 @@ class Datarequest extends MY_Controller
         {
           "type": "object",
           "required": [
+            "evaluation",
             "contribution",
             "informed_consent_fit",
             "research_question_answerability",
@@ -1214,6 +1215,20 @@ class Datarequest extends MY_Controller
             "biological_samples"
           ],
           "properties": {
+            "evaluation": {
+              "type": "string",
+              "title": "Would you approve / reject / reject (resubmit) this data request?",
+              "enum": [
+                "Approve",
+                "Reject",
+                "Reject (resubmit)"
+              ]
+            },
+            "evaluation_rationale": {
+              "type": "string",
+              "title": "Please provide a brief rationale for your evaluation.",
+              "description": "This is mandatory if the data request is rejected."
+            },
             "contribution": {
               "type": "string",
               "title": "How much did the applicant involved contribute to YOUth with respect to recruitment, setup, and continuation of YOUth?"
@@ -1253,6 +1268,32 @@ class Datarequest extends MY_Controller
             }
           },
           "dependencies": {
+            "evaluation": {
+              "oneOf": [
+                {
+                  "properties": {
+                    "evaluation": {
+                      "enum": [
+                        "Approve"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "evaluation": {
+                      "enum": [
+                        "Reject",
+                        "Reject (resubmit)"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "evaluation_rationale"
+                  ]
+                }
+              ]
+            },
             "biological_samples": {
               "oneOf": [
                 {
