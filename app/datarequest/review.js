@@ -195,6 +195,9 @@ function submitData(data)
     // Disable submit button
     $("button:submit").attr("disabled", "disabled");
 
+    // Append username to data
+    data.username = username;
+
     var tokenName = form.dataset.csrf_token_name;
     var tokenHash = form.dataset.csrf_token_hash;
 
