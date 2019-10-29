@@ -31,7 +31,7 @@ function startBrowsing(items)
         "bInfo": false,
         "bLengthChange": false,
         "language": {
-            "emptyTable": "No research proposals present"
+            "emptyTable": "No data requests present"
   },
         "ajax": {
             url: "/datarequest/researchproposal/data",
