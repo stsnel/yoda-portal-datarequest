@@ -136,17 +136,16 @@ class Datarequest extends MY_Controller
             "introduction": {
               "type": "object",
               "title": "Introduction",
-              "description": "The information you provide here will be used by the YOUth Data Management Committee to evaluate your data request. Details on this evaluation procedure can be found in the Data Access Protocol.<br/><br/>Moreover, your data request will be stored in an online repository available to all researchers who submit or have submitted a data request. The aim of this repository is to provide a searchable overview of past, current, and pending data requests. By default, we will publish the following information from your request on our researcher’s website:<br/><ul><li><u>After submission of a data request</u>: the names and institutions of the contact person and participating researchers (<b>Section 1</b>) and the research context (<b>Section 2</b>).</li><li><u>After approval of a data request</u>: the complete request (<b>Section 1-5</b>).<br><i>Exception</i>: If you believe that publishing the complete request could do harm (e.g. when you propose to use a novel analysis technique) you can object to publishing the complete request. This should be indicated on the data request form with a rationale (<b>Section 5</b>). The YOUth Data Management Committee will review your matter and advise the YOUth Executive Board whether or not to publish the complete request. If you do not agree with the YOUth Data Management Committee about publishing the complete request, you have the possibility to withdraw your data request.</li></ul>"
+              "description": "The information you provide here will be used by the YOUth Executive Board, the Data Manager, and the Data Management Committee to evaluate your data request. Details regarding this evaluation procedure can be found in the Data Access Protocol.<br/><br/>All data requests will be published on the YOUth researcher’s website in order to provide a searchable overview of past, current, and pending data requests. By default, the publication of submitted and pending data requests includes he names and institutions of the contact person and participating researchers as well as a broad description of the research context.</br></br>After approval of a data request, the complete request (including hypotheses and proposed analyses) will be published. If an applicant has reasons to object to the publication of their complete data request, they should notify the Project Manager, who will evaluate the objection   with the other members of the Executive Board and the Data Management Committee. If the objection is rejected, the researcher may decide to withdraw their data request."
             },
             "researchers": {
               "type": "object",
               "title": "Researchers",
-              "description": "In this section, please provide information about the researchers involved with this data request.</br><ul><li>Name, affiliation and contact information of the contact person</li><li>Name and details of participating researchers (e.g. intended co-authors)</li><li>Name and details of the contact person within YOUth</li></ul>",
+              "description": "In this section, please provide information about the researchers involved with this data request.</br><ul><li>Name, affiliation and contact information of the contact person</li><li>Name and details of participating researchers (e.g. intended co-authors)</li><li>Name and details of the contact person within YOUth (if any)</li></ul>",
               "properties": {
                 "contacts": {
                   "type": "array",
-                  "title": "Contact person for the proposed study",
-                  "description": "Please note that this should be level postdoc or higher.",
+                  "title": "Contact person(s) for the proposed study",
                   "minItems": 1,
                   "items": {
                     "type": "object",
@@ -188,7 +187,7 @@ class Datarequest extends MY_Controller
                 },
                 "dmc_contact": {
                   "type": "string",
-                  "title": "Contact person in YOUth Data Management Committee",
+                  "title": "Contact person in YOUth Data Management Committee (if any)",
                   "enum": [
                     "Prof. Dr. M.J.N.L. Benders / Wilhelmina Children\'s Hospital, UMCU / Neonatology / m.benders@umcutrecht.nl",
                     "Prof. Dr. M. Dekovic / Utrecht University / Clinical Child and Family Studies / M.Dekovic@uu.nl",
@@ -199,8 +198,7 @@ class Datarequest extends MY_Controller
                     "Prof. Dr. C. Kemner / Utrecht University / Developmental Psychology / C.Kemner@uu.nl",
                     "Prof. Dr. P.M. Valkenburg / University of Amsterdam / Media, Youth and Society / P.M.Valkenburg@uva.nl",
                     "Prof. Dr. W.A.M. Vollebergh / Utrecht University / Social Sciences / W.A.M.Vollebergh@uu.nl"
-                  ],
-                  "default": "Prof. Dr. M.J.N.L. Benders / Wilhelmina Children\'s Hospital, UMCU / Neonatology / m.benders@umcutrecht.nl"
+                  ]
                 }
               }
             },
@@ -238,7 +236,7 @@ class Datarequest extends MY_Controller
             "hypotheses": {
               "type": "object",
               "title": "Hypotheses",
-              "description": "In this section, please provide your research hypotheses. For each hypothesis:<ul><li>Be as specific as possible</li><li>Provide the anticipated outcomes for accepting and/or rejecting a hypothesis (or explain why this does not apply to your project, e.g. when using Bayesian statistics)</li></ul><i>Exception</i>: if you plan a hypotheses-free project, please use this section to explain why you don’t formulate specific hypotheses.",
+              "description": "In this section, please provide your research hypotheses. For each hypothesis:<ul><li>Be as specific as possible</li><li>Provide the anticipated outcomes for accepting and/or rejecting a hypothesis</li></ul>",
               "properties": {
                 "hypotheses": {
                   "type": "string",
@@ -262,7 +260,7 @@ class Datarequest extends MY_Controller
                 },
                 "processing": {
                   "type": "string",
-                  "title": "Specific processing and analysis steps"
+                  "title": "Specific processing and analysis steps to address the hypotheses"
                 },
                 "additional_methodological_aspects": {
                   "type": "string",
@@ -275,7 +273,7 @@ class Datarequest extends MY_Controller
             "datarequest": {
               "type": "object",
               "title": "Requested data",
-              "description": "In this section, please specify as detailed as possible which data (and from which subjects) you request. Include information regarding:<ul><li>Which wave(s)</li><li>Which experiments, questionnaires, etc.</li><li>How many sets (sample-size)</li><li>Purpose of your data request</li><li>Other aspects relevant to your data request (optional).</li></ul>",
+              "description": "In this section, please specify as detailed as possible which data you request (and from which subjects). Include information regarding:<ul><li>Which wave(s)</li><li>Which experiments, questionnaires, etc.</li><li>How many sets (sample-size)</li><li>Purpose of your data request</li><li>Other aspects relevant to your data request (optional).</li></ul>Some information on the use of the data selection table below:<ul><li>Use the sorting options to find the data set(s) you would like to request</li><li>Click the checkbox or the row to add the data to your \"shopping cart\"</li><li>Click the (+) to show additional information about a data set (if available)</li><li>Your selection is shown in the shopping cart below the data selection table</li><li>You may change the number of rows per page using the bottom-left drop-down menu</li></ul>",
               "properties": {
                 "data": {
                   "type": "object",
@@ -292,28 +290,87 @@ class Datarequest extends MY_Controller
                   "description": "Optional"
                 },
                 "purpose": {
-                  "type": "array",
+                  "type": "string",
                   "title": "Purpose",
                   "description": "Data request for the purpose of:",
-                  "items": {
-                    "type": "string",
-                    "enum": [
-                      "Analyses in order to publish (e.g. article, report, thesis, etc.)",
-                      "Analyses for data quality control only (data will not be published)",
-                      "Analyses for descriptive data only, e.g. in order to determine good datasets (data will not be published)"
-                    ]
-                  },
-                  "minItems": 1,
-                  "uniqueItems": true
+                  "enum": [
+                    "Analyses in order to publish",
+                    "Analyses for data assessment only (results will not be published)"
+                  ]
                 },
                 "data_lock_notification": {
                   "type": "boolean",
                   "title": "Would you like to be notified when a new data lock is available?",
-                  "description": "In principle, data will be made available in data locks twice a year. This means that twice a year, the data is locked on a specific date and that all approved data request projects will receive the same locked data set."
+                  "enumNames": [ "Yes", "No" ]
                 },
                 "publication_approval": {
                   "type": "boolean",
-                  "title": "Do you agree with publishing the complete request on our researcher’s website after it is approved (by default)?"
+                  "title": "Do you agree with publishing the complete request on our researcher’s website after it is approved?",
+                  "enumNames": [ "Yes", "No (please provide a rationale)" ]
+                }
+              },
+              "dependencies": {
+                "purpose": {
+                  "oneOf": [
+                    {
+                      "properties": {
+                        "purpose": {
+                          "enum": [
+                            "Analyses for data assessment only (results will not be published)"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "purpose": {
+                          "enum": [
+                            "Analyses in order to publish"
+                          ]
+                        },
+                        "publication_type": {
+                          "type": "string",
+                          "title": "Publication type",
+                          "enum": [
+                            "Article or report",
+                            "PhD thesis"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "publication_type"
+                      ]
+                    }
+                  ]
+                },
+                "publication_approval": {
+                  "oneOf": [
+                    {
+                      "properties": {
+                        "publication_approval": {
+                          "enum": [
+                            true
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "publication_approval": {
+                          "enum": [
+                            false
+                          ]
+                        },
+                        "private_request_explanation": {
+                          "type": "string",
+                          "title": "Please explain why your request should not be made public."
+                        }
+                      },
+                      "required": [
+                        "private_request_explanation"
+                      ]
+                    }
+                  ]
                 }
               },
               "required": [
@@ -385,14 +442,43 @@ class Datarequest extends MY_Controller
                             "Other contribution"
                           ]
                         },
-                        "contribution_time_amount": {
-                          "type": "number",
-                          "title": "Number of hours contribution incl. specification"
+                        "contribution_time_specification": {
+                          "type": "string",
+                          "title": "Number of hours of contribution incl. specification"
                         }
                       },
                       "required": [
                         "contribution_time_type",
-                        "contribution_time_amount"
+                        "contribution_time_specification"
+                      ]
+                    }
+                  ]
+                },
+                "contribution_time_type": {
+                  "oneOf": [
+                    {
+                      "properties": {
+                        "contribution_time_type": {
+                          "enum": [
+                            "PhD student"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "contribution_time_type": {
+                          "enum": [
+                            "Other contribution"
+                          ]
+                        },
+                        "contribution_time_type_other": {
+                          "type": "string",
+                          "title": "Who will provide the time contribution?"
+                        }
+                      },
+                      "required": [
+                        "contribution_time_type_other"
                       ]
                     }
                   ]
@@ -418,7 +504,8 @@ class Datarequest extends MY_Controller
                         "contribution_financial_amount": {
                           "type": "number",
                           "title": "Financial contribution",
-                          "description": "In euros"
+                          "description": "In euros",
+                          "minimum": 0
                         }
                       },
                       "required": [
@@ -500,17 +587,26 @@ class Datarequest extends MY_Controller
             },
             "processing": {
               "ui:widget": "textarea"
+            },
+            "additional_methodological_aspects": {
+              "ui:widget": "textarea"
             }
           },
           "datarequest": {
+            "ui:order": [ "data", "additional_specifications", "other_remarks", "purpose", "publication_type", "data_lock_notification", "publication_approval", "private_request_explanation" ],
             "data": {
               "ui:field": "DataSelection"
             },
-            "purpose": {
-              "ui:widget": "checkboxes",
-              "ui:help": "DISCLAIMER DATA ACCESS QUALITY CONTROL AND DESCRIPTIVE DATA: These data can only be used for data quality control analyses or descriptive data analyses only and may not be made public, for example by publishing them or otherwise making them available to others. If you want to use data for disclosure, permission of the YOUth data committee is required, and this data request protocol must be followed for analyses in order to publish."
+            "additional_specifications": {
+              "ui:widget": "textarea"
             },
-            "data": {
+            "purpose": {
+              "ui:widget": "radio"
+            },
+            "publication_type": {
+              "ui:widget": "radio"
+            },
+            "other_remarks": {
               "ui:widget": "textarea"
             },
             "data_lock_notification": {
@@ -518,6 +614,9 @@ class Datarequest extends MY_Controller
             },
             "publication_approval": {
               "ui:widget": "radio"
+            },
+            "private_request_explanation": {
+              "ui:widget": "textarea"
             }
           },
           "person": {
@@ -526,6 +625,10 @@ class Datarequest extends MY_Controller
             }
           },
           "contribution": {
+            "ui:order": [ "contribution_time", "contribution_time_type", "contribution_time_type_other", "contribution_time_specification", "contribution_financial", "contribution_financial_amount", "contribution_favor", "contribution_favor_description" ],
+            "contribution_time_specification": {
+              "ui:widget": "textarea"
+            },
             "contribution_favor_description": {
               "ui:widget": "textarea"
             }
