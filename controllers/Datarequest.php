@@ -311,19 +311,13 @@ class Datarequest extends MY_Controller
                   "description": "Optional"
                 },
                 "purpose": {
-                  "type": "array",
+                  "type": "string",
                   "title": "Purpose",
                   "description": "Data request for the purpose of:",
-                  "items": {
-                    "type": "string",
-                    "enum": [
-                      "Analyses in order to publish (e.g. article, report, thesis, etc.)",
-                      "Analyses for data quality control only (data will not be published)",
-                      "Analyses for descriptive data only, e.g. in order to determine good datasets (data will not be published)"
-                    ]
-                  },
-                  "minItems": 1,
-                  "uniqueItems": true
+                  "enum": [
+                    "Analyses in order to publish",
+                    "Analyses for data assessment only (results will not be published)"
+                  ]
                 },
                 "data_lock_notification": {
                   "type": "boolean",
@@ -335,6 +329,69 @@ class Datarequest extends MY_Controller
                   "title": "Do you agree with publishing the complete request on our researcher’s website after it is approved?",
                   "enumNames": [ "Yes", "No (please provide a rationale)" ]
                 }
+              },
+              "dependencies": {
+                "purpose": {
+                  "oneOf": [
+                    {
+                      "properties": {
+                        "purpose": {
+                          "enum": [
+                            "Analyses for data assessment only (results will not be published)"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "purpose": {
+                          "enum": [
+                            "Analyses in order to publish"
+                          ]
+                        },
+                        "publication_type": {
+                          "type": "string",
+                          "title": "Publication type",
+                          "enum": [
+                            "Article or report",
+                            "PhD thesis"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "publication_type"
+                      ]
+                    }
+                  ]
+                },
+                "publication_approval": {
+                  "oneOf": [
+                    {
+                      "properties": {
+                        "publication_approval": {
+                          "enum": [
+                            true
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "publication_approval": {
+                          "enum": [
+                            false
+                          ]
+                        },
+                        "private_request_explanation": {
+                          "type": "string",
+                          "title": "Please explain why your request should not be made public."
+                        }
+                      },
+                      "required": [
+                        "private_request_explanation"
+                      ]
+                    }
+                  ]
                 }
               },
               "required": [
@@ -528,15 +585,20 @@ class Datarequest extends MY_Controller
             }
           },
           "datarequest": {
-            "wave": {
-              "ui:widget": "checkboxes"
+            "ui:order": [ "data", "additional_specifications", "other_remarks", "purpose", "publication_type", "data_lock_notification", "publication_approval", "private_request_explanation" ],
+            "data": {
+              "ui:field": "DataSelection"
+            },
             "additional_specifications": {
               "ui:widget": "textarea"
             },
             "purpose": {
-              "ui:widget": "checkboxes",
+              "ui:widget": "radio"
             },
-            "data": {
+            "publication_type": {
+              "ui:widget": "radio"
+            },
+            "other_remarks": {
               "ui:widget": "textarea"
             },
             "data_lock_notification": {
@@ -544,6 +606,9 @@ class Datarequest extends MY_Controller
             },
             "publication_approval": {
               "ui:widget": "radio"
+            },
+            "private_request_explanation": {
+              "ui:widget": "textarea"
             }
           },
           "person": {
