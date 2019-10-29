@@ -1413,12 +1413,12 @@ class Datarequest extends MY_Controller
     public function reviewData($requestId) {
         $rule = new ProdsRule(
             $this->rodsuser->getRodsAccount(),
-            'rule { uuGetReview(*requestId); }',
+            'rule { uuGetReviews(*requestId); }',
             array('*requestId' => $requestId),
             array('ruleExecOut')
         );
 
-        $formData = json_decode($rule->execute()['ruleExecOut'], true)['reviewJSON'];
+        $formData = json_decode($rule->execute()['ruleExecOut'], true)['reviewsJSON'];
 
         $this->output->set_content_type('application/json')->set_output($formData);
     }
