@@ -439,7 +439,8 @@ class Datarequest extends MY_Controller
                         "contribution_financial_amount": {
                           "type": "number",
                           "title": "Financial contribution",
-                          "description": "In euros"
+                          "description": "In euros",
+                          "minimum": 0
                         }
                       },
                       "required": [
