@@ -1064,6 +1064,17 @@ class Datarequest extends MY_Controller
                       "items": {
                         "type": "string",
                         "enum": [
+                          "bodmember",
+                          "dmcmember",
+                          "other",
+                          "other2",
+                          "other3",
+                          "other4",
+                          "other5",
+                          "other6",
+                          "other7"
+                        ],
+                        "enumNames": [
                           "Prof. Dr. M.J.N.L. Benders / Wilhelmina Children\'s Hospital, UMCU / Neonatology / m.benders@umcutrecht.nl",
                           "Prof. Dr. M. Dekovic / Utrecht University / Clinical Child and Family Studies / M.Dekovic@uu.nl",
                           "Prof. Dr. S. Durston / UMCU / Psychiatry / s.durston@umcutrecht.nl",
