@@ -273,7 +273,7 @@ class Datarequest extends MY_Controller
             "datarequest": {
               "type": "object",
               "title": "Requested data",
-              "description": "In this section, please specify as detailed as possible which data (and from which subjects) you request. Include information regarding:<ul><li>Which wave(s)</li><li>Which experiments, questionnaires, etc.</li><li>How many sets (sample-size)</li><li>Purpose of your data request</li><li>Other aspects relevant to your data request (optional).</li></ul>",
+              "description": "In this section, please specify as detailed as possible which data you request (and from which subjects). Include information regarding:<ul><li>Which wave(s)</li><li>Which experiments, questionnaires, etc.</li><li>How many sets (sample-size)</li><li>Purpose of your data request</li><li>Other aspects relevant to your data request (optional).</li></ul>Some information on the use of the data selection table below:<ul><li>Use the sorting options to find the data set(s) you would like to request</li><li>Click the checkbox or the row to add the data to your \"shopping cart\"</li><li>Click the (+) to show additional information about a data set (if available)</li><li>Your selection is shown in the shopping cart below the data selection table</li><li>You may change the number of rows per page using the bottom-left drop-down menu</li></ul>",
               "properties": {
                 "wave": {
                   "type": "array",
