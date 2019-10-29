@@ -95,6 +95,7 @@ class YodaForm extends React.Component {
         return (
             <Form className="form"
                   schema={schema}
+                  uiSchema={uiSchema}
                   idPrefix={"yoda"}
                   onSubmit={onSubmit}>
                   <button ref={(btn) => {this.submitButton=btn;}}

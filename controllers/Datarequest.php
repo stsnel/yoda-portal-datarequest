@@ -1331,8 +1331,42 @@ class Datarequest extends MY_Controller
           }
         }';
 
+        $uiSchema = '{
+          "evaluation_rationale": {
+            "ui:widget": "textarea"
+          },
+          "contribution": {
+            "ui:widget": "textarea"
+          },
+          "informed_consent_fit": {
+            "ui:widget": "textarea"
+          },
+          "research_question_answerability": {
+            "ui:widget": "textarea"
+          },
+          "study_quality": {
+            "ui:widget": "textarea"
+          },
+          "logistical_feasibility": {
+            "ui:widget": "textarea"
+          },
+          "study_value": {
+            "ui:widget": "textarea"
+          },
+          "researcher_expertise": {
+            "ui:widget": "textarea"
+          },
+          "biological_samples_volume": {
+            "ui:widget": "textarea"
+          },
+          "biological_samples_committee_approval": {
+            "ui:widget": "textarea"
+          }
+        }';
+
         $output = array();
         $output['schema'] = json_decode($schema);
+        $output['uiSchema'] = json_decode($uiSchema);
 
         $this->output->set_content_type('application/json')->set_output(json_encode($output));
     }
