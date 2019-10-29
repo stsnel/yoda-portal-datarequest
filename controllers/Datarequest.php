@@ -198,8 +198,7 @@ class Datarequest extends MY_Controller
                     "Prof. Dr. C. Kemner / Utrecht University / Developmental Psychology / C.Kemner@uu.nl",
                     "Prof. Dr. P.M. Valkenburg / University of Amsterdam / Media, Youth and Society / P.M.Valkenburg@uva.nl",
                     "Prof. Dr. W.A.M. Vollebergh / Utrecht University / Social Sciences / W.A.M.Vollebergh@uu.nl"
-                  ],
-                  "default": "Prof. Dr. M.J.N.L. Benders / Wilhelmina Children\'s Hospital, UMCU / Neonatology / m.benders@umcutrecht.nl"
+                  ]
                 }
               }
             },
