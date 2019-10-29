@@ -136,17 +136,16 @@ class Datarequest extends MY_Controller
             "introduction": {
               "type": "object",
               "title": "Introduction",
-              "description": "The information you provide here will be used by the YOUth Data Management Committee to evaluate your data request. Details on this evaluation procedure can be found in the Data Access Protocol.<br/><br/>Moreover, your data request will be stored in an online repository available to all researchers who submit or have submitted a data request. The aim of this repository is to provide a searchable overview of past, current, and pending data requests. By default, we will publish the following information from your request on our researcher’s website:<br/><ul><li><u>After submission of a data request</u>: the names and institutions of the contact person and participating researchers (<b>Section 1</b>) and the research context (<b>Section 2</b>).</li><li><u>After approval of a data request</u>: the complete request (<b>Section 1-5</b>).<br><i>Exception</i>: If you believe that publishing the complete request could do harm (e.g. when you propose to use a novel analysis technique) you can object to publishing the complete request. This should be indicated on the data request form with a rationale (<b>Section 5</b>). The YOUth Data Management Committee will review your matter and advise the YOUth Executive Board whether or not to publish the complete request. If you do not agree with the YOUth Data Management Committee about publishing the complete request, you have the possibility to withdraw your data request.</li></ul>"
+              "description": "The information you provide here will be used by the YOUth Executive Board, the Data Manager, and the Data Management Committee to evaluate your data request. Details regarding this evaluation procedure can be found in the Data Access Protocol.<br/><br/>All data requests will be published on the YOUth researcher’s website in order to provide a searchable overview of past, current, and pending data requests. By default, the publication of submitted and pending data requests includes he names and institutions of the contact person and participating researchers as well as a broad description of the research context.</br></br>After approval of a data request, the complete request (including hypotheses and proposed analyses) will be published. If an applicant has reasons to object to the publication of their complete data request, they should notify the Project Manager, who will evaluate the objection   with the other members of the Executive Board and the Data Management Committee. If the objection is rejected, the researcher may decide to withdraw their data request."
             },
             "researchers": {
               "type": "object",
               "title": "Researchers",
-              "description": "In this section, please provide information about the researchers involved with this data request.</br><ul><li>Name, affiliation and contact information of the contact person</li><li>Name and details of participating researchers (e.g. intended co-authors)</li><li>Name and details of the contact person within YOUth</li></ul>",
+              "description": "In this section, please provide information about the researchers involved with this data request.</br><ul><li>Name, affiliation and contact information of the contact person</li><li>Name and details of participating researchers (e.g. intended co-authors)</li><li>Name and details of the contact person within YOUth (if any)</li></ul>",
               "properties": {
                 "contacts": {
                   "type": "array",
-                  "title": "Contact person for the proposed study",
-                  "description": "Please note that this should be level postdoc or higher.",
+                  "title": "Contact person(s) for the proposed study",
                   "minItems": 1,
                   "items": {
                     "type": "object",
@@ -188,7 +187,7 @@ class Datarequest extends MY_Controller
                 },
                 "dmc_contact": {
                   "type": "string",
-                  "title": "Contact person in YOUth Data Management Committee",
+                  "title": "Contact person in YOUth Data Management Committee (if any)",
                   "enum": [
                     "Prof. Dr. M.J.N.L. Benders / Wilhelmina Children\'s Hospital, UMCU / Neonatology / m.benders@umcutrecht.nl",
                     "Prof. Dr. M. Dekovic / Utrecht University / Clinical Child and Family Studies / M.Dekovic@uu.nl",
@@ -238,7 +237,7 @@ class Datarequest extends MY_Controller
             "hypotheses": {
               "type": "object",
               "title": "Hypotheses",
-              "description": "In this section, please provide your research hypotheses. For each hypothesis:<ul><li>Be as specific as possible</li><li>Provide the anticipated outcomes for accepting and/or rejecting a hypothesis (or explain why this does not apply to your project, e.g. when using Bayesian statistics)</li></ul><i>Exception</i>: if you plan a hypotheses-free project, please use this section to explain why you don’t formulate specific hypotheses.",
+              "description": "In this section, please provide your research hypotheses. For each hypothesis:<ul><li>Be as specific as possible</li><li>Provide the anticipated outcomes for accepting and/or rejecting a hypothesis</li></ul>",
               "properties": {
                 "hypotheses": {
                   "type": "string",
@@ -262,7 +261,7 @@ class Datarequest extends MY_Controller
                 },
                 "processing": {
                   "type": "string",
-                  "title": "Specific processing and analysis steps"
+                  "title": "Specific processing and analysis steps to address the hypotheses"
                 },
                 "additional_methodological_aspects": {
                   "type": "string",
@@ -330,11 +329,13 @@ class Datarequest extends MY_Controller
                 "data_lock_notification": {
                   "type": "boolean",
                   "title": "Would you like to be notified when a new data lock is available?",
-                  "description": "In principle, data will be made available in data locks twice a year. This means that twice a year, the data is locked on a specific date and that all approved data request projects will receive the same locked data set."
+                  "enumNames": [ "Yes", "No" ]
                 },
                 "publication_approval": {
                   "type": "boolean",
-                  "title": "Do you agree with publishing the complete request on our researcher’s website after it is approved (by default)?"
+                  "title": "Do you agree with publishing the complete request on our researcher’s website after it is approved?",
+                  "enumNames": [ "Yes", "No (please provide a rationale)" ]
+                }
                 }
               },
               "required": [
@@ -408,7 +409,7 @@ class Datarequest extends MY_Controller
                         },
                         "contribution_time_amount": {
                           "type": "number",
-                          "title": "Number of hours contribution incl. specification"
+                          "title": "Number of hours of contribution incl. specification"
                         }
                       },
                       "required": [
@@ -521,15 +522,19 @@ class Datarequest extends MY_Controller
             },
             "processing": {
               "ui:widget": "textarea"
+            },
+            "additional_methodological_aspects": {
+              "ui:widget": "textarea"
             }
           },
           "datarequest": {
             "wave": {
               "ui:widget": "checkboxes"
+            "additional_specifications": {
+              "ui:widget": "textarea"
             },
             "purpose": {
               "ui:widget": "checkboxes",
-              "ui:help": "DISCLAIMER DATA ACCESS QUALITY CONTROL AND DESCRIPTIVE DATA: These data can only be used for data quality control analyses or descriptive data analyses only and may not be made public, for example by publishing them or otherwise making them available to others. If you want to use data for disclosure, permission of the YOUth data committee is required, and this data request protocol must be followed for analyses in order to publish."
             },
             "data": {
               "ui:widget": "textarea"
