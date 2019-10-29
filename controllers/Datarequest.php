@@ -463,14 +463,43 @@ class Datarequest extends MY_Controller
                             "Other contribution"
                           ]
                         },
-                        "contribution_time_amount": {
-                          "type": "number",
+                        "contribution_time_specification": {
+                          "type": "string",
                           "title": "Number of hours of contribution incl. specification"
                         }
                       },
                       "required": [
                         "contribution_time_type",
-                        "contribution_time_amount"
+                        "contribution_time_specification"
+                      ]
+                    }
+                  ]
+                },
+                "contribution_time_type": {
+                  "oneOf": [
+                    {
+                      "properties": {
+                        "contribution_time_type": {
+                          "enum": [
+                            "PhD student"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "properties": {
+                        "contribution_time_type": {
+                          "enum": [
+                            "Other contribution"
+                          ]
+                        },
+                        "contribution_time_type_other": {
+                          "type": "string",
+                          "title": "Who will provide the time contribution?"
+                        }
+                      },
+                      "required": [
+                        "contribution_time_type_other"
                       ]
                     }
                   ]
@@ -617,6 +646,10 @@ class Datarequest extends MY_Controller
             }
           },
           "contribution": {
+            "ui:order": [ "contribution_time", "contribution_time_type", "contribution_time_type_other", "contribution_time_specification", "contribution_financial", "contribution_financial_amount", "contribution_favor", "contribution_favor_description" ],
+            "contribution_time_specification": {
+              "ui:widget": "textarea"
+            },
             "contribution_favor_description": {
               "ui:widget": "textarea"
             }
