@@ -75,22 +75,37 @@ var reviewSchema = {};
 var reviewUiSchema = {};
 var reviewFormData = {};
 
-// Get the schema and formData of the data request review. Then render the data
-// as a disabled form
+// Get the reviews and render them in as dissabled forms
 axios.all([
     axios.get("/datarequest/datarequest/reviewSchema"),
     axios.get("/datarequest/datarequest/reviewData/" + requestId)
     ])
     .then(axios.spread((schemaresponse, dataresponse) => {
-        console.log(dataresponse);
         reviewFormData = dataresponse.data;
         reviewSchema   = schemaresponse.data.schema;
 
-        render(<ContainerReadonly schema={reviewSchema}
-                                  uiSchema={reviewUiSchema}
-                                  formData={reviewFormData} />,
-            document.getElementById("review")
-        );
+        var reviews = reviewFormData.map(function(line, i) {
+          return(
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="panel panel-default">
+                        <div class="panel-heading clearfix">
+                            <h3 class="panel-title pull-left">
+                                Review by {reviewFormData[i].username}
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                      <ContainerReadonly schema={reviewSchema}
+                                         uiSchema={reviewUiSchema}
+                                         formData={reviewFormData[i]} />
+                        </div>
+                    </div>
+                </div>
+            </div>
+          );
+        });
+
+        render(<div>{reviews}</div>, document.getElementById("reviews"));
     }));
 
 var evaluationSchema = {};
