@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import axios from 'axios';
 import { render } from "react-dom";
 import Form from "react-jsonschema-form";
+import BootstrapTable from 'react-bootstrap-table-next';
+import filterFactory, { numberFilter, textFilter, selectFilter, multiSelectFilter, Comparator } from 'react-bootstrap-table2-filter';
+import paginationFactory from 'react-bootstrap-table2-paginator';
+import DataSelection, { DataSelectionTable } from "./DataSelection.js";
 
 var schema = {};
 var uiSchema = {};
@@ -20,6 +24,7 @@ axios.get("/datarequest/datarequest/schema")
     });
 
 const onSubmit = ({formData}) => submitData(formData);
+
 
 class YodaForm extends React.Component {
     constructor(props) {
@@ -45,7 +50,8 @@ const CustomDescriptionField = ({id, description}) => {
 };
 
 const fields = {
-  DescriptionField: CustomDescriptionField
+  DescriptionField: CustomDescriptionField,
+  DataSelection: DataSelectionTable
 };
 
 class YodaButtons extends React.Component {
