@@ -1200,6 +1200,7 @@ class Datarequest extends MY_Controller
         $tokenHash = $this->security->get_csrf_hash();
 
         $viewParams = array(
+            'username'         => $this->rodsuser->getUserInfo()['name'],
             'tokenName'        => $tokenName,
             'tokenHash'        => $tokenHash,
             'activeModule'     => 'datarequest',
