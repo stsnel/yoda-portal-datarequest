@@ -119,7 +119,12 @@ function submitData(data)
     bodyFormData.set(tokenName, tokenHash);
     bodyFormData.set('formData', JSON.stringify(data));
 
-   // Store.
+    // If set, append previous_request_id to POST data
+    if (typeof(previousRequestId) !== 'undefined') {
+        bodyFormData.set('previousRequestId', previousRequestId);
+    }
+
+    // Store.
     axios({
         method: 'post',
         url: "/datarequest/datarequest/store",

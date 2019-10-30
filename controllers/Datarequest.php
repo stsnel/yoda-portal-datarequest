@@ -116,7 +116,9 @@ class Datarequest extends MY_Controller
         $this->load->model('Datarequest_model');
 
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
-            $result = $this->Datarequest_model->submit($arrayPost['formData']);
+            $result = isset($arrayPost['previousRequestId']) ?
+                        $this->Datarequest_model->submit($arrayPost['formData'], $arrayPost['previousRequestId']) :
+                        $this->Datarequest_model->submit($arrayPost['formData']);
 
             if ($result['status'] == 0) {
                 $this->output
