@@ -91,7 +91,7 @@ class Datarequest extends MY_Controller
         loadView('datarequest/datarequest/view', $viewParams);
     }
 
-    public function add() {
+    public function add($previousRequestId = NULL) {
 
         // Load CSRF token
         $tokenName = $this->security->get_csrf_token_name();
@@ -102,6 +102,9 @@ class Datarequest extends MY_Controller
             'tokenHash'        => $tokenHash,
             'activeModule'     => 'datarequest'
         );
+        if ($previousRequestId) {
+            $viewParams['previousRequestId'] = $previousRequestId;
+        }
 
         loadView('/datarequest/add', $viewParams);
     }
