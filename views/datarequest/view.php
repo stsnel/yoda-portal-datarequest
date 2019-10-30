@@ -104,44 +104,44 @@
             <div class="panel-body">
                 <div class="row bs-wizard" style="border-bottom:0;">
                     <div class="col-xs-3 bs-wizard-step <?php if (in_array($requestStatus, array("submitted", "accepted_for_dm_review", "dm_accepted", "dm_rejected", "assigned", "reviewed", "approved", "dta_ready", "dta_signed", "data_ready"))): ?>complete<?php else: ?>disabled<?php endif ?>">
-                      <div class="text-center bs-wizard-stepnum">Submission</div>
+                      <div class="text-center bs-wizard-stepnum">1. Submission</div>
                       <div class="progress"><div class="progress-bar"></div></div>
                       <a href="#" class="bs-wizard-dot"></a>
                     </div>
 
                     <div class="col-xs-3 bs-wizard-step <?php if (in_array($requestStatus, array("assigned", "reviewed", "approved", "dta_ready", "dta_signed", "data_ready"))): ?>complete<?php else: ?>disabled<?php endif ?>">
-                      <div class="text-center bs-wizard-stepnum">Under review</div>
+                      <div class="text-center bs-wizard-stepnum">2. Under review</div>
                       <div class="progress"><div class="progress-bar"></div></div>
                       <a href="#" class="bs-wizard-dot"></a>
                     </div>
 
                     <div class="col-xs-3 bs-wizard-step <?php if (in_array($requestStatus, array("reviewed", "approved", "dta_ready", "dta_signed", "data_ready"))): ?>complete<?php else: ?>disabled<?php endif ?>">
-                      <div class="text-center bs-wizard-stepnum">Reviewed</div>
+                      <div class="text-center bs-wizard-stepnum">3. Reviewed</div>
                       <div class="progress"><div class="progress-bar"></div></div>
                       <a href="#" class="bs-wizard-dot"></a>
                     </div>
 
                     <div class="col-xs-3 bs-wizard-step <?php if (in_array($requestStatus, array("approved", "dta_ready", "dta_signed", "data_ready"))): ?>complete<?php else: ?>disabled<?php endif ?>">
-                      <div class="text-center bs-wizard-stepnum">Approved</div>
+                      <div class="text-center bs-wizard-stepnum">4. Approved</div>
                       <div class="progress"><div class="progress-bar"></div></div>
                       <a href="#" class="bs-wizard-dot"></a>
                     </div>
                 </div>
                 <div class="row bs-wizard col-md-offset-2" style="border-bottom:0;">
                     <div class="col-xs-3 bs-wizard-step <?php if (in_array($requestStatus, array("dta_ready", "dta_signed", "data_ready"))): ?>complete<?php else: ?>disabled<?php endif ?>">
-                      <div class="text-center bs-wizard-stepnum">DTA ready</div>
+                      <div class="text-center bs-wizard-stepnum">5. DTA ready</div>
                       <div class="progress"><div class="progress-bar"></div></div>
                       <a href="#" class="bs-wizard-dot"></a>
                     </div>
 
                     <div class="col-xs-3 bs-wizard-step <?php if (in_array($requestStatus, array("dta_signed", "data_ready"))): ?>complete<?php else: ?>disabled<?php endif ?>">
-                      <div class="text-center bs-wizard-stepnum">DTA signed</div>
+                      <div class="text-center bs-wizard-stepnum">6. DTA signed</div>
                       <div class="progress"><div class="progress-bar"></div></div>
                       <a href="#" class="bs-wizard-dot"></a>
                     </div>
 
                     <div class="col-xs-3 bs-wizard-step <?php if (in_array($requestStatus, array("data_ready"))): ?>complete<?php else: ?>disabled<?php endif ?>">
-                      <div class="text-center bs-wizard-stepnum">Data ready</div>
+                      <div class="text-center bs-wizard-stepnum">7. Data ready</div>
                       <div class="progress"><div class="progress-bar"></div></div>
                       <a href="#" class="bs-wizard-dot"></a>
                     </div>

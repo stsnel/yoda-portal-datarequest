@@ -1,5 +1,6 @@
 <script>
     var requestId = <?php echo $requestId; ?>;
+    var username = "<?php echo $username; ?>";
 </script>
 
 <div class="row">

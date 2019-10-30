@@ -1064,6 +1064,17 @@ class Datarequest extends MY_Controller
                       "items": {
                         "type": "string",
                         "enum": [
+                          "bodmember",
+                          "dmcmember",
+                          "other",
+                          "other2",
+                          "other3",
+                          "other4",
+                          "other5",
+                          "other6",
+                          "other7"
+                        ],
+                        "enumNames": [
                           "Prof. Dr. M.J.N.L. Benders / Wilhelmina Children\'s Hospital, UMCU / Neonatology / m.benders@umcutrecht.nl",
                           "Prof. Dr. M. Dekovic / Utrecht University / Clinical Child and Family Studies / M.Dekovic@uu.nl",
                           "Prof. Dr. S. Durston / UMCU / Psychiatry / s.durston@umcutrecht.nl",
@@ -1189,6 +1200,7 @@ class Datarequest extends MY_Controller
         $tokenHash = $this->security->get_csrf_hash();
 
         $viewParams = array(
+            'username'         => $this->rodsuser->getUserInfo()['name'],
             'tokenName'        => $tokenName,
             'tokenHash'        => $tokenHash,
             'activeModule'     => 'datarequest',
@@ -1204,6 +1216,7 @@ class Datarequest extends MY_Controller
         {
           "type": "object",
           "required": [
+            "evaluation",
             "contribution",
             "informed_consent_fit",
             "research_question_answerability",
@@ -1214,6 +1227,20 @@ class Datarequest extends MY_Controller
             "biological_samples"
           ],
           "properties": {
+            "evaluation": {
+              "type": "string",
+              "title": "Would you approve / reject / reject (resubmit) this data request?",
+              "enum": [
+                "Approve",
+                "Reject",
+                "Reject (resubmit)"
+              ]
+            },
+            "evaluation_rationale": {
+              "type": "string",
+              "title": "Please provide a brief rationale for your evaluation.",
+              "description": "This is mandatory if the data request is rejected."
+            },
             "contribution": {
               "type": "string",
               "title": "How much did the applicant involved contribute to YOUth with respect to recruitment, setup, and continuation of YOUth?"
@@ -1253,6 +1280,32 @@ class Datarequest extends MY_Controller
             }
           },
           "dependencies": {
+            "evaluation": {
+              "oneOf": [
+                {
+                  "properties": {
+                    "evaluation": {
+                      "enum": [
+                        "Approve"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "evaluation": {
+                      "enum": [
+                        "Reject",
+                        "Reject (resubmit)"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "evaluation_rationale"
+                  ]
+                }
+              ]
+            },
             "biological_samples": {
               "oneOf": [
                 {
@@ -1290,8 +1343,42 @@ class Datarequest extends MY_Controller
           }
         }';
 
+        $uiSchema = '{
+          "evaluation_rationale": {
+            "ui:widget": "textarea"
+          },
+          "contribution": {
+            "ui:widget": "textarea"
+          },
+          "informed_consent_fit": {
+            "ui:widget": "textarea"
+          },
+          "research_question_answerability": {
+            "ui:widget": "textarea"
+          },
+          "study_quality": {
+            "ui:widget": "textarea"
+          },
+          "logistical_feasibility": {
+            "ui:widget": "textarea"
+          },
+          "study_value": {
+            "ui:widget": "textarea"
+          },
+          "researcher_expertise": {
+            "ui:widget": "textarea"
+          },
+          "biological_samples_volume": {
+            "ui:widget": "textarea"
+          },
+          "biological_samples_committee_approval": {
+            "ui:widget": "textarea"
+          }
+        }';
+
         $output = array();
         $output['schema'] = json_decode($schema);
+        $output['uiSchema'] = json_decode($uiSchema);
 
         $this->output->set_content_type('application/json')->set_output(json_encode($output));
     }
@@ -1327,12 +1414,12 @@ class Datarequest extends MY_Controller
     public function reviewData($requestId) {
         $rule = new ProdsRule(
             $this->rodsuser->getRodsAccount(),
-            'rule { uuGetReview(*requestId); }',
+            'rule { uuGetReviews(*requestId); }',
             array('*requestId' => $requestId),
             array('ruleExecOut')
         );
 
-        $formData = json_decode($rule->execute()['ruleExecOut'], true)['reviewJSON'];
+        $formData = json_decode($rule->execute()['ruleExecOut'], true)['reviewsJSON'];
 
         $this->output->set_content_type('application/json')->set_output($formData);
     }
