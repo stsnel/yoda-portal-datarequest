@@ -765,6 +765,7 @@ class Datarequest extends MY_Controller
               "title": "This data request is",
               "enum": [
                 "Accepted for data manager review",
+                "Rejected (resubmit)",
                 "Rejected"
               ]
             },
@@ -790,6 +791,7 @@ class Datarequest extends MY_Controller
                   "properties": {
                     "preliminary_review": {
                       "enum": [
+                        "Rejected (resubmit)",
                         "Rejected"
                       ]
                     },
@@ -901,6 +903,7 @@ class Datarequest extends MY_Controller
               "title": "I advise that this data request be",
               "enum": [
                 "Accepted",
+                "Rejected (resubmit)",
                 "Rejected"
               ]
             },
@@ -926,6 +929,7 @@ class Datarequest extends MY_Controller
                   "properties": {
                     "datamanager_review": {
                       "enum": [
+                        "Rejected (resubmit)",
                         "Rejected"
                       ]
                     },
@@ -1045,6 +1049,7 @@ class Datarequest extends MY_Controller
               "title": "This data request is:",
               "enum": [
                 "Accepted for DMC review",
+                "Rejected (resubmit)",
                 "Rejected"
               ]
             },
@@ -1102,6 +1107,7 @@ class Datarequest extends MY_Controller
                   "properties": {
                     "decision": {
                       "enum": [
+                        "Rejected (resubmit)",
                         "Rejected"
                       ]
                     },
@@ -1237,8 +1243,8 @@ class Datarequest extends MY_Controller
               "title": "Would you approve / reject / reject (resubmit) this data request?",
               "enum": [
                 "Approve",
-                "Reject",
-                "Reject (resubmit)"
+                "Reject (resubmit)",
+                "Reject"
               ]
             },
             "evaluation_rationale": {
@@ -1300,8 +1306,8 @@ class Datarequest extends MY_Controller
                   "properties": {
                     "evaluation": {
                       "enum": [
-                        "Reject",
-                        "Reject (resubmit)"
+                        "Reject (resubmit)",
+                        "Reject"
                       ]
                     }
                   },
@@ -1458,6 +1464,7 @@ class Datarequest extends MY_Controller
               "title": "This data request is",
               "enum": [
                 "Approved",
+                "Rejected (resubmit)",
                 "Rejected"
               ]
             },
@@ -1475,13 +1482,14 @@ class Datarequest extends MY_Controller
                       "enum": [
                         "Approved"
                       ]
-                    }                
+                    }
                   }
                 },
                 {
                   "properties": {
                     "evaluation": {
                       "enum": [
+                        "Rejected (resubmit)",
                         "Rejected"
                       ]
                     },
