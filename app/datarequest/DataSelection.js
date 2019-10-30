@@ -471,26 +471,35 @@ class DataSelectionTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      ...props.formData,
-      selectedRows: []
+      selectedRows: [],
+      ...props.formData
     };
   }
 
   selectRow = (row, isSelect) => {
-    let x = this.state.selectedRows;
+    let selectedRows = this.state.selectedRows;
     if (isSelect) {
-      x.push(row);
+      selectedRows.push(row);
     } else {
-      x = x.filter(x => x != row);
+      selectedRows = selectedRows.filter(selectedRows => selectedRows.expId != row.expId);
     }
-    this.setState({'selectedRows': x}, () => this.props.onChange(this.state));
+    this.setState({'selectedRows': selectedRows}, () => this.props.onChange(this.state));
   };
+
+  getSelectedRowIds() {
+    let selectedRowIds = [];
+    this.state.selectedRows.forEach(function(row, index) {
+      selectedRowIds.push(row['expId']);
+    });
+    return selectedRowIds;
+  }
 
   render() {
     const selectRow = {
       mode: "checkbox",
       clickToSelect: true,
       hideSelectAll: true,
+      selected: this.getSelectedRowIds(),
       style: { backgroundColor: '#c8e6c9' },
       onSelect: this.selectRow
     };
