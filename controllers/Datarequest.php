@@ -91,7 +91,7 @@ class Datarequest extends MY_Controller
         loadView('datarequest/datarequest/view', $viewParams);
     }
 
-    public function add() {
+    public function add($previousRequestId = NULL) {
 
         // Load CSRF token
         $tokenName = $this->security->get_csrf_token_name();
@@ -102,6 +102,9 @@ class Datarequest extends MY_Controller
             'tokenHash'        => $tokenHash,
             'activeModule'     => 'datarequest'
         );
+        if ($previousRequestId) {
+            $viewParams['previousRequestId'] = $previousRequestId;
+        }
 
         loadView('/datarequest/add', $viewParams);
     }
@@ -113,7 +116,9 @@ class Datarequest extends MY_Controller
         $this->load->model('Datarequest_model');
 
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
-            $result = $this->Datarequest_model->submit($arrayPost['formData']);
+            $result = isset($arrayPost['previousRequestId']) ?
+                        $this->Datarequest_model->submit($arrayPost['formData'], $arrayPost['previousRequestId']) :
+                        $this->Datarequest_model->submit($arrayPost['formData']);
 
             if ($result['status'] == 0) {
                 $this->output
@@ -760,6 +765,7 @@ class Datarequest extends MY_Controller
               "title": "This data request is",
               "enum": [
                 "Accepted for data manager review",
+                "Rejected (resubmit)",
                 "Rejected"
               ]
             },
@@ -785,6 +791,7 @@ class Datarequest extends MY_Controller
                   "properties": {
                     "preliminary_review": {
                       "enum": [
+                        "Rejected (resubmit)",
                         "Rejected"
                       ]
                     },
@@ -896,6 +903,7 @@ class Datarequest extends MY_Controller
               "title": "I advise that this data request be",
               "enum": [
                 "Accepted",
+                "Rejected (resubmit)",
                 "Rejected"
               ]
             },
@@ -921,6 +929,7 @@ class Datarequest extends MY_Controller
                   "properties": {
                     "datamanager_review": {
                       "enum": [
+                        "Rejected (resubmit)",
                         "Rejected"
                       ]
                     },
@@ -1040,6 +1049,7 @@ class Datarequest extends MY_Controller
               "title": "This data request is:",
               "enum": [
                 "Accepted for DMC review",
+                "Rejected (resubmit)",
                 "Rejected"
               ]
             },
@@ -1097,6 +1107,7 @@ class Datarequest extends MY_Controller
                   "properties": {
                     "decision": {
                       "enum": [
+                        "Rejected (resubmit)",
                         "Rejected"
                       ]
                     },
@@ -1232,8 +1243,8 @@ class Datarequest extends MY_Controller
               "title": "Would you approve / reject / reject (resubmit) this data request?",
               "enum": [
                 "Approve",
-                "Reject",
-                "Reject (resubmit)"
+                "Reject (resubmit)",
+                "Reject"
               ]
             },
             "evaluation_rationale": {
@@ -1295,8 +1306,8 @@ class Datarequest extends MY_Controller
                   "properties": {
                     "evaluation": {
                       "enum": [
-                        "Reject",
-                        "Reject (resubmit)"
+                        "Reject (resubmit)",
+                        "Reject"
                       ]
                     }
                   },
@@ -1453,6 +1464,7 @@ class Datarequest extends MY_Controller
               "title": "This data request is",
               "enum": [
                 "Approved",
+                "Rejected (resubmit)",
                 "Rejected"
               ]
             },
@@ -1470,13 +1482,14 @@ class Datarequest extends MY_Controller
                       "enum": [
                         "Approved"
                       ]
-                    }                
+                    }
                   }
                 },
                 {
                   "properties": {
                     "evaluation": {
                       "enum": [
+                        "Rejected (resubmit)",
                         "Rejected"
                       ]
                     },

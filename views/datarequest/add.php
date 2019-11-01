@@ -1,3 +1,9 @@
+<script>
+    <?php if (isset($previousRequestId)): ?>
+        var previousRequestId = <?php echo $previousRequestId; ?>;
+    <?php endif ?>
+</script>
+
     <div class="row metadata-form">
         <div class="col-md-12">
             <div class="panel panel-default">

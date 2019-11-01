@@ -9,6 +9,7 @@ import DataSelection, { DataSelectionTable } from "./DataSelection.js";
 
 var schema = {};
 var uiSchema = {};
+var formData = {};
 
 var form = document.getElementById('form');
 
@@ -18,9 +19,21 @@ axios.get("/datarequest/datarequest/schema")
         schema = response.data.schema;
         uiSchema = response.data.uiSchema;
 
-        render(<Container/>,
-            document.getElementById("form")
-        );
+        // Get schema of previous data request (of which this data request will become a resubmission) if specified
+        if (typeof previousRequestId !== 'undefined') {
+            axios.get("/datarequest/datarequest/data/" + previousRequestId)
+                .then(function(response) {
+                    formData = response.data;
+                    render(<Container formData={formData} />,
+                        document.getElementById("form")
+                    );
+                });
+        } else {
+            render(<Container />,
+                document.getElementById("form")
+            );
+        }
+
     });
 
 const onSubmit = ({formData}) => submitData(formData);
@@ -37,6 +50,7 @@ class YodaForm extends React.Component {
                   schema={schema}
                   idPrefix={"yoda"}
                   uiSchema={uiSchema}
+                  formData={formData}
                   fields={fields}
                   onSubmit={onSubmit}>
                 <button ref={(btn) => {this.submitButton=btn;}} className="hidden" />
@@ -85,7 +99,7 @@ class Container extends React.Component {
     render() {
         return (
         <div>
-          <YodaForm ref={(form) => {this.form=form;}}/>
+          <YodaForm formData={this.props.formData} ref={(form) => {this.form=form;}}/>
           <YodaButtons submitButton={this.submitForm}/>
         </div>
       );
@@ -105,7 +119,12 @@ function submitData(data)
     bodyFormData.set(tokenName, tokenHash);
     bodyFormData.set('formData', JSON.stringify(data));
 
-   // Store.
+    // If set, append previous_request_id to POST data
+    if (typeof(previousRequestId) !== 'undefined') {
+        bodyFormData.set('previousRequestId', previousRequestId);
+    }
+
+    // Store.
     axios({
         method: 'post',
         url: "/datarequest/datarequest/store",
