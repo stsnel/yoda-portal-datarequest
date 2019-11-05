@@ -1208,49 +1208,6 @@ class Datarequest extends MY_Controller
         $this->output->set_content_type('application/json')->set_output(json_encode($output));
     }
 
-    public function assignRequest() {
-        $this->load->model('user');
-
-        # Check if user is a data manager
-        $isDatamanager = $this->user->isDatamanager();
-
-        if ($isDatamanager) {
-            # Get input parameters
-            $assignees = $this->input->post()['data'];
-            $requestId = $this->input->post()['requestId'];
-
-            # Call uuAssignRequest rule and get status info
-            $rule = new ProdsRule(
-                $this->rodsuser->getRodsAccount(),
-                'rule { uuAssignRequest(*assignees, *requestId); }',
-                array('*assignees' => json_encode($assignees), '*requestId' => $requestId),
-                array('ruleExecOut')
-            );
-            $result = $rule->execute()['ruleExecOut'];
-
-            # Return status info
-            if (json_decode($result, true)['status'] === 0) {
-                $this->output
-                ->set_content_type('application/json')
-                ->set_output($result);
-            } else {
-                $this->output
-                    ->set_content_type('application/json')
-                    ->set_status_header(500)
-                    ->set_output($result);
-            }
-        }
-        else {
-            $output['status']     = -2;
-            $output['statusInfo'] = "Uploading user is not a datamanager.";
-
-            return $this->output
-                        ->set_content_type('application/json')
-                        ->set_status_header(403)
-                        ->set_output(json_encode($output));
-        }
-    }
-
     public function assignData($requestId) {
         $rule = new ProdsRule(
             $this->rodsuser->getRodsAccount(),
