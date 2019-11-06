@@ -37,6 +37,32 @@ EORULE;
     }
 
     /**
+     * Check if user is a Data Management Committee member.
+     */
+    function isDMCMember()
+    {
+        $rulebody = <<<EORULE
+        rule {
+            uuGroupUserExists(*group, "*user#*zone", false, *member);
+            *member = str(*member);
+        }
+EORULE;
+        $rule = new ProdsRule(
+            $this->rodsuser->getRodsAccount(),
+            $rulebody,
+                array(
+                    '*user'  => $this->rodsuser->getUserInfo()['name'],
+                    '*zone'  => $this->rodsuser->getUserInfo()['zone'],
+                    '*group' => 'datarequests-research-data-management-committee'
+                ),
+                array('*member')
+            );
+        $result = $rule->execute()['*member'];
+
+        return $result == 'true' ? true : false;
+    }
+
+    /**
      * Check if user is a data manager.
      */
     function isDatamanager()
