@@ -9,6 +9,13 @@
 
 class Datarequest extends MY_Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->load->library('api');
+    }
+
     public function index() {
         $this->config->load('config');
         $items = $this->config->item('browser-items-per-page');
