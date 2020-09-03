@@ -9,6 +9,13 @@
 
 class Datarequest_model extends CI_Model
 {
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->load->library('api');
+    }
+
     function submit($data, $previousRequestId = NULL)
     {
         $rule = new ProdsRule(

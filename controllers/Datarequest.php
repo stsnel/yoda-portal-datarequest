@@ -67,22 +67,10 @@ class Datarequest extends MY_Controller
         $tokenName = $this->security->get_csrf_token_name();
         $tokenHash = $this->security->get_csrf_hash();
 
-        # Get the data request and data request status from iRODS
-        $rule = new ProdsRule(
-            $this->rodsuser->getRodsAccount(),
-            'rule { uuGetDatarequest(*requestId); }',
-            array('*requestId' => $requestId),
-            array('ruleExecOut')
-        );
-        $result = json_decode($rule->execute()['ruleExecOut'], true);
-        if ($result['status'] != 0) {
-            $this->output
-                 ->set_content_type('application/json')
-                 ->set_status_header(500)
-                 ->set_output(json_encode($result));
-        }
-        $datarequest = json_decode($result["requestJSON"], true);
-        $datarequestStatus = $result["requestStatus"];
+	# Get the data request and data request status from iRODS
+	$result = $this->api->call('uuGetDatarequest', ['requestId' => $requestId]);
+	$datarequest = json_decode($result->data->requestJSON);
+	$datarequestStatus = $result->data->requestStatus;
 
         # Set view params and render the view
         $viewParams = array(
