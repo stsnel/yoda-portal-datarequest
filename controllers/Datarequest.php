@@ -68,7 +68,7 @@ class Datarequest extends MY_Controller
         $tokenHash = $this->security->get_csrf_hash();
 
 	# Get the data request and data request status from iRODS
-	$result = $this->api->call('uuGetDatarequest', ['requestId' => $requestId]);
+	$result = $this->api->call('datarequest_get', ['requestId' => $requestId]);
 	$datarequest = json_decode($result->data->requestJSON);
 	$datarequestStatus = $result->data->requestStatus;
 
@@ -653,18 +653,14 @@ class Datarequest extends MY_Controller
     public function data($requestId) {
         $this->load->model('user');
 
-        $rule = new ProdsRule(
-            $this->rodsuser->getRodsAccount(),
-            'rule { uuGetDatarequest(*requestId); }',
-            array('*requestId' => $requestId),
-            array('ruleExecOut')
-        );
+	# Get data request and data request status
+	$result = $this->api->call('datarequest_get', ['requestId' => $requestId]);
+	$datarequest = $result->data->requestJSON;
+	$callStatus = $result->data->status;
 
-        $data = json_decode($rule->execute()['ruleExecOut'], true);
-
-        if ($data['status'] === 0) {
-            $this->output->set_content_type('application/json')->set_output($data['requestJSON']);
-        } elseif ($data['status'] === 'PermissionError') {
+        if ($callStatus === 0) {
+            $this->output->set_content_type('application/json')->set_output($datarequest);
+        } elseif ($callStatus === 'PermissionError') {
             $this->output->set_status_header(403);
         }
     }
