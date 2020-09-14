@@ -18,14 +18,10 @@ class Datarequest_model extends CI_Model
 
     function submit($data, $previousRequestId = NULL)
     {
-        $rule = new ProdsRule(
-            $this->rodsuser->getRodsAccount(),
-            'rule { uuSubmitDatarequest(*data, *previousRequestId); }',
-            array('*data' => $data, '*previousRequestId' => $previousRequestId),
-            array('ruleExecOut')
-        );
+	$result = $this->api->call('datarequest_submit',
+                                   ['data' => $data,
+                                    'previousRequestId' => $previousRequestId]);
 
-        $result = json_decode($rule->execute()['ruleExecOut'], true);
         return $result;
     }
 
