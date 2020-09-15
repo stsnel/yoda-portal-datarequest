@@ -16,15 +16,6 @@ class Datarequest_model extends CI_Model
         $this->load->library('api');
     }
 
-    function submit($data, $previousRequestId = NULL)
-    {
-	$result = $this->api->call('datarequest_submit',
-                                   ['data' => $data,
-                                    'previousRequestId' => $previousRequestId]);
-
-        return $result;
-    }
-
     function overview($limit, $offset = 0)
     {
         # Get table data from iRODS

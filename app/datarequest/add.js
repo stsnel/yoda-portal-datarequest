@@ -106,37 +106,21 @@ class Container extends React.Component {
     }
 };
 
-function submitData(data)
+async function submitData(data)
 {
     // Disable submit button
     $("button:submit").attr("disabled", "disabled");
 
-    var tokenName = form.dataset.csrf_token_name;
-    var tokenHash = form.dataset.csrf_token_hash;
+    // Store
+    try {
+        await Yoda.call('datarequest_submit',
+            {data: JSON.stringify(data),
+             previousRequestId: typeof(previousRequestId) !== 'undefined' ? previousRequestId : null},
+            {errorPrefix: "Could not submit data."});
 
-    // Create form data.
-    var bodyFormData = new FormData();
-    bodyFormData.set(tokenName, tokenHash);
-    bodyFormData.set('formData', JSON.stringify(data));
-
-    // If set, append previous_request_id to POST data
-    if (typeof(previousRequestId) !== 'undefined') {
-        bodyFormData.set('previousRequestId', previousRequestId);
+        window.location.href = "/datarequest";
+    } catch (e) {
+        // Re-enable submit button if submission failed
+        $('button:submit').attr("disabled", false);
     }
-
-    // Store.
-    axios({
-        method: 'post',
-        url: "/datarequest/datarequest/store",
-        data: bodyFormData,
-        config: { headers: {'Content-Type': 'multipart/form-data' }}
-        })
-        .then(function (response) {
-            window.location.href = "/datarequest";
-        })
-        .catch(function (error) {
-            //handle error
-            console.log('ERROR:');
-            console.log(error);
-        });
 }

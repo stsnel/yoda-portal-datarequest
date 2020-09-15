@@ -112,30 +112,6 @@ class Datarequest extends MY_Controller
         loadView('/datarequest/add', $viewParams);
     }
 
-    public function store()
-    {
-        $arrayPost = $this->input->post();
-
-        $this->load->model('Datarequest_model');
-
-        if ($this->input->server('REQUEST_METHOD') == 'POST') {
-            $result = isset($arrayPost['previousRequestId']) ?
-                        $this->Datarequest_model->submit($arrayPost['formData'], $arrayPost['previousRequestId']) :
-                        $this->Datarequest_model->submit($arrayPost['formData']);
-
-            if ($result['status'] === 0) {
-                $this->output
-                     ->set_content_type('application/json')
-                     ->set_output(json_encode($result));
-            } else {
-                $this->output
-                     ->set_content_type('application/json')
-                     ->set_status_header(500)
-                     ->set_output(json_encode($result));
-            }
-        }
-    }
-
     public function schema()
     {
         $schema = '{
