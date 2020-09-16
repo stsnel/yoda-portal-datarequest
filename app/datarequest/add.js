@@ -115,7 +115,7 @@ async function submitData(data)
     try {
         await Yoda.call('datarequest_submit',
             {data: JSON.stringify(data),
-             previousRequestId: typeof(previousRequestId) !== 'undefined' ? previousRequestId : null},
+             previous_request_id: typeof(previousRequestId) !== 'undefined' ? previousRequestId : null},
             {errorPrefix: "Could not submit data."});
 
         window.location.href = "/datarequest";
