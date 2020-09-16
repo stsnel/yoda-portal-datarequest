@@ -626,23 +626,6 @@ class Datarequest extends MY_Controller
         $this->output->set_content_type('application/json')->set_output(json_encode($output));
     }
 
-    public function data($requestId) {
-        $this->load->model('user');
-
-	# Get data request and data request status
-	$result = $this->api->call('datarequest_get', ['requestId' => $requestId]);
-	$datarequest = $result->data->requestJSON;
-	$callStatus = $result->status;
-
-        if ($callStatus == "ok") {
-            $this->output->set_content_type('application/json')->set_output($datarequest);
-        } elseif ($callStatus === 'permission_error') {
-            $this->output->set_status_header(403);
-        } else {
-            $this->output->set_status_header(500);
-        }
-    }
-
     public function overview_data()
     {
         $this->load->model('Datarequest_model');

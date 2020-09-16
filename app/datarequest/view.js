@@ -19,21 +19,23 @@ $(document).ready(function() {
     var datarequestUiSchema = {};
     var datarequestFormData = {};
 
-    // Get the schema, uiSchema and formData of the data request to be reviewed.
-    // Then render the data as a disabled form
-    axios.all([
-        axios.get("/datarequest/datarequest/schema"),
-        axios.get("/datarequest/datarequest/data/" + requestId)
-        ])
-        .then(axios.spread((schemaresponse, dataresponse) => {
-            datarequestFormData = dataresponse.data;
-            datarequestSchema   = schemaresponse.data.schema;
-            datarequestUiSchema = schemaresponse.data.uiSchema;
+    // Get data request
+    Yoda.call('datarequest_get',
+        {request_id: requestId},
+        {errorPrefix: "Could not get datarequest."})
+    .then((dr) => {
+        datarequestFormData = JSON.parse(dr.requestJSON);
+    });
 
-            render(<ContainerReadonly schema={datarequestSchema} uiSchema={datarequestUiSchema} formData={datarequestFormData} />,
-                document.getElementById("datarequest")
-            );
-        }));
+    // Get the schema and uiSchema, then render the data as a disabled form.
+    axios.get("/datarequest/datarequest/schema").then((schema) => {
+        datarequestSchema   = schema.data.schema;
+        datarequestUiSchema = schema.data.uiSchema;
+
+	render(<ContainerReadonly schema={datarequestSchema} uiSchema={datarequestUiSchema} formData={datarequestFormData} />,
+	    document.getElementById("datarequest")
+        );
+    });
 
     // Render and show the modal for assigning a data request to one or
     // more DMC members
