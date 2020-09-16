@@ -68,7 +68,7 @@ class Datarequest extends MY_Controller
         $tokenHash = $this->security->get_csrf_hash();
 
 	# Get the data request and data request status from iRODS
-	$result = $this->api->call('datarequest_get', ['requestId' => $requestId]);
+	$result = $this->api->call('datarequest_get', ['request_id' => $requestId]);
 	$datarequest = json_decode($result->data->requestJSON);
 	$datarequestStatus = $result->data->requestStatus;
 
