@@ -702,29 +702,15 @@ class Datarequest extends MY_Controller
         $arrayPost = $this->input->post();
 
         if ($this->input->server('REQUEST_METHOD') == 'POST') {
-            $rule = new ProdsRule(
-                $this->rodsuser->getRodsAccount(),
-                'rule { uuSubmitPreliminaryReview(*data, *requestId); }',
-                array('*data' => $arrayPost['formData'],
-                      '*requestId' => $arrayPost['requestId']),
-                array('ruleExecOut')
-            );
+            $result = $this->api->call('datarequest_preliminary_review_submit',
+                                       ['data' => $arrayPost['formData'],
+                                        'request_id' => $arrayPost['requestId']]);
+            $callStatus = $result->data->status;
 
-            $result = json_decode($rule->execute()['ruleExecOut'], true);
-
-            if ($result['status'] === 0) {
+            if ($callStatus === 0) {
                 $this->output
                      ->set_content_type('application/json')
-                     ->set_output(json_encode($result));
-            } elseif ($result['status'] === "PermissionError") {
-                $this->output
-                     ->set_status_header(403);
-                return;
-            } else {
-                $this->output
-                     ->set_content_type('application/json')
-                     ->set_status_header(500)
-                     ->set_output(json_encode($result));
+                     ->set_output(json_encode($result->data));
             }
         }
     }
@@ -812,19 +798,12 @@ class Datarequest extends MY_Controller
     }
 
     public function preliminaryReviewData($requestId) {
-        $rule = new ProdsRule(
-            $this->rodsuser->getRodsAccount(),
-            'rule { uuGetPreliminaryReview(*requestId); }',
-            array('*requestId' => $requestId),
-            array('ruleExecOut')
-        );
+        $result = $this->api->call('datarequest_preliminary_review_get', ['request_id' => $requestId]);
+        $callStatus = $result->data->status;
+        $preliminaryReview = $result->data->preliminaryReviewJSON;
 
-        $data = json_decode($rule->execute()['ruleExecOut'], true);
-
-        if ($data['status'] === 0) {
-            $this->output->set_content_type('application/json')->set_output($data['preliminaryReviewJSON']);
-        } elseif ($data['status'] === 'PermissionError') {
-            $this->output->set_status_header(403);
+        if ($callStatus === 0) {
+            $this->output->set_content_type('application/json')->set_output($preliminaryReview);
         }
     }
 
