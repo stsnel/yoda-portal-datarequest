@@ -4,51 +4,67 @@ import { render } from "react-dom";
 import Form from "react-jsonschema-form";
 import DataSelection, { DataSelectionCart } from "./DataSelection.js";
 
-var datarequestSchema   = {};
-var datarequestUiSchema = {};
-var datarequestFormData = {};
-var prSchema   = {};
-var prUiSchema = {};
-var prFormData = {};
+$(document).ready(function() {
 
-// Get the schema, uiSchema and formData of the data request to be reviewed by the data manager.
-// Then render the data as a disabled form
-axios.all([
-    axios.get("/datarequest/datarequest/schema"),
-    axios.get("/datarequest/datarequest/data/" + requestId),
-    axios.get("/datarequest/datarequest/preliminaryReviewSchema"),
-    axios.get("/datarequest/datarequest/preliminaryReviewData/" + requestId)
-    ])
-    .then(axios.spread((schemaresponse, dataresponse,
-                        prschemaresponse, prdataresponse) => {
-        datarequestFormData = dataresponse.data;
-        datarequestSchema   = schemaresponse.data.schema;
-        datarequestUiSchema = schemaresponse.data.uiSchema;
-        prFormData          = prdataresponse.data;
-        prSchema            = prschemaresponse.data.schema;
-        prUiSchema          = prschemaresponse.data.uiSchema;
+    var datarequestSchema   = {};
+    var datarequestUiSchema = {};
+    var datarequestFormData = {};
 
+    // Get data request
+    Yoda.call('datarequest_get',
+        {request_id: requestId},
+        {errorPrefix: "Could not get datarequest"})
+    .then((datarequest) => {
+        datarequestFormData = JSON.parse(datarequest.requestJSON);
+    })
+    // Get data request schema and uiSchema
+    .then(async function() {
+        let schema = await axios.get("/datarequest/datarequest/schema");
+        datarequestSchema   = schema.data.schema;
+        datarequestUiSchema = schema.data.uiSchema;
+    })
+    // Render data request as disabled form
+    .then(() => {
         render(<ContainerReadonly schema={datarequestSchema}
                                   uiSchema={datarequestUiSchema}
                                   formData={datarequestFormData} />,
-            document.getElementById("datarequest")
+               document.getElementById("datarequest")
         );
+    });
 
+    var prSchema   = {};
+    var prUiSchema = {};
+    var prFormData = {};
+
+    // Get preliminary review
+    Yoda.call('datarequest_preliminary_review_get',
+        {request_id: requestId},
+        {errorPrefix: "Could not get preliminary review"})
+    .then((preliminary_review) => {
+        prFormData = JSON.parse(preliminary_review);
+    })
+    // Get preliminary review schema and uiSchema
+    .then(async function() {
+        let schema = await axios.get("/datarequest/datarequest/preliminaryReviewSchema");
+        prSchema   = schema.data.schema;
+        prUiSchema = schema.data.uiSchema;
+    })
+    // Render preliminary review as disabled form
+    .then(() => {
         render(<ContainerReadonly schema={prSchema}
                                   uiSchema={prUiSchema}
                                   formData={prFormData} />,
             document.getElementById("preliminaryReview")
         );
-    }));
+    });
 
-var datamanagerReviewSchema = {};
-var datamanagerReviewUiSchema = {};
-var form = document.getElementById('datamanagerReview');
+    var datamanagerReviewSchema = {};
+    var datamanagerReviewUiSchema = {};
+    var form = document.getElementById('datamanagerReview');
 
-// Get the schema of the data request review form for the data manager
-axios.get("/datarequest/datarequest/datamanagerReviewSchema")
+    // Get the schema of the data request review form for the data manager
+    axios.get("/datarequest/datarequest/datamanagerReviewSchema")
     .then(function (response) {
-        console.log(response);
         datamanagerReviewSchema = response.data.schema;
         datamanagerReviewUiSchema = response.data.uiSchema;
 
@@ -57,6 +73,7 @@ axios.get("/datarequest/datarequest/datamanagerReviewSchema")
             document.getElementById("datamanagerReview")
         );
     });
+});
 
 class YodaForm extends React.Component {
     constructor(props) {
@@ -162,33 +179,20 @@ class ContainerReadonly extends React.Component {
     }
 }
 
-function submitData(data)
-{
+async function submitData(data) {
+
     // Disable submit button
-    $("button:submit").attr("disabled", "disabled");
+    $("button:submit").attr("disabled", true);
 
-    var tokenName = datamanagerReview.dataset.csrf_token_name;
-    var tokenHash = datamanagerReview.dataset.csrf_token_hash;
-
-    // Create form data.
-    var bodyFormData = new FormData();
-    bodyFormData.set(tokenName, tokenHash);
-    bodyFormData.set('formData', JSON.stringify(data));
-    bodyFormData.set('requestId', requestId);
-
-   // Store.
-    axios({
-        method: 'post',
-        url: "/datarequest/datarequest/storeDatamanagerReview",
-        data: bodyFormData,
-        config: { headers: {'Content-Type': 'multipart/form-data' }}
-        })
-        .then(function (response) {
-            window.location.href = "/datarequest/view/" + requestId;
-        })
-        .catch(function (error) {
-            //handle error
-            console.log('ERROR:');
-            console.log(error);
-        });
+    // Store
+    Yoda.call("datarequest_datamanager_review_submit",
+        {data: JSON.stringify(data),
+         request_id: requestId},
+        {errorPrefix: "Could not submit datamanager review"})
+    .then(function (response) {
+        window.location.href = "/datarequest/view/" + requestId;
+    })
+    .catch((error) => {
+        $("button:submit").attr("disabled", false);
+    });
 }

@@ -797,16 +797,6 @@ class Datarequest extends MY_Controller
         $this->output->set_content_type('application/json')->set_output(json_encode($output));
     }
 
-    public function preliminaryReviewData($requestId) {
-        $result = $this->api->call('datarequest_preliminary_review_get', ['request_id' => $requestId]);
-        $callStatus = $result->data->status;
-        $preliminaryReview = $result->data->preliminaryReviewJSON;
-
-        if ($callStatus === 0) {
-            $this->output->set_content_type('application/json')->set_output($preliminaryReview);
-        }
-    }
-
     public function datamanagerReview($requestId) {
         // Check if user is data manager. If not, return a 403
         $this->load->model('user');
@@ -829,38 +819,6 @@ class Datarequest extends MY_Controller
         );
 
         loadView('/datarequest/datamanagerreview', $viewParams);
-    }
-
-    public function storeDatamanagerReview()
-    {
-        $arrayPost = $this->input->post();
-
-        if ($this->input->server('REQUEST_METHOD') == 'POST') {
-            $rule = new ProdsRule(
-                $this->rodsuser->getRodsAccount(),
-                'rule { uuSubmitDatamanagerReview(*data, *requestId); }',
-                array('*data' => $arrayPost['formData'],
-                      '*requestId' => $arrayPost['requestId']),
-                array('ruleExecOut')
-            );
-
-            $result = json_decode($rule->execute()['ruleExecOut'], true);
-
-            if ($result['status'] === 0) {
-                $this->output
-                     ->set_content_type('application/json')
-                     ->set_output(json_encode($result));
-            } elseif ($result['status'] === "PermissionError") {
-                $this->output
-                     ->set_status_header(403);
-                return;
-            } else {
-                $this->output
-                     ->set_content_type('application/json')
-                     ->set_status_header(500)
-                     ->set_output(json_encode($result));
-            }
-        }
     }
 
     public function datamanagerReviewSchema()
