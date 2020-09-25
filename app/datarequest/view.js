@@ -22,18 +22,22 @@ $(document).ready(function() {
     // Get data request
     Yoda.call('datarequest_get',
         {request_id: requestId},
-        {errorPrefix: "Could not get datarequest."})
-    .then((dr) => {
-        datarequestFormData = JSON.parse(dr.requestJSON);
-    });
-
-    // Get the schema and uiSchema, then render the data as a disabled form.
-    axios.get("/datarequest/datarequest/schema").then((schema) => {
+        {errorPrefix: "Could not get datarequest"})
+    .then((datarequest) => {
+        datarequestFormData = JSON.parse(datarequest.requestJSON);
+    })
+    // Get data request schema and uiSchema
+    .then(async function() {
+        let schema = await axios.get("/datarequest/datarequest/schema");
         datarequestSchema   = schema.data.schema;
         datarequestUiSchema = schema.data.uiSchema;
-
-	render(<ContainerReadonly schema={datarequestSchema} uiSchema={datarequestUiSchema} formData={datarequestFormData} />,
-	    document.getElementById("datarequest")
+    })
+    // Render data request as disabled form
+    .then(() => {
+        render(<ContainerReadonly schema={datarequestSchema}
+                                  uiSchema={datarequestUiSchema}
+                                  formData={datarequestFormData} />,
+               document.getElementById("datarequest")
         );
     });
 
