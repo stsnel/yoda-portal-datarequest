@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import axios from 'axios';
 import { render } from "react-dom";
 import Form from "react-jsonschema-form";
 import BootstrapTable from 'react-bootstrap-table-next';
@@ -7,37 +6,39 @@ import filterFactory, { numberFilter, textFilter, selectFilter, multiSelectFilte
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import DataSelection, { DataSelectionTable } from "./DataSelection.js";
 
-var schema = {};
-var uiSchema = {};
-var formData = {};
+document.addEventListener("DOMContentLoaded", async () => {
 
-var form = document.getElementById('form');
+    // Get data request schema and uiSchema
+    fetch("/datarequest/datarequest/schema")
+    .then(async response => {
+        let schemas = await response.json();
 
-// Get schema
-axios.get("/datarequest/datarequest/schema")
-    .then(function (response) {
-        schema = response.data.schema;
-        uiSchema = response.data.uiSchema;
+        let datarequestSchema = schemas.schema;
+        let datarequestUiSchema = schemas.uiSchema;
 
-        // Get schema of previous data request (of which this data request will become a resubmission) if specified
+        // If specified, get data of previous data request (of which the present
+        // data request will become a resubmission) and prefill data request
+        // form
         if (typeof previousRequestId !== 'undefined') {
-            axios.get("/datarequest/datarequest/data/" + previousRequestId)
-                .then(function(response) {
-                    formData = response.data;
-                    render(<Container formData={formData} />,
-                        document.getElementById("form")
-                    );
-                });
-        } else {
-            render(<Container />,
-                document.getElementById("form")
-            );
-        }
+            fetch("/datarequest/datarequest/data/" + previousRequestId)
+            .then(async response => {
+                let datarequestFormData = await response.json();
 
+                render(<Container schema={datarequestSchema}
+                                  uiSchema={datarequestUiSchema}
+                                  formData={datarequestFormData} />,
+                       document.getElementById("form"));
+            });
+        // Else, render blank data request form
+        } else {
+            render(<Container schema={datarequestSchema}
+                              uiSchema={datarequestUiSchema} />,
+                   document.getElementById("form"));
+        }
     });
+});
 
 const onSubmit = ({formData}) => submitData(formData);
-
 
 class YodaForm extends React.Component {
     constructor(props) {
@@ -47,13 +48,14 @@ class YodaForm extends React.Component {
     render() {
         return (
             <Form className="form"
-                  schema={schema}
+                  schema={this.props.schema}
                   idPrefix={"yoda"}
-                  uiSchema={uiSchema}
-                  formData={formData}
+                  uiSchema={this.props.uiSchema}
+                  formData={this.props.formData}
                   fields={fields}
                   onSubmit={onSubmit}>
-                <button ref={(btn) => {this.submitButton=btn;}} className="hidden" />
+                  <button ref={(btn) => {this.submitButton=btn;}}
+                          className="hidden" />
             </Form>
         );
     }
@@ -99,28 +101,31 @@ class Container extends React.Component {
     render() {
         return (
         <div>
-          <YodaForm formData={this.props.formData} ref={(form) => {this.form=form;}}/>
+          <YodaForm schema={this.props.schema}
+                    uiSchema={this.props.uiSchema}
+                    formData={this.props.formData}
+                    ref={(form) => {this.form=form;}}/>
           <YodaButtons submitButton={this.submitForm}/>
         </div>
       );
     }
 };
 
-async function submitData(data)
+function submitData(data)
 {
     // Disable submit button
     $("button:submit").attr("disabled", "disabled");
 
-    // Store
-    try {
-        await Yoda.call('datarequest_submit',
-            {data: JSON.stringify(data),
-             previous_request_id: typeof(previousRequestId) !== 'undefined' ? previousRequestId : null},
-            {errorPrefix: "Could not submit data."});
-
-        window.location.href = "/datarequest";
-    } catch (e) {
+    // Store data and redirect to overview page
+    Yoda.call("datarequest_submit",
+        {data: JSON.stringify(data),
+         previous_request_id: typeof(previousRequestId) !== 'undefined' ? previousRequestId : null},
+        {errorPrefix: "Could not submit data"})
+    .then(() => {
+        window.location.href = "/datarequest/";
+    })
+    .catch(error => {
         // Re-enable submit button if submission failed
         $('button:submit').attr("disabled", false);
-    }
+    });
 }
