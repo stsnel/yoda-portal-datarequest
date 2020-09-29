@@ -4,7 +4,7 @@ import { render } from "react-dom";
 import Form from "react-jsonschema-form";
 import DataSelection, { DataSelectionCart } from "./DataSelection.js";
 
-$(document).ready(function() {
+$(document).ready(() => {
 
     var datarequestSchema   = {};
     var datarequestUiSchema = {};
@@ -14,14 +14,17 @@ $(document).ready(function() {
     Yoda.call('datarequest_get',
         {request_id: requestId},
         {errorPrefix: "Could not get datarequest"})
-    .then((datarequest) => {
+    .then(datarequest => {
         datarequestFormData = JSON.parse(datarequest.requestJSON);
     })
     // Get data request schema and uiSchema
-    .then(async function() {
-        let schema = await axios.get("/datarequest/datarequest/schema");
-        datarequestSchema   = schema.data.schema;
-        datarequestUiSchema = schema.data.uiSchema;
+    .then(async () => {
+        let response = await fetch("/datarequest/datarequest/schema");
+
+        let schemas = await response.json();
+
+        datarequestSchema   = schemas.schema;
+        datarequestUiSchema = schemas.uiSchema;
     })
     // Render data request as disabled form
     .then(() => {
@@ -40,14 +43,17 @@ $(document).ready(function() {
     Yoda.call('datarequest_preliminary_review_get',
         {request_id: requestId},
         {errorPrefix: "Could not get preliminary review"})
-    .then((preliminary_review) => {
-        prFormData = JSON.parse(preliminary_review);
+    .then(response => {
+        prFormData = JSON.parse(response);
     })
     // Get preliminary review schema and uiSchema
-    .then(async function() {
-        let schema = await axios.get("/datarequest/datarequest/preliminaryReviewSchema");
-        prSchema   = schema.data.schema;
-        prUiSchema = schema.data.uiSchema;
+    .then(async () => {
+        let response = await fetch("/datarequest/datarequest/preliminaryReviewSchema");
+
+        let schemas = await response.json();
+
+        prSchema   = schemas.schema;
+        prUiSchema = schemas.uiSchema;
     })
     // Render preliminary review as disabled form
     .then(() => {
@@ -58,15 +64,13 @@ $(document).ready(function() {
         );
     });
 
-    var datamanagerReviewSchema = {};
-    var datamanagerReviewUiSchema = {};
-    var form = document.getElementById('datamanagerReview');
-
     // Get the schema of the data request review form for the data manager
-    axios.get("/datarequest/datarequest/datamanagerReviewSchema")
-    .then(function (response) {
-        datamanagerReviewSchema = response.data.schema;
-        datamanagerReviewUiSchema = response.data.uiSchema;
+    fetch("/datarequest/datarequest/datamanagerReviewSchema")
+    .then(async response => {
+        let schemas = await response.json();
+
+        let datamanagerReviewSchema = schemas.schema;
+        let datamanagerReviewUiSchema = schemas.uiSchema;
 
         render(<Container schema={datamanagerReviewSchema}
                           uiSchema={datamanagerReviewUiSchema} />,
@@ -179,12 +183,12 @@ class ContainerReadonly extends React.Component {
     }
 }
 
-async function submitData(data) {
+function submitData(data) {
 
     // Disable submit button
     $("button:submit").attr("disabled", true);
 
-    // Store
+    // Submit form and redirect to view/
     Yoda.call("datarequest_datamanager_review_submit",
         {data: JSON.stringify(data),
          request_id: requestId},
@@ -193,6 +197,7 @@ async function submitData(data) {
         window.location.href = "/datarequest/view/" + requestId;
     })
     .catch((error) => {
+        // Re-enable submit button if submission failed
         $("button:submit").attr("disabled", false);
     });
 }
