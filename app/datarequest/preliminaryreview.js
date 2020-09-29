@@ -44,8 +44,7 @@ document.addEventListener("DOMContentLoaded", async function() {
 
         render(<Container schema={preliminaryReviewSchema}
                           uiSchema={preliminaryReviewUiSchema} />,
-               document.getElementById("preliminaryReview")
-        );
+               document.getElementById("preliminaryReview"));
     });
 });
 
