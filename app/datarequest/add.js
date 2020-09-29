@@ -116,7 +116,7 @@ function submitData(data)
     // Disable submit button
     $("button:submit").attr("disabled", "disabled");
 
-    // Store data and redirect to overview page
+    // Submit form and redirect to overview page
     Yoda.call("datarequest_submit",
         {data: JSON.stringify(data),
          previous_request_id: typeof(previousRequestId) !== 'undefined' ? previousRequestId : null},
