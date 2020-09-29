@@ -162,10 +162,10 @@ function submitData(data)
 
     // Store data and redirect to view/
     Yoda.call("datarequest_preliminary_review_submit",
-        {data: JSON.stringify,
+        {data: JSON.stringify(data),
          request_id: requestId},
         {errorPrefix: "Could not submit data"})
     .then(() => {
-        window.location.href = "/datarequest/view/";
+        window.location.href = "/datarequest/view/" + requestId;
     });
 }
