@@ -167,5 +167,9 @@ function submitData(data)
         {errorPrefix: "Could not submit data"})
     .then(() => {
         window.location.href = "/datarequest/view/" + requestId;
+    })
+    .catch(error => {
+        // Re-enable submit button if submission failed
+        $("button:submit").attr("disabled", false);
     });
 }
