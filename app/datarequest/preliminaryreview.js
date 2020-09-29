@@ -161,25 +161,12 @@ function submitData(data)
     var tokenName = preliminaryReview.dataset.csrf_token_name;
     var tokenHash = preliminaryReview.dataset.csrf_token_hash;
 
-    // Create form data.
-    var bodyFormData = new FormData();
-    bodyFormData.set(tokenName, tokenHash);
-    bodyFormData.set('formData', JSON.stringify(data));
-    bodyFormData.set('requestId', requestId);
-
-   // Store.
-    axios({
-        method: 'post',
-        url: "/datarequest/datarequest/storePreliminaryReview",
-        data: bodyFormData,
-        config: { headers: {'Content-Type': 'multipart/form-data' }}
-        })
-        .then(function (response) {
-            window.location.href = "/datarequest/view/" + requestId;
-        })
-        .catch(function (error) {
-            //handle error
-            console.log('ERROR:');
-            console.log(error);
-        });
+    // Store data and redirect to view/
+    Yoda.call("datarequest_preliminary_review_submit",
+        {data: JSON.stringify,
+         request_id: requestId},
+        {errorPrefix: "Could not submit data"})
+    .then(() => {
+        window.location.href = "/datarequest/view/";
+    });
 }
