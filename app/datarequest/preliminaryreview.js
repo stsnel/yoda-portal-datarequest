@@ -3,7 +3,7 @@ import { render } from "react-dom";
 import Form from "react-jsonschema-form";
 import DataSelection, { DataSelectionCart } from "./DataSelection.js";
 
-document.addEventListener("DOMContentLoaded", async function() {
+document.addEventListener("DOMContentLoaded", async () => {
 
     var datarequestSchema = {};
     var datarequestUiSchema = {};
@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         datarequestFormData = JSON.parse(datarequest.requestJSON);
     })
     // Get data request schema and uiSchema
-    .then(async function() {
+    .then(async () => {
         let response = await fetch("/datarequest/datarequest/schema");
 
         let schemas = await response.json();
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", async function() {
 
     // Get the schema of the data request preliminary review form
     fetch("/datarequest/datarequest/preliminaryReviewSchema")
-    .then(async (response) => {
+    .then(async response => {
         let schemas = await response.json();
 
         let preliminaryReviewSchema = schemas.schema;
