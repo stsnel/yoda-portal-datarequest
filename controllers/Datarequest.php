@@ -697,24 +697,6 @@ class Datarequest extends MY_Controller
         loadView('/datarequest/preliminaryreview', $viewParams);
     }
 
-    public function storePreliminaryReview()
-    {
-        $arrayPost = $this->input->post();
-
-        if ($this->input->server('REQUEST_METHOD') == 'POST') {
-            $result = $this->api->call('datarequest_preliminary_review_submit',
-                                       ['data' => $arrayPost['formData'],
-                                        'request_id' => $arrayPost['requestId']]);
-            $callStatus = $result->data->status;
-
-            if ($callStatus === 0) {
-                $this->output
-                     ->set_content_type('application/json')
-                     ->set_output(json_encode($result->data));
-            }
-        }
-    }
-
     public function preliminaryReviewSchema()
     {
         $schema = '
@@ -895,23 +877,6 @@ class Datarequest extends MY_Controller
         $this->output->set_content_type('application/json')->set_output(json_encode($output));
     }
 
-    public function datamanagerReviewData($requestId) {
-        $rule = new ProdsRule(
-            $this->rodsuser->getRodsAccount(),
-            'rule { uuGetDatamanagerReview(*requestId); }',
-            array('*requestId' => $requestId),
-            array('ruleExecOut')
-        );
-
-        $data = json_decode($rule->execute()['ruleExecOut'], true);
-
-        if ($data['status'] === 0) {
-            $this->output->set_content_type('application/json')->set_output($data['datamanagerReviewJSON']);
-        } elseif ($data['status'] === 'PermissionError') {
-            $this->output->set_status_header(403);
-        }
-    }
-
     public function dmcmembers() {
         $rule = new ProdsRule(
             $this->rodsuser->getRodsAccount(),
@@ -948,38 +913,6 @@ class Datarequest extends MY_Controller
         );
 
         loadView('/datarequest/assign', $viewParams);
-    }
-
-    public function storeAssign()
-    {
-        $arrayPost = $this->input->post();
-
-        if ($this->input->server('REQUEST_METHOD') == 'POST') {
-            $rule = new ProdsRule(
-                $this->rodsuser->getRodsAccount(),
-                'rule { uuSubmitAssignment(*data, *requestId); }',
-                array('*data' => $arrayPost['formData'],
-                      '*requestId' => $arrayPost['requestId']),
-                array('ruleExecOut')
-            );
-
-            $result = json_decode($rule->execute()['ruleExecOut'], true);
-
-            if ($result['status'] === 0) {
-                $this->output
-                     ->set_content_type('application/json')
-                     ->set_output(json_encode($result));
-            } elseif ($result['status'] === "PermissionError") {
-                $this->output
-                     ->set_status_header(403);
-                return;
-            } else {
-                $this->output
-                     ->set_content_type('application/json')
-                     ->set_status_header(500)
-                     ->set_output(json_encode($result));
-            }
-        }
     }
 
     public function assignSchema()
@@ -1093,23 +1026,6 @@ class Datarequest extends MY_Controller
         $output['uiSchema'] = json_decode($uiSchema);
 
         $this->output->set_content_type('application/json')->set_output(json_encode($output));
-    }
-
-    public function assignData($requestId) {
-        $rule = new ProdsRule(
-            $this->rodsuser->getRodsAccount(),
-            'rule { uuGetAssignment(*requestId); }',
-            array('*requestId' => $requestId),
-            array('ruleExecOut')
-        );
-
-        $data = json_decode($rule->execute()['ruleExecOut'], true);
-
-        if ($data['status'] === 0) {
-            $this->output->set_content_type('application/json')->set_output($data['assignmentJSON']);
-        } elseif ($data['status'] === 'PermissionError') {
-            $this->output->set_status_header(403);
-        }
     }
 
     public function review($requestId) {
@@ -1310,55 +1226,6 @@ class Datarequest extends MY_Controller
         $this->output->set_content_type('application/json')->set_output(json_encode($output));
     }
 
-    public function store_review()
-    {
-        $arrayPost = $this->input->post();
-
-        if ($this->input->server('REQUEST_METHOD') == 'POST') {
-            $rule = new ProdsRule(
-                $this->rodsuser->getRodsAccount(),
-                'rule { uuSubmitReview(*data, *requestId); }',
-                array('*data' => $arrayPost['formData'],
-                      '*requestId' => $arrayPost['requestId']),
-                array('ruleExecOut')
-            );
-
-            $result = json_decode($rule->execute()['ruleExecOut'], true);
-
-            if ($result['status'] === 0) {
-                $this->output
-                     ->set_content_type('application/json')
-                     ->set_output(json_encode($result));
-            } elseif ($result['status'] === "PermissionError") {
-                $this->output
-                     ->set_status_header(403);
-                return;
-            } else {
-                $this->output
-                     ->set_content_type('application/json')
-                     ->set_status_header(500)
-                     ->set_output(json_encode($result));
-            }
-        }
-    }
-
-    public function reviewData($requestId) {
-        $rule = new ProdsRule(
-            $this->rodsuser->getRodsAccount(),
-            'rule { uuGetReviews(*requestId); }',
-            array('*requestId' => $requestId),
-            array('ruleExecOut')
-        );
-
-        $data = json_decode($rule->execute()['ruleExecOut'], true);
-
-        if ($data['status'] === 0) {
-            $this->output->set_content_type('application/json')->set_output($data['reviewsJSON']);
-        } elseif ($data['status'] === 'PermissionError') {
-            $this->output->set_status_header(403);
-        }
-    }
-
     public function evaluate($requestId) {
         // Check if user is board of directors member. If not, return a 403
         $this->load->model('user');
@@ -1455,37 +1322,6 @@ class Datarequest extends MY_Controller
         $output['uiSchema'] = json_decode($uiSchema);
 
         $this->output->set_content_type('application/json')->set_output(json_encode($output));
-    }
-
-    public function store_evaluation()
-    {
-        $arrayPost = $this->input->post();
-        if ($this->input->server('REQUEST_METHOD') == 'POST') {
-            $rule = new ProdsRule(
-                $this->rodsuser->getRodsAccount(),
-                'rule { uuSubmitEvaluation(*data, *requestId); }',
-                array('*data' => $arrayPost['formData'],
-                      '*requestId' => $arrayPost['requestId']),
-                array('ruleExecOut')
-            );
-
-            $result = json_decode($rule->execute()['ruleExecOut'], true);
-
-            if ($result['status'] === 0) {
-                $this->output
-                     ->set_content_type('application/json')
-                     ->set_output(json_encode($result));
-            } elseif ($result['status'] === "PermissionError") {
-                $this->output
-                     ->set_status_header(403);
-                return;
-            } else {
-                $this->output
-                     ->set_content_type('application/json')
-                     ->set_status_header(500)
-                     ->set_output(json_encode($result));
-            }
-        }
     }
 
     public function upload_dta($requestId) {
