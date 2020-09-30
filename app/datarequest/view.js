@@ -53,7 +53,6 @@ $(document).ready(function() {
 
                 // Construct the multiselect list of options (i.e. DMC members)
                 for (let member of data) {
-                    console.log(member);
                     $("#dmc-members-list").append(new Option(member));
                 }
             } else {
