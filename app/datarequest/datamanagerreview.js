@@ -193,7 +193,7 @@ function submitData(data) {
         {data: JSON.stringify(data),
          request_id: requestId},
         {errorPrefix: "Could not submit datamanager review"})
-    .then(response => {
+    .then(() => {
         window.location.href = "/datarequest/view/" + requestId;
     })
     .catch(error => {
