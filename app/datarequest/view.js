@@ -8,8 +8,8 @@ $(document).ajaxSend(function(e, request, settings) {
     // Append a CSRF token to all AJAX POST requests.
     if (settings.type === 'POST' && settings.data.length) {
          settings.data
-             += '&' + encodeURIComponent(YodaPortal.csrf.tokenName)
-              + '=' + encodeURIComponent(YodaPortal.csrf.tokenValue);
+             += '&' + encodeURIComponent(Yoda.csrf.tokenName)
+              + '=' + encodeURIComponent(Yoda.csrf.tokenValue);
     }
 });
 
@@ -47,15 +47,17 @@ $(document).ready(function() {
     });
 
     $("body").on("click", "button.submit_dta", function(data) {
-        // Upload data
-        var xhr = new XMLHttpRequest();
+        // Prepare form data
         var fd = new FormData(document.getElementById('dta'));
+        fd.append(Yoda.csrf.tokenName, Yoda.csrf.tokenValue);
 
-        fd.append(YodaPortal.csrf.tokenName, YodaPortal.csrf.tokenValue);
-
+        // Prepare XHR
+        var xhr = new XMLHttpRequest();
         xhr.open("POST", "/datarequest/datarequest/upload_dta/" + requestId);
+        // Reload page after DTA upload
         xhr.onload = location.reload();
 
+        // Send DTA
         xhr.send(fd);
     });
 
@@ -65,15 +67,17 @@ $(document).ready(function() {
     });
 
     $("body").on("click", "button.submit_signed_dta", function(data) {
-        // Upload data
-        var xhr = new XMLHttpRequest();
+        // Prepare form data
         var fd = new FormData(document.getElementById('signed_dta'));
+        fd.append(Yoda.csrf.tokenName, Yoda.csrf.tokenValue);
 
-        fd.append(YodaPortal.csrf.tokenName, YodaPortal.csrf.tokenValue);
-
+        // Prepare XHR
+        var xhr = new XMLHttpRequest();
         xhr.open("POST", "/datarequest/datarequest/upload_signed_dta/" + requestId);
+        // Reload page after signed DTA upload
         xhr.onload = location.reload();
 
+        // Send signed DTA
         xhr.send(fd);
     });
 });
