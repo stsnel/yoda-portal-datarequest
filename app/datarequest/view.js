@@ -12,7 +12,7 @@ $(document).ajaxSend((e, request, settings) => {
     }
 });
 
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", async () => {
 
     var datarequestSchema = {};
     var datarequestUiSchema = {};

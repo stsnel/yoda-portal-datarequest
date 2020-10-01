@@ -3,7 +3,7 @@ import { render } from "react-dom";
 import Form from "react-jsonschema-form";
 import DataSelection, { DataSelectionCart } from "./DataSelection.js";
 
-$(document).ready(() => {
+document.addEventListener("DOMContentLoaded", async () => {
 
     var datarequestSchema   = {};
     var datarequestUiSchema = {};
