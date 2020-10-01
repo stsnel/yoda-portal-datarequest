@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     Yoda.call('datarequest_get',
         {request_id: requestId},
         {errorPrefix: "Could not get datarequest"})
-    .then((datarequest) => {
+    .then(datarequest => {
         datarequestFormData = JSON.parse(datarequest.requestJSON);
     })
     // Get data request schema and uiSchema
@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         reviewUiSchema = schemas.uiSchema;
     })
     .then(() => {
-        var reviews = reviewFormData.map(function(line, i) {
+        var reviews = reviewFormData.map((line, i) => {
           return(
             <div class="col-md-6">
                 <div class="row">

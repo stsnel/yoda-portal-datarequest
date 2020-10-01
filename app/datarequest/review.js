@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     Yoda.call('datarequest_get',
         {request_id: requestId},
         {errorPrefix: "Could not get datarequest"})
-    .then((datarequest) => {
+    .then(datarequest => {
         datarequestFormData = JSON.parse(datarequest.requestJSON);
     })
     // Get data request schema and uiSchema
