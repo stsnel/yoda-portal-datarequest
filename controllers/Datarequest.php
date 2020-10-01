@@ -1416,27 +1416,13 @@ class Datarequest extends MY_Controller
             return;
         }
 
-        $rule = new ProdsRule(
-            $this->rodsuser->getRodsAccount(),
-            'rule { uuRequestDataReady(*requestId, *currentUserName); }',
-            array('*requestId' => $requestId,
-                  '*currentUserName' => $this->rodsuser->getUserInfo()['name']),
-            array('ruleExecOut')
-        );
+        // Set status to data_ready
+	$result = $this->api->call('datarequest_data_ready',
+                                   ['request_id' => $requestId]);
 
-        $result = json_decode($rule->execute()['ruleExecOut'], true);
-
-        if ($result['status'] === 0) {
+        // Redirect to view/
+        if ($result->status === "ok") {
             redirect('/datarequest/view/' . $requestId);
-        } elseif ($result['status'] === "PermissionError") {
-            $this->output
-                 ->set_status_header(403);
-            return;
-        } else {
-            return $this->output
-                        ->set_content_type('application/json')
-                        ->set_status_header(500)
-                        ->set_output(json_encode($result));
         }
     }
 }
