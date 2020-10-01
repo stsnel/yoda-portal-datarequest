@@ -877,21 +877,6 @@ class Datarequest extends MY_Controller
         $this->output->set_content_type('application/json')->set_output(json_encode($output));
     }
 
-    public function dmcmembers() {
-        $rule = new ProdsRule(
-            $this->rodsuser->getRodsAccount(),
-            'rule { uuGroupGetMembersAsJson(*groupName, *members); }',
-            array('*groupName' => 'datarequests-research-data-management-committee'),
-            array('*members')
-        );
-
-        $result = $rule->execute()['*members'];
-
-        $this->output
-             ->set_content_type('application/json')
-             ->set_output($result);
-    }
-
     public function assign($requestId) {
         // Check if user is board of directors member. If not, return a 403
         $this->load->model('user');
@@ -1350,63 +1335,9 @@ class Datarequest extends MY_Controller
         $output = $this->filesystem->upload($rodsaccount, $filePath,
                                             $_FILES["file"]);
 
-        # Give the researcher that owns the data request read permissions on
-        # the DTA document so he can download it
-        $rule = new ProdsRule(
-            $this->rodsuser->getRodsAccount(),
-            'rule { uuDTAGrantReadPermissions(*requestId, *username); }',
-            array('*requestId' => $requestId, '*username' => $this->rodsuser->getUserInfo()['name']),
-            array('ruleExecOut')
-        );
-
-        $result = json_decode($rule->execute()['ruleExecOut'], true);
-
-        if ($result['status'] === 0) {
-            $this->output
-                 ->set_content_type('application/json')
-                 ->set_output(json_encode($result));
-        } elseif ($result['status'] === "PermissionError") {
-            $this->output
-                 ->set_status_header(403);
-            return;
-        } else {
-            $this->output
-                 ->set_content_type('application/json')
-                 ->set_status_header(500)
-                 ->set_output(json_encode($result));
-        }
-
-        # If upload succeeded, set status to "dta_ready", else return error
-        if ($output["status"] == "OK") {
-            # Set status to "dta_ready"
-            $rule = new ProdsRule(
-                $this->rodsuser->getRodsAccount(),
-                'rule { uuRequestDTAReady(*requestId, *currentUserName); }',
-                array('*requestId' => $requestId,
-                      '*currentUserName' => $this->rodsuser->getUserInfo()['name']),
-                array('ruleExecOut')
-            );
-
-            $result = json_decode($rule->execute()['ruleExecOut'], true);
-
-            if ($result['status'] === 0) {
-                redirect('/datarequest/view/' + $requestId);
-            } elseif ($result['status'] === "PermissionError") {
-                $this->output
-                     ->set_status_header(403);
-                return;
-            } else {
-                return $this->output
-                            ->set_content_type('application/json')
-                            ->set_status_header(500)
-                            ->set_output(json_encode($result));
-            }
-        } else {
-            return $this->output
-                        ->set_content_type("application/json")
-                        ->set_status_header(500)
-                        ->set_output(json_encode($output));
-        }
+        # Perform post-upload actions
+        $result = $this->api->call('datarequest_dta_post_upload_actions',
+                                  ['request_id' => $requestId]);
     }
 
     public function download_dta($requestId)
@@ -1453,63 +1384,9 @@ class Datarequest extends MY_Controller
         $output = $this->filesystem->upload($rodsaccount, $filePath,
                                             $_FILES["file"]);
 
-        # Give the data manager read permissions on the signed DTA so he can
-        # download it
-        $rule = new ProdsRule(
-            $this->rodsuser->getRodsAccount(),
-            'rule { uuSignedDTAGrantReadPermissions(*requestId, *username); }',
-            array('*requestId' => $requestId, '*username' => $this->rodsuser->getUserInfo()['name']),
-            array('ruleExecOut')
-        );
-
-        $result = json_decode($rule->execute()['ruleExecOut'], true);
-
-        if ($result['status'] === 0) {
-            $this->output
-                 ->set_content_type('application/json')
-                 ->set_output(json_encode($result));
-        } elseif ($result['status'] === "PermissionError") {
-            $this->output
-                 ->set_status_header(403);
-            return;
-        } else {
-            $this->output
-                 ->set_content_type('application/json')
-                 ->set_status_header(500)
-                 ->set_output(json_encode($result));
-        }
-
-        # If upload succeeded, set status to "dta_signed", else return error
-        if ($output["status"] == "OK") {
-            # Set status to "dta_signed"
-            $rule = new ProdsRule(
-                $this->rodsuser->getRodsAccount(),
-                'rule { uuRequestDTASigned(*requestId, *currentUserName); }',
-                array('*requestId' => $requestId,
-                      '*currentUserName' => $this->rodsuser->getUserInfo()['name']),
-                array('ruleExecOut')
-            );
-
-            $result = json_decode($rule->execute()['ruleExecOut'], true);
-
-            if ($result['status'] === 0) {
-                redirect('/datarequest/view/' . $requestId);
-            } elseif ($result['status'] === "PermissionError") {
-                $this->output
-                     ->set_status_header(403);
-                return;
-            } else {
-                return $this->output
-                            ->set_content_type('application/json')
-                            ->set_status_header(500)
-                            ->set_output(json_encode($result));
-            }
-        } else {
-            return $this->output
-                        ->set_content_type("application/json")
-                        ->set_status_header(500)
-                        ->set_output(json_encode($output));
-        }
+        # Perform post-upload actions
+        $result = $this->api->call('datarequest_signed_dta_post_upload_actions',
+                                  ['request_id' => $requestId]);
     }
 
     public function download_signed_dta($requestId)
@@ -1539,27 +1416,13 @@ class Datarequest extends MY_Controller
             return;
         }
 
-        $rule = new ProdsRule(
-            $this->rodsuser->getRodsAccount(),
-            'rule { uuRequestDataReady(*requestId, *currentUserName); }',
-            array('*requestId' => $requestId,
-                  '*currentUserName' => $this->rodsuser->getUserInfo()['name']),
-            array('ruleExecOut')
-        );
+        // Set status to data_ready
+	$result = $this->api->call('datarequest_data_ready',
+                                   ['request_id' => $requestId]);
 
-        $result = json_decode($rule->execute()['ruleExecOut'], true);
-
-        if ($result['status'] === 0) {
+        // Redirect to view/
+        if ($result->status === "ok") {
             redirect('/datarequest/view/' . $requestId);
-        } elseif ($result['status'] === "PermissionError") {
-            $this->output
-                 ->set_status_header(403);
-            return;
-        } else {
-            return $this->output
-                        ->set_content_type('application/json')
-                        ->set_status_header(500)
-                        ->set_output(json_encode($result));
         }
     }
 }

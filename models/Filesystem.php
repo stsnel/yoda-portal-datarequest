@@ -140,44 +140,4 @@ class Filesystem extends CI_Model {
         $file->close();
         return true;
     }
-
-    /**
-     * Get the category dependent JSON schema from iRODS.
-     *
-     * @param $iRodsAccount
-     * @param $folder
-     * @return array
-     */
-    function getJsonSchema($iRodsAccount, $folder)
-    {
-        $output = array();
-
-        $ruleBody = <<<'RULE'
-myRule {
-    iiFrontGetJsonSchema(*folder, *result, *status, *statusInfo);
-}
-RULE;
-        try {
-            $rule = new ProdsRule(
-                $iRodsAccount,
-                $ruleBody,
-                array(
-                    "*folder" => $folder
-                ),
-                array("*result", "*status", "*statusInfo")
-            );
-
-            $ruleResult = $rule->execute();
-            $output['*result'] = $ruleResult['*result'];
-            $output['*status'] = $ruleResult['*status'];
-            $output['*statusInfo'] = $ruleResult['*statusInfo'];
-
-            return $output;
-
-        } catch(RODSException $e) {
-            return array();
-        }
-
-        return array();
-    }
 }
