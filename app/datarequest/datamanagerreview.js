@@ -59,7 +59,7 @@ $(document).ready(() => {
         render(<ContainerReadonly schema={prSchema}
                                   uiSchema={prUiSchema}
                                   formData={prFormData} />,
-            document.getElementById("preliminaryReview")
+               document.getElementById("preliminaryReview")
         );
     });
 
@@ -73,7 +73,7 @@ $(document).ready(() => {
 
         render(<Container schema={datamanagerReviewSchema}
                           uiSchema={datamanagerReviewUiSchema} />,
-            document.getElementById("datamanagerReview")
+               document.getElementById("datamanagerReview")
         );
     });
 });
@@ -189,8 +189,7 @@ function submitData(data) {
 
     // Submit form and redirect to view/
     Yoda.call("datarequest_datamanager_review_submit",
-        {data: JSON.stringify(data),
-         request_id: requestId},
+        {data: JSON.stringify(data), request_id: requestId},
         {errorPrefix: "Could not submit datamanager review"})
     .then(() => {
         window.location.href = "/datarequest/view/" + requestId;
