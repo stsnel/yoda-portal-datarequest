@@ -16,19 +16,6 @@ class Datarequest_model extends CI_Model
         $this->load->library('api');
     }
 
-    function submit($data, $previousRequestId = NULL)
-    {
-        $rule = new ProdsRule(
-            $this->rodsuser->getRodsAccount(),
-            'rule { uuSubmitDatarequest(*data, *previousRequestId); }',
-            array('*data' => $data, '*previousRequestId' => $previousRequestId),
-            array('ruleExecOut')
-        );
-
-        $result = json_decode($rule->execute()['ruleExecOut'], true);
-        return $result;
-    }
-
     function overview($limit, $offset = 0)
     {
         # Get table data from iRODS

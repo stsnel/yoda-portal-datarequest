@@ -1,47 +1,52 @@
 import React, { Component } from "react";
-import axios from 'axios';
 import { render } from "react-dom";
 import Form from "react-jsonschema-form";
 import DataSelection, { DataSelectionCart } from "./DataSelection.js";
 
-var datarequestSchema = {};
-var datarequestUiSchema = {};
-var datarequestFormData = {};
+document.addEventListener("DOMContentLoaded", async () => {
 
-// Get the schema, uiSchema and formData of the data request to be reviewed preliminarily.
-// Then render the data as a disabled form
-axios.all([
-    axios.get("/datarequest/datarequest/schema"),
-    axios.get("/datarequest/datarequest/data/" + requestId)
-    ])
-    .then(axios.spread((schemaresponse, dataresponse) => {
-        datarequestFormData = dataresponse.data;
-        datarequestSchema   = schemaresponse.data.schema;
-        datarequestUiSchema = schemaresponse.data.uiSchema;
+    var datarequestSchema = {};
+    var datarequestUiSchema = {};
+    var datarequestFormData = {};
 
+    // Get data request
+    Yoda.call('datarequest_get',
+        {request_id: requestId},
+        {errorPrefix: "Could not get datarequest"})
+    .then((datarequest) => {
+        datarequestFormData = JSON.parse(datarequest.requestJSON);
+    })
+    // Get data request schema and uiSchema
+    .then(async () => {
+        let response = await fetch("/datarequest/datarequest/schema");
+
+        let schemas = await response.json();
+
+        datarequestSchema   = schemas.schema;
+        datarequestUiSchema = schemas.uiSchema;
+    })
+    // Render data request as disabled form
+    .then(() => {
         render(<ContainerReadonly schema={datarequestSchema}
                                   uiSchema={datarequestUiSchema}
                                   formData={datarequestFormData} />,
-            document.getElementById("datarequest")
+               document.getElementById("datarequest")
         );
-    }));
+    });
 
-var preliminaryReviewSchema = {};
-var preliminaryReviewUiSchema = {};
-var form = document.getElementById('preliminaryReview');
+    // Get the schema of the data request preliminary review form
+    fetch("/datarequest/datarequest/preliminaryReviewSchema")
+    .then(async response => {
+        let schemas = await response.json();
 
-// Get the schema of the data request preliminary review form
-axios.get("/datarequest/datarequest/preliminaryReviewSchema")
-    .then(function (response) {
-        console.log(response);
-        preliminaryReviewSchema = response.data.schema;
-        preliminaryReviewUiSchema = response.data.uiSchema;
+        let preliminaryReviewSchema = schemas.schema;
+        let preliminaryReviewUiSchema = schemas.uiSchema;
 
         render(<Container schema={preliminaryReviewSchema}
                           uiSchema={preliminaryReviewUiSchema} />,
-            document.getElementById("preliminaryReview")
-        );
+               document.getElementById("preliminaryReview"));
     });
+});
 
 class YodaForm extends React.Component {
     constructor(props) {
@@ -155,25 +160,16 @@ function submitData(data)
     var tokenName = preliminaryReview.dataset.csrf_token_name;
     var tokenHash = preliminaryReview.dataset.csrf_token_hash;
 
-    // Create form data.
-    var bodyFormData = new FormData();
-    bodyFormData.set(tokenName, tokenHash);
-    bodyFormData.set('formData', JSON.stringify(data));
-    bodyFormData.set('requestId', requestId);
-
-   // Store.
-    axios({
-        method: 'post',
-        url: "/datarequest/datarequest/storePreliminaryReview",
-        data: bodyFormData,
-        config: { headers: {'Content-Type': 'multipart/form-data' }}
-        })
-        .then(function (response) {
-            window.location.href = "/datarequest/view/" + requestId;
-        })
-        .catch(function (error) {
-            //handle error
-            console.log('ERROR:');
-            console.log(error);
-        });
+    // Submit form and redirect to view/
+    Yoda.call("datarequest_preliminary_review_submit",
+        {data: JSON.stringify(data),
+         request_id: requestId},
+        {errorPrefix: "Could not submit data"})
+    .then(() => {
+        window.location.href = "/datarequest/view/" + requestId;
+    })
+    .catch(error => {
+        // Re-enable submit button if submission failed
+        $("button:submit").attr("disabled", false);
+    });
 }

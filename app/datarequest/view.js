@@ -19,21 +19,27 @@ $(document).ready(function() {
     var datarequestUiSchema = {};
     var datarequestFormData = {};
 
-    // Get the schema, uiSchema and formData of the data request to be reviewed.
-    // Then render the data as a disabled form
-    axios.all([
-        axios.get("/datarequest/datarequest/schema"),
-        axios.get("/datarequest/datarequest/data/" + requestId)
-        ])
-        .then(axios.spread((schemaresponse, dataresponse) => {
-            datarequestFormData = dataresponse.data;
-            datarequestSchema   = schemaresponse.data.schema;
-            datarequestUiSchema = schemaresponse.data.uiSchema;
-
-            render(<ContainerReadonly schema={datarequestSchema} uiSchema={datarequestUiSchema} formData={datarequestFormData} />,
-                document.getElementById("datarequest")
-            );
-        }));
+    // Get data request
+    Yoda.call('datarequest_get',
+        {request_id: requestId},
+        {errorPrefix: "Could not get datarequest"})
+    .then((datarequest) => {
+        datarequestFormData = JSON.parse(datarequest.requestJSON);
+    })
+    // Get data request schema and uiSchema
+    .then(async function() {
+        let schema = await axios.get("/datarequest/datarequest/schema");
+        datarequestSchema   = schema.data.schema;
+        datarequestUiSchema = schema.data.uiSchema;
+    })
+    // Render data request as disabled form
+    .then(() => {
+        render(<ContainerReadonly schema={datarequestSchema}
+                                  uiSchema={datarequestUiSchema}
+                                  formData={datarequestFormData} />,
+               document.getElementById("datarequest")
+        );
+    });
 
     // Render and show the modal for assigning a data request to one or
     // more DMC members
@@ -47,7 +53,6 @@ $(document).ready(function() {
 
                 // Construct the multiselect list of options (i.e. DMC members)
                 for (let member of data) {
-                    console.log(member);
                     $("#dmc-members-list").append(new Option(member));
                 }
             } else {
