@@ -877,21 +877,6 @@ class Datarequest extends MY_Controller
         $this->output->set_content_type('application/json')->set_output(json_encode($output));
     }
 
-    public function dmcmembers() {
-        $rule = new ProdsRule(
-            $this->rodsuser->getRodsAccount(),
-            'rule { uuGroupGetMembersAsJson(*groupName, *members); }',
-            array('*groupName' => 'datarequests-research-data-management-committee'),
-            array('*members')
-        );
-
-        $result = $rule->execute()['*members'];
-
-        $this->output
-             ->set_content_type('application/json')
-             ->set_output($result);
-    }
-
     public function assign($requestId) {
         // Check if user is board of directors member. If not, return a 403
         $this->load->model('user');

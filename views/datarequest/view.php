@@ -2,28 +2,6 @@
     var requestId = <?php echo $requestId; ?>;
 </script>
 
-<div class="modal" id="assignForReview">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body">
-                <h3>Assign data request for review by a DMC member</h3>
-                <div class="form-group">
-                    <label for="dmc-members-list">Select DMC member(s) that should review this data request:</label>
-                    <select multiple class="form-control" id="dmc-members-list">
-                    </select>
-                </div>
-                <div class="help"></div><br />
-                <div class="advice"></div>
-            </div>
-
-            <div class="modal-footer">
-                <button class="btn btn-default grey cancel" data-dismiss="modal">Close</button>
-                <button class="btn btn-default grey submit-assignment" data-dismiss="modal">Submit</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="modal" id="uploadDTA">
     <div class="modal-dialog">
         <div class="modal-content">
