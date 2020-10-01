@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import axios from 'axios';
 import { render } from "react-dom";
 import Form from "react-jsonschema-form";
 import DataSelection, { DataSelectionCart } from "./DataSelection.js";

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import axios from 'axios';
 import { render } from "react-dom";
 import Form from "react-jsonschema-form";
 import DataSelection, { DataSelectionCart } from "./DataSelection.js";
@@ -28,9 +27,12 @@ $(document).ready(function() {
     })
     // Get data request schema and uiSchema
     .then(async function() {
-        let schema = await axios.get("/datarequest/datarequest/schema");
-        datarequestSchema   = schema.data.schema;
-        datarequestUiSchema = schema.data.uiSchema;
+        let response = await fetch("/datarequest/datarequest/schema");
+
+        let schemas = await response.json();
+
+        datarequestSchema   = schemas.schema;
+        datarequestUiSchema = schemas.uiSchema;
     })
     // Render data request as disabled form
     .then(() => {
