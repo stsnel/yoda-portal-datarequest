@@ -157,9 +157,6 @@ function submitData(data)
     // Disable submit button
     $("button:submit").attr("disabled", "disabled");
 
-    var tokenName = preliminaryReview.dataset.csrf_token_name;
-    var tokenHash = preliminaryReview.dataset.csrf_token_hash;
-
     // Submit form and redirect to view/
     Yoda.call("datarequest_preliminary_review_submit",
         {data: JSON.stringify(data), request_id: requestId},
