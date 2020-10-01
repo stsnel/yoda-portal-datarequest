@@ -1,10 +1,9 @@
 import React, { Component } from "react";
-import axios from 'axios';
 import { render } from "react-dom";
 import Form from "react-jsonschema-form";
 import DataSelection, { DataSelectionCart } from "./DataSelection.js";
 
-$(document).ready(() => {
+document.addEventListener("DOMContentLoaded", async () => {
 
     var datarequestSchema   = {};
     var datarequestUiSchema = {};
@@ -60,7 +59,7 @@ $(document).ready(() => {
         render(<ContainerReadonly schema={prSchema}
                                   uiSchema={prUiSchema}
                                   formData={prFormData} />,
-            document.getElementById("preliminaryReview")
+               document.getElementById("preliminaryReview")
         );
     });
 
@@ -74,11 +73,44 @@ $(document).ready(() => {
 
         render(<Container schema={datamanagerReviewSchema}
                           uiSchema={datamanagerReviewUiSchema} />,
-            document.getElementById("datamanagerReview")
+               document.getElementById("datamanagerReview")
         );
     });
 });
 
+class Container extends React.Component {
+    constructor(props) {
+        super(props);
+        this.submitForm = this.submitForm.bind(this);
+    }
+
+    submitForm() {
+        this.form.submitButton.click();
+    }
+
+    render() {
+        return (
+        <div>
+          <YodaForm schema={this.props.schema}
+                    uiSchema={this.props.uiSchema}
+                    ref={(form) => {this.form=form;}}/>
+          <YodaButtons submitButton={this.submitForm}/>
+        </div>
+        );
+    }
+}
+
+class ContainerReadonly extends React.Component {
+    render() {
+        return (
+        <div>
+          <YodaFormReadonly schema={this.props.schema}
+                            uiSchema={this.props.uiSchema}
+                            formData={this.props.formData} />
+        </div>
+      );
+    }
+}
 class YodaForm extends React.Component {
     constructor(props) {
         super(props);
@@ -118,17 +150,6 @@ class YodaFormReadonly extends React.Component {
     }
 };
 
-const CustomDescriptionField = ({id, description}) => {
-  return <div id={id} dangerouslySetInnerHTML={{ __html: description }}></div>;
-};
-
-const fields = {
-  DescriptionField: CustomDescriptionField,
-  DataSelection: DataSelectionCart
-};
-
-const onSubmit = ({formData}) => submitData(formData);
-
 class YodaButtons extends React.Component {
     constructor(props) {
         super(props);
@@ -149,39 +170,16 @@ class YodaButtons extends React.Component {
     }
 }
 
-class Container extends React.Component {
-    constructor(props) {
-        super(props);
-        this.submitForm = this.submitForm.bind(this);
-    }
+const onSubmit = ({formData}) => submitData(formData);
 
-    submitForm() {
-        this.form.submitButton.click();
-    }
+const fields = {
+  DescriptionField: CustomDescriptionField,
+  DataSelection: DataSelectionCart
+};
 
-    render() {
-        return (
-        <div>
-          <YodaForm schema={this.props.schema}
-                    uiSchema={this.props.uiSchema}
-                    ref={(form) => {this.form=form;}}/>
-          <YodaButtons submitButton={this.submitForm}/>
-        </div>
-        );
-    }
-}
-
-class ContainerReadonly extends React.Component {
-    render() {
-        return (
-        <div>
-          <YodaFormReadonly schema={this.props.schema}
-                            uiSchema={this.props.uiSchema}
-                            formData={this.props.formData} />
-        </div>
-      );
-    }
-}
+const CustomDescriptionField = ({id, description}) => {
+  return <div id={id} dangerouslySetInnerHTML={{ __html: description }}></div>;
+};
 
 function submitData(data) {
 
@@ -190,8 +188,7 @@ function submitData(data) {
 
     // Submit form and redirect to view/
     Yoda.call("datarequest_datamanager_review_submit",
-        {data: JSON.stringify(data),
-         request_id: requestId},
+        {data: JSON.stringify(data), request_id: requestId},
         {errorPrefix: "Could not submit datamanager review"})
     .then(() => {
         window.location.href = "/datarequest/view/" + requestId;

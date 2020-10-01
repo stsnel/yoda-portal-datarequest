@@ -38,7 +38,28 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 });
 
-const onSubmit = ({formData}) => submitData(formData);
+class Container extends React.Component {
+    constructor(props) {
+        super(props);
+        this.submitForm = this.submitForm.bind(this);
+    }
+
+    submitForm() {
+        this.form.submitButton.click();
+    }
+
+    render() {
+        return (
+        <div>
+          <YodaForm schema={this.props.schema}
+                    uiSchema={this.props.uiSchema}
+                    formData={this.props.formData}
+                    ref={(form) => {this.form=form;}}/>
+          <YodaButtons submitButton={this.submitForm}/>
+        </div>
+      );
+    }
+};
 
 class YodaForm extends React.Component {
     constructor(props) {
@@ -61,15 +82,6 @@ class YodaForm extends React.Component {
     }
 };
 
-const CustomDescriptionField = ({id, description}) => {
-  return <div id={id} dangerouslySetInnerHTML={{ __html: description }}></div>;
-};
-
-const fields = {
-  DescriptionField: CustomDescriptionField,
-  DataSelection: DataSelectionTable
-};
-
 class YodaButtons extends React.Component {
     constructor(props) {
         super(props);
@@ -88,27 +100,15 @@ class YodaButtons extends React.Component {
     }
 }
 
-class Container extends React.Component {
-    constructor(props) {
-        super(props);
-        this.submitForm = this.submitForm.bind(this);
-    }
+const onSubmit = ({formData}) => submitData(formData);
 
-    submitForm() {
-        this.form.submitButton.click();
-    }
+const fields = {
+  DescriptionField: CustomDescriptionField,
+  DataSelection: DataSelectionTable
+};
 
-    render() {
-        return (
-        <div>
-          <YodaForm schema={this.props.schema}
-                    uiSchema={this.props.uiSchema}
-                    formData={this.props.formData}
-                    ref={(form) => {this.form=form;}}/>
-          <YodaButtons submitButton={this.submitForm}/>
-        </div>
-      );
-    }
+const CustomDescriptionField = ({id, description}) => {
+  return <div id={id} dangerouslySetInnerHTML={{ __html: description }}></div>;
 };
 
 function submitData(data)

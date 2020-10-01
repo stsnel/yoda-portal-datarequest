@@ -1,10 +1,9 @@
 import React, { Component } from "react";
-import axios from 'axios';
 import { render } from "react-dom";
 import Form from "react-jsonschema-form";
 import DataSelection, { DataSelectionCart } from "./DataSelection.js";
 
-$(document).ajaxSend(function(e, request, settings) {
+$(document).ajaxSend((e, request, settings) => {
     // Append a CSRF token to all AJAX POST requests.
     if (settings.type === 'POST' && settings.data.length) {
          settings.data
@@ -13,7 +12,7 @@ $(document).ajaxSend(function(e, request, settings) {
     }
 });
 
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", async () => {
 
     var datarequestSchema = {};
     var datarequestUiSchema = {};
@@ -23,14 +22,17 @@ $(document).ready(function() {
     Yoda.call('datarequest_get',
         {request_id: requestId},
         {errorPrefix: "Could not get datarequest"})
-    .then((datarequest) => {
+    .then(datarequest => {
         datarequestFormData = JSON.parse(datarequest.requestJSON);
     })
     // Get data request schema and uiSchema
-    .then(async function() {
-        let schema = await axios.get("/datarequest/datarequest/schema");
-        datarequestSchema   = schema.data.schema;
-        datarequestUiSchema = schema.data.uiSchema;
+    .then(async () => {
+        let response = await fetch("/datarequest/datarequest/schema");
+
+        let schemas = await response.json();
+
+        datarequestSchema   = schemas.schema;
+        datarequestUiSchema = schemas.uiSchema;
     })
     // Render data request as disabled form
     .then(() => {
@@ -42,11 +44,11 @@ $(document).ready(function() {
     });
 
     // Render and show the modal for uploading a DTA
-    $("body").on("click", "button.upload_dta", function() {
+    $("body").on("click", "button.upload_dta", () => {
         $("#uploadDTA").modal("show");
     });
 
-    $("body").on("click", "button.submit_dta", function(data) {
+    $("body").on("click", "button.submit_dta", data => {
         // Prepare form data
         var fd = new FormData(document.getElementById('dta'));
         fd.append(Yoda.csrf.tokenName, Yoda.csrf.tokenValue);
@@ -62,11 +64,11 @@ $(document).ready(function() {
     });
 
     // Render and show the modal for uploading a signed DTA
-    $("body").on("click", "button.upload_signed_dta", function() {
+    $("body").on("click", "button.upload_signed_dta", () => {
         $("#uploadSignedDTA").modal("show");
     });
 
-    $("body").on("click", "button.submit_signed_dta", function(data) {
+    $("body").on("click", "button.submit_signed_dta", data => {
         // Prepare form data
         var fd = new FormData(document.getElementById('signed_dta'));
         fd.append(Yoda.csrf.tokenName, Yoda.csrf.tokenValue);
@@ -81,6 +83,18 @@ $(document).ready(function() {
         xhr.send(fd);
     });
 });
+
+class ContainerReadonly extends React.Component {
+    render() {
+        return (
+        <div>
+          <YodaFormReadonly schema={this.props.schema}
+                            uiSchema={this.props.uiSchema}
+                            formData={this.props.formData} />
+        </div>
+      );
+    }
+}
 
 class YodaFormReadonly extends React.Component {
     constructor(props) {
@@ -102,23 +116,11 @@ class YodaFormReadonly extends React.Component {
     }
 };
 
-const CustomDescriptionField = ({id, description}) => {
-  return <div id={id} dangerouslySetInnerHTML={{ __html: description }}></div>;
-};
-
 const fields = {
   DescriptionField: CustomDescriptionField,
   DataSelection: DataSelectionCart
 };
 
-class ContainerReadonly extends React.Component {
-    render() {
-        return (
-        <div>
-          <YodaFormReadonly schema={this.props.schema}
-                            uiSchema={this.props.uiSchema}
-                            formData={this.props.formData} />
-        </div>
-      );
-    }
-}
+const CustomDescriptionField = ({id, description}) => {
+  return <div id={id} dangerouslySetInnerHTML={{ __html: description }}></div>;
+};
