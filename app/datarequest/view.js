@@ -84,6 +84,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 });
 
+class ContainerReadonly extends React.Component {
+    render() {
+        return (
+        <div>
+          <YodaFormReadonly schema={this.props.schema}
+                            uiSchema={this.props.uiSchema}
+                            formData={this.props.formData} />
+        </div>
+      );
+    }
+}
+
 class YodaFormReadonly extends React.Component {
     constructor(props) {
         super(props);
@@ -104,23 +116,11 @@ class YodaFormReadonly extends React.Component {
     }
 };
 
-const CustomDescriptionField = ({id, description}) => {
-  return <div id={id} dangerouslySetInnerHTML={{ __html: description }}></div>;
-};
-
 const fields = {
   DescriptionField: CustomDescriptionField,
   DataSelection: DataSelectionCart
 };
 
-class ContainerReadonly extends React.Component {
-    render() {
-        return (
-        <div>
-          <YodaFormReadonly schema={this.props.schema}
-                            uiSchema={this.props.uiSchema}
-                            formData={this.props.formData} />
-        </div>
-      );
-    }
-}
+const CustomDescriptionField = ({id, description}) => {
+  return <div id={id} dangerouslySetInnerHTML={{ __html: description }}></div>;
+};

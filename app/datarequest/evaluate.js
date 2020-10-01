@@ -172,6 +172,39 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 });
 
+class Container extends React.Component {
+    constructor(props) {
+        super(props);
+        this.submitForm = this.submitForm.bind(this);
+    }
+
+    submitForm() {
+        this.form.submitButton.click();
+    }
+
+    render() {
+        return (
+        <div>
+          <YodaForm schema={this.props.schema}
+                    uiSchema={this.props.uiSchema}
+                    ref={(form) => {this.form=form;}}/>
+          <YodaButtons submitButton={this.submitForm}/>
+        </div>
+        );
+    }
+}
+
+class ContainerReadonly extends React.Component {
+    render() {
+        return (
+        <div>
+          <YodaFormReadonly schema={this.props.schema}
+                            uiSchema={this.props.uiSchema}
+                            formData={this.props.formData} />
+        </div>
+      );
+    }
+}
 
 class YodaForm extends React.Component {
     constructor(props) {
@@ -212,17 +245,6 @@ class YodaFormReadonly extends React.Component {
     }
 };
 
-const CustomDescriptionField = ({id, description}) => {
-  return <div id={id} dangerouslySetInnerHTML={{ __html: description }}></div>;
-};
-
-const fields = {
-  DescriptionField: CustomDescriptionField,
-  DataSelection: DataSelectionCart
-};
-
-const onSubmit = ({formData}) => submitData(formData);
-
 class YodaButtons extends React.Component {
     constructor(props) {
         super(props);
@@ -243,39 +265,16 @@ class YodaButtons extends React.Component {
     }
 }
 
-class Container extends React.Component {
-    constructor(props) {
-        super(props);
-        this.submitForm = this.submitForm.bind(this);
-    }
+const onSubmit = ({formData}) => submitData(formData);
 
-    submitForm() {
-        this.form.submitButton.click();
-    }
+const fields = {
+  DescriptionField: CustomDescriptionField,
+  DataSelection: DataSelectionCart
+};
 
-    render() {
-        return (
-        <div>
-          <YodaForm schema={this.props.schema}
-                    uiSchema={this.props.uiSchema}
-                    ref={(form) => {this.form=form;}}/>
-          <YodaButtons submitButton={this.submitForm}/>
-        </div>
-        );
-    }
-}
-
-class ContainerReadonly extends React.Component {
-    render() {
-        return (
-        <div>
-          <YodaFormReadonly schema={this.props.schema}
-                            uiSchema={this.props.uiSchema}
-                            formData={this.props.formData} />
-        </div>
-      );
-    }
-}
+const CustomDescriptionField = ({id, description}) => {
+  return <div id={id} dangerouslySetInnerHTML={{ __html: description }}></div>;
+};
 
 function submitData(data)
 {
