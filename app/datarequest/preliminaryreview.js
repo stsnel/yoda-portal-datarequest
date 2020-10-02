@@ -143,13 +143,13 @@ class YodaButtons extends React.Component {
 
 const onSubmit = ({formData}) => submitData(formData);
 
+const CustomDescriptionField = ({id, description}) => {
+  return <div id={id} dangerouslySetInnerHTML={{ __html: description }}></div>;
+};
+
 const fields = {
   DescriptionField: CustomDescriptionField,
   DataSelection: DataSelectionCart
-};
-
-const CustomDescriptionField = ({id, description}) => {
-  return <div id={id} dangerouslySetInnerHTML={{ __html: description }}></div>;
 };
 
 function submitData(data)
