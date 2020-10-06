@@ -213,7 +213,7 @@ function submitData(data)
 
     // Submit form and direct to view/
     Yoda.call("datarequest_assignment_submit",
-        {data: JSON.stringify(data), request_id: requestId},
+        {data: data, request_id: requestId},
         {errorPrefix: "Could not submit assignment"})
     .then(() => {
         window.location.href = "/datarequest/view/" + requestId;

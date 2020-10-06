@@ -188,7 +188,7 @@ function submitData(data) {
 
     // Submit form and redirect to view/
     Yoda.call("datarequest_datamanager_review_submit",
-        {data: JSON.stringify(data), request_id: requestId},
+        {data: data, request_id: requestId},
         {errorPrefix: "Could not submit datamanager review"})
     .then(() => {
         window.location.href = "/datarequest/view/" + requestId;

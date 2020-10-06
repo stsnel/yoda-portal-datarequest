@@ -118,7 +118,7 @@ function submitData(data)
 
     // Submit form and redirect to overview page
     Yoda.call("datarequest_submit",
-        {data: JSON.stringify(data),
+        {data: data,
          previous_request_id: typeof(previousRequestId) !== 'undefined' ? previousRequestId : null},
         {errorPrefix: "Could not submit data"})
     .then(() => {
