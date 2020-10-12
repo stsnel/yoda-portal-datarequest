@@ -140,15 +140,15 @@ function startBrowsing(items)
             "lengthMenu": "_MENU_"
         },
         "dom": '<"top">frt<"bottom"lp><"clear">',
-        'columns': [{render: tableRenderer.name,    data: 'name'},
+        'columns': [{render: tableRenderer.name,   data: 'name'},
                     // Date should be orderable, but limitations
                     // on how queries work prevent us from doing this
                     // correctly without significant overhead.
                     // (enabling this as is may result in duplicated results for data objects)
-                    {render: tableRenderer.id,      orderable: false, data: 'id'},
+                    {render: tableRenderer.id,     orderable: false, data: 'id'},
                     {render: tableRenderer.title,  orderable: false, data: 'title'},
-                    {render: tableRenderer.date,    orderable: false, data: 'create_time'},
-                    {render: tableRenderer.status,  orderable: false, data: 'status'}],
+                    {render: tableRenderer.date,   orderable: false, data: 'create_time'},
+                    {render: tableRenderer.status, orderable: false, data: 'status'}],
         "ajax": getFolderContents,
         "processing": true,
         "serverSide": true,
