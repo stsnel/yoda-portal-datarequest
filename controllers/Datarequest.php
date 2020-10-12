@@ -624,56 +624,6 @@ class Datarequest extends MY_Controller
         $this->output->set_content_type('application/json')->set_output(json_encode($output));
     }
 
-    public function overview_data()
-    {
-        $this->load->model('Datarequest_model');
-
-        # Get configured defaults
-        $itemsPerPage = $this->config->item('browser-items-per-page');
-
-        # Get DataTables parameters (for pagination)
-        $totalItemsLeftInView = $this->input->get('length');
-        $length = $totalItemsLeftInView;
-        $start = $this->input->get('start');
-        $draw = $this->input->get('draw');
-
-        # Fetch data from iRODS
-        $data = $this->Datarequest_model->overview($length, $start);
-
-        # Extract summary statistics from data
-        $totalItems = $data['summary']['total'];
-        $rows = [];
-
-        if ($totalItems > 0) {
-            # Parse data
-            foreach ($data['rows'] as $row) {
-                    $owner      = $row['COLL_OWNER_NAME'];
-                    $requestId  = basename($row['COLL_NAME'], '.json');
-                    $title      = $row['title'];
-                    $requestUri = "<a href='view/" . $requestId . "'>" .
-                                  $requestId . "</a>";
-                    $name       = $title;
-                    $date       = date('Y-m-d H:i:s', $row['COLL_CREATE_TIME']);
-                    $status     = $row['META_DATA_ATTR_VALUE'];
-                    $rows[]     = array($owner, $requestUri, $name, $date,
-                                       $status);
-            }
-        }
-
-        # Construct output array for front-end
-        $output = array('status'          => $data["status"],
-                        'statusInfo'      => $data["statusInfo"],
-                        'draw'            => $draw,
-                        'recordsTotal'    => $totalItems,
-                        'recordsFiltered' => $totalItems,
-                        'data'            => $rows
-        );
-
-        # Return data to DataTables
-        $this->output->set_content_type('application/json')
-                     ->set_output(json_encode($output));
-    }
-
     public function preliminaryReview($requestId) {
         // Check if user is board of directors member. If not, return a 403
         $this->load->model('user');
