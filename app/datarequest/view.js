@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     var datarequestSchema = {};
     var datarequestUiSchema = {};
     var datarequestFormData = {};
+    var datarequestStatus = {};
 
     // Get data request
     Yoda.call('datarequest_get',
@@ -24,6 +25,51 @@ document.addEventListener("DOMContentLoaded", async () => {
         {errorPrefix: "Could not get datarequest"})
     .then(datarequest => {
         datarequestFormData = JSON.parse(datarequest.requestJSON);
+        datarequestStatus   = datarequest.requestStatus;
+    })
+    // Set progress bar according to status of data request
+    .then(() => {
+        let datarequestStatusInt = null;
+        switch(datarequestStatus) {
+            case 'SUBMITTED':
+            case 'PRELIMINARY_ACCEPT':
+            case 'PRELIMINARY_REJECT':
+            case 'PRELIMINARY_RESUBMIT':
+            case 'DATAMANAGER_ACCEPT':
+            case 'DATAMANAGER_REJECT':
+            case 'DATAMANAGER_RESUBMIT':
+                datarequestStatusInt = 0;
+                break;
+            case 'UNDER_REVIEW':
+            case 'REJECTED_AFTER_DATAMANAGER_REVIEW':
+            case 'RESUBMIT_AFTER_DATAMANAGER_REVIEW':
+                datarequestStatusInt = 1;
+                break;
+            case 'REVIEWED':
+                datarequestStatusInt = 2;
+                break;
+            case 'APPROVED':
+            case 'REJECTED':
+            case 'RESUBMIT':
+                datarequestStatusInt = 3;
+                break;
+            case 'DTA_READY':
+                datarequestStatusInt = 4;
+                break;
+            case 'DTA_SIGNED':
+                datarequestStatusInt = 5;
+                break;
+            case 'DATA_READY':
+                datarequestStatusInt = 6;
+                break;
+        }
+
+        // Activate the appropriate steps
+        for (const num of Array(datarequestStatusInt + 1).keys()) {
+            let elem = document.getElementById("step-" + num);
+            elem.classList.remove("disabled");
+            elem.classList.add("complete");
+        }
     })
     // Get data request schema and uiSchema
     .then(async () => {
