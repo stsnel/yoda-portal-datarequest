@@ -44,30 +44,30 @@
     </div>
 </div>
 
-<?php if ($requestStatus == "dta_signed" && $isDatamanager): ?>
+<?php if ($requestStatus == "DTA_SIGNED" && $isDatamanager): ?>
     <a href="/datarequest/download_signed_dta/<?php echo html_escape($requestId) ?>" class="btn btn-default pull-right">Download signed DTA</a>
     <a href="/datarequest/data_ready/<?php echo html_escape($requestId) ?>" class="btn btn-default pull-right" role="button">Data ready</a>
 <?php endif ?>
-<?php if ($requestStatus == "dta_ready" && $isRequestOwner): ?>
+<?php if ($requestStatus == "DTA_READY" && $isRequestOwner): ?>
     <a href="/datarequest/download_dta/<?php echo html_escape($requestId) ?>" class="btn btn-default pull-right">Download DTA</a>
     <button type="button" class="btn btn-default pull-right upload_signed_dta" data-path="">Upload signed DTA</button>
 <?php endif ?>
-<?php if ($requestStatus == "approved" && $isDatamanager): ?>
+<?php if ($requestStatus == "APPROVED" && $isDatamanager): ?>
     <button type="button" class="btn btn-default pull-right upload_dta" data-path="">Upload DTA</button>
 <?php endif ?>
-<?php if ($requestStatus == "reviewed" && $isBoardMember): ?>
+<?php if ($requestStatus == "REVIEWED" && $isBoardMember): ?>
     <a href="/datarequest/evaluate/<?php echo html_escape($requestId) ?>" class="btn btn-default pull-right" role="button">Evaluate data request</a>
 <?php endif ?>
-<?php if ($requestStatus == "assigned" && $isReviewer): ?>
+<?php if ($requestStatus == "UNDER_REVIEW" && $isReviewer): ?>
     <a href="/datarequest/review/<?php echo html_escape($requestId) ?>" class="btn btn-default pull-right" role="button">Review data request</a>
 <?php endif ?>
-<?php if (in_array($requestStatus, array("dm_accepted", "dm_rejected")) && $isBoardMember): ?>
+<?php if (in_array($requestStatus, array("DATAMANAGER_ACCEPT", "DATAMANAGER_RESUBMIT", "DATAMANAGER_REJECT")) && $isBoardMember): ?>
     <a href="/datarequest/assign/<?php echo html_escape($requestId) ?>" class="btn btn-default pull-right" role="button">Assign</a>
 <?php endif ?>
-<?php if ($requestStatus == "accepted_for_dm_review" && $isDatamanager): ?>
+<?php if ($requestStatus == "PRELIMINARY_ACCEPT" && $isDatamanager): ?>
     <a href="/datarequest/datamanagerreview/<?php echo html_escape($requestId) ?>" class="btn btn-default pull-right" role="button">Data manager review</a>
 <?php endif ?>
-<?php if ($requestStatus == "submitted" && $isBoardMember): ?>
+<?php if ($requestStatus == "SUBMITTED" && $isBoardMember): ?>
     <a href="/datarequest/preliminaryreview/<?php echo html_escape($requestId) ?>" class="btn btn-default pull-right" role="button">Preliminary review</a>
 <?php endif ?>
 <div class="row">
@@ -125,7 +125,7 @@
                     </div>
                 </div>
 
-                <?php if (in_array($requestStatus, array("preliminary_reject", "rejected_after_data_manager_review", "rejected"))): ?>
+                <?php if (in_array($requestStatus, array("PRELIMINARY_REJECT", "PRELIMINARY_RESUBMIT", "REJECTED_AFTER_DATAMANAGER_REVIEW", "RESUBMIT_AFTER_DATAMANAGER_REVIEW", "REJECTED", "RESUBMIT"))): ?>
                     <div class="rejected"><h3>Proposal rejected</h3></div>
                 <?php endif ?>
 
