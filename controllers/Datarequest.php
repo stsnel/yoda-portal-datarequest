@@ -144,6 +144,11 @@ class Datarequest extends MY_Controller
                         "type": "string",
                         "title": "Department"
                       },
+                      "academic_role": {
+                        "type": "string",
+                        "title": "Academic role",
+                        "description": "E.g. Professor, Associate professor, PhD student"
+                      },
                       "work_address": {
                         "type": "string",
                         "title": "Address"
@@ -162,6 +167,7 @@ class Datarequest extends MY_Controller
                     "name",
                     "institution",
                     "department",
+                    "academic_role",
                     "work_address",
                     "email",
                     "phone"
