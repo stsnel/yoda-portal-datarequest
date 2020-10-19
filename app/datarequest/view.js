@@ -71,14 +71,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             elem.classList.add("complete");
         }
     })
-    // Get data request schema and uiSchema
-    .then(async () => {
-        let response = await fetch("/datarequest/datarequest/schema");
-
-        let schemas = await response.json();
-
-        datarequestSchema   = schemas.schema;
-        datarequestUiSchema = schemas.uiSchema;
+    // Get data request schema and uischema
+    .then(() => {
+        Yoda.call("schema_get", {schema_name: "datarequest"})
+        .then(response => {
+            datarequestSchema   = response.schema;
+            datarequestUiSchema = response.uischema;
+        })
     })
     // Render data request as disabled form
     .then(() => {

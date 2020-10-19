@@ -16,14 +16,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     .then(datarequest => {
         datarequestFormData = JSON.parse(datarequest.requestJSON);
     })
-    // Get data request schema and uiSchema
-    .then(async () => {
-        let response = await fetch("/datarequest/datarequest/schema");
-
-        let schemas = await response.json();
-
-        datarequestSchema   = schemas.schema;
-        datarequestUiSchema = schemas.uiSchema;
+    // Get data request schema and uischema
+    .then(() => {
+        Yoda.call("schema_get", {schema_name: "datarequest"})
+        .then(response => {
+            datarequestSchema   = response.schema;
+            datarequestUiSchema = response.uischema;
+        })
     })
     // Render data request as disabled form
     .then(() => {
@@ -35,12 +34,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     // Get the schema of the data request preliminary review form
-    fetch("/datarequest/datarequest/preliminaryReviewSchema")
-    .then(async response => {
-        let schemas = await response.json();
-
-        let preliminaryReviewSchema = schemas.schema;
-        let preliminaryReviewUiSchema = schemas.uiSchema;
+    Yoda.call("schema_get", {schema_name: "preliminary_review"})
+    .then(response => {
+        let preliminaryReviewSchema = response.schema;
+        let preliminaryReviewUiSchema = response.uiSchema;
 
         render(<Container schema={preliminaryReviewSchema}
                           uiSchema={preliminaryReviewUiSchema} />,
