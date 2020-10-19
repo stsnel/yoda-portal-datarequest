@@ -79,6 +79,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             dmrUiSchema = response.uischema;
         })
     })
+    // Render data manager review as disabled form
     .then(() => {
         render(<ContainerReadonly schema={dmrSchema}
                                   uiSchema={dmrUiSchema}
@@ -93,7 +94,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Get assignment
     Yoda.call("datarequest_assignment_get",
               {request_id: requestId},
-              {errorPrefix: "Could not get datamanager review"})
+              {errorPrefix: "Could not get assignment"})
     .then(response => {
         assignFormData = JSON.parse(response);
     })
@@ -105,6 +106,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             assignUiSchema = response.uischema;
         })
     })
+    // Render assignment as disabled form
     .then(() => {
         render(<ContainerReadonly schema={assignSchema}
                                   uiSchema={assignUiSchema}

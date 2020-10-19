@@ -79,6 +79,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             dmrUiSchema = response.uischema;
         })
     })
+    // Render data manager review as disabled form
     .then(() => {
         render(<ContainerReadonly schema={dmrSchema}
                                   uiSchema={dmrUiSchema}
@@ -105,6 +106,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             assignUiSchema = response.uischema;
         })
     })
+    // Render assignment as disabled form
     .then(() => {
         render(<ContainerReadonly schema={assignSchema}
                                   uiSchema={assignUiSchema}
