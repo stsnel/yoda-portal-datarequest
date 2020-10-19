@@ -184,74 +184,6 @@ class Datarequest extends MY_Controller
                 }
               }
             },
-            "research_context": {
-              "type": "object",
-              "title": "Research context",
-              "description": "In this section, please briefly describe the context for your research plans. This section should logically introduce the next section (hypotheses). As mentioned, please note that this section will be made publicly available on our researcher’s website after submission of your request.<br/>Please provide:<br/><ul><li>The title of your research plan</li><li>A very brief background for the topic of your research plan</li><li>The rationale for and relevance of your specific research plan</li><li>The specific research question(s) or aim(s) of your research (Please also provide a brief specification)</li><li>A short description of the data you request</li></ul>References can be added at the end of this section (optional).",
-              "properties": {
-                "title": {
-                  "type": "string",
-                  "title": "Title of the study",
-                  "maxLength": 2700
-                },
-                "background": {
-                  "type": "string",
-                  "title": "Background of the topic of your research plan, rationale, relevance (max. 500 words)"
-                },
-                "research_question": {
-                  "type": "string",
-                  "title": "The specific research question(s) or aim(s) of your research"
-                },
-                "requested_data_summary": {
-                  "type": "string",
-                  "title": "Summary of the data requested for your project",
-                  "description": "Please indicate which data you request to answer your research question."
-                },
-                "references": {
-                  "type": "string",
-                  "title": "References",
-                  "description": "Optional"
-                }
-              },
-              "required": ["title", "background", "research_question", "requested_data_summary"]
-            },
-            "hypotheses": {
-              "type": "object",
-              "title": "Hypotheses",
-              "description": "In this section, please provide your research hypotheses. For each hypothesis:<ul><li>Be as specific as possible</li><li>Provide the anticipated outcomes for accepting and/or rejecting a hypothesis</li></ul>",
-              "properties": {
-                "hypotheses": {
-                  "type": "string",
-                  "title": "Hypotheses"
-                }
-              }
-            },
-            "methods": {
-              "type": "object",
-              "title": "Methods",
-              "description": "In this section, you should make clear how the hypotheses are tested. Be as specific as possible.<br/>Please describe:<ul><li>The study design and study population (Which data do you require from which subjects?)</li><li>The general processing steps (to prepare the data for analysis)</li>The analysis steps (How are the data analysed to address the hypotheses? If possible, link each description to a specific hypothesis)</li><li>Any additional aspects that need to be described to clarify the methodological approach (optional)</li></ul>",
-              "properties": {
-                "design": {
-                  "type": "string",
-                  "title": "Study design, study population and sample size",
-                  "description": "E.g. cross-sectional or longitudinal; entire population or a subset; substantiate your choices."
-                },
-                "preparation": {
-                  "type": "string",
-                  "title": "General processing steps to prepare the data for analysis"
-                },
-                "processing": {
-                  "type": "string",
-                  "title": "Specific processing and analysis steps to address the hypotheses"
-                },
-                "additional_methodological_aspects": {
-                  "type": "string",
-                  "title": "Additional methodological aspects",
-                  "description": "Optional"
-                }
-              },
-              "required": ["design", "preparation", "processing"]
-            },
             "datarequest": {
               "type": "object",
               "title": "Requested data",
@@ -359,6 +291,74 @@ class Datarequest extends MY_Controller
               "required": [
                 "data", "purpose", "data_lock_notification", "publication_approval"
               ]
+            },
+            "research_context": {
+              "type": "object",
+              "title": "Research context",
+              "description": "In this section, please briefly describe the context for your research plans. This section should logically introduce the next section (hypotheses). As mentioned, please note that this section will be made publicly available on our researcher’s website after submission of your request.<br/>Please provide:<br/><ul><li>The title of your research plan</li><li>A very brief background for the topic of your research plan</li><li>The rationale for and relevance of your specific research plan</li><li>The specific research question(s) or aim(s) of your research (Please also provide a brief specification)</li><li>A short description of the data you request</li></ul>References can be added at the end of this section (optional).",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "title": "Title of the study",
+                  "maxLength": 2700
+                },
+                "background": {
+                  "type": "string",
+                  "title": "Background of the topic of your research plan, rationale, relevance (max. 500 words)"
+                },
+                "research_question": {
+                  "type": "string",
+                  "title": "The specific research question(s) or aim(s) of your research"
+                },
+                "requested_data_summary": {
+                  "type": "string",
+                  "title": "Summary of the data requested for your project",
+                  "description": "Please indicate which data you request to answer your research question."
+                },
+                "references": {
+                  "type": "string",
+                  "title": "References",
+                  "description": "Optional"
+                }
+              },
+              "required": ["title", "background", "research_question", "requested_data_summary"]
+            },
+            "hypotheses": {
+              "type": "object",
+              "title": "Hypotheses",
+              "description": "In this section, please provide your research hypotheses. For each hypothesis:<ul><li>Be as specific as possible</li><li>Provide the anticipated outcomes for accepting and/or rejecting a hypothesis</li></ul>",
+              "properties": {
+                "hypotheses": {
+                  "type": "string",
+                  "title": "Hypotheses"
+                }
+              }
+            },
+            "methods": {
+              "type": "object",
+              "title": "Methods",
+              "description": "In this section, you should make clear how the hypotheses are tested. Be as specific as possible.<br/>Please describe:<ul><li>The study design and study population (Which data do you require from which subjects?)</li><li>The general processing steps (to prepare the data for analysis)</li>The analysis steps (How are the data analysed to address the hypotheses? If possible, link each description to a specific hypothesis)</li><li>Any additional aspects that need to be described to clarify the methodological approach (optional)</li></ul>",
+              "properties": {
+                "design": {
+                  "type": "string",
+                  "title": "Study design, study population and sample size",
+                  "description": "E.g. cross-sectional or longitudinal; entire population or a subset; substantiate your choices."
+                },
+                "preparation": {
+                  "type": "string",
+                  "title": "General processing steps to prepare the data for analysis"
+                },
+                "processing": {
+                  "type": "string",
+                  "title": "Specific processing and analysis steps to address the hypotheses"
+                },
+                "additional_methodological_aspects": {
+                  "type": "string",
+                  "title": "Additional methodological aspects",
+                  "description": "Optional"
+                }
+              },
+              "required": ["design", "preparation", "processing"]
             },
             "contribution": {
               "type": "object",
