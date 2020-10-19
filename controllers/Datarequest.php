@@ -544,13 +544,22 @@ class Datarequest extends MY_Controller
           },
           "research_context": {
             "background": {
-              "ui:widget": "textarea"
+              "ui:widget": "textarea",
+              "ui:options": {
+                "rows": 20
+              }
             },
             "research_question": {
-              "ui:widget": "textarea"
+              "ui:widget": "textarea",
+              "ui:options": {
+                "rows": 5
+              }
             },
             "requested_data_summary": {
-              "ui:widget": "textarea"
+              "ui:widget": "textarea",
+              "ui:options": {
+                "rows": 5
+              }
             },
             "references": {
               "ui:widget": "textarea"
@@ -558,18 +567,30 @@ class Datarequest extends MY_Controller
           },
           "hypotheses": {
             "hypotheses": {
-              "ui:widget": "textarea"
+              "ui:widget": "textarea",
+              "ui:options": {
+                "rows": 8
+              }
             }
           },
           "methods": {
             "design": {
-              "ui:widget": "textarea"
+              "ui:widget": "textarea",
+              "ui:options": {
+                "rows": 10
+              }
             },
             "preparation": {
-              "ui:widget": "textarea"
+              "ui:widget": "textarea",
+              "ui:options": {
+                "rows": 8
+              }
             },
             "processing": {
-              "ui:widget": "textarea"
+              "ui:widget": "textarea",
+              "ui:options": {
+                "rows": 8
+              }
             },
             "additional_methodological_aspects": {
               "ui:widget": "textarea"
