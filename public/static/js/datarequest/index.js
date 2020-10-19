@@ -124,7 +124,7 @@ const tableRenderer = {
          return elem[0].outerHTML;
      },
      status: (status, _, row) => {
-         return `${htmlEncode(status)}`;
+         return `${htmlEncode(convertToHumanReadableStatus(status))}`;
      },
 };
 
@@ -158,6 +158,49 @@ function startBrowsing(items)
 
     buildFileBrowser();
 }
+
+
+function convertToHumanReadableStatus(status) {
+    switch(status) {
+        case "SUBMITTED":
+            return "Submitted";
+        case "PRELIMINARY_ACCEPT":
+            return "Preliminary accept";
+        case "PRELIMINARY_REJECT":
+            return "Preliminary reject";
+        case "PRELIMINARY_RESUBMIT":
+            return "Preliminary reject (resubmit)";
+        case "DATAMANAGER_ACCEPT":
+            return "Datamanager accept";
+        case "DATAMANAGER_REJECT":
+            return "Datamanager reject";
+        case "DATAMANAGER_RESUBMIT":
+            return "Datamanager reject (resubmit)";
+        case "UNDER_REVIEW":
+            return "Under review";
+        case "REJECTED_AFTER_DATAMANAGER_REVIEW":
+            return "Rejected";
+        case "RESUBMIT_AFTER_DATAMANAGER_REVIEW":
+            return "Rejected (resubmit)";
+        case "REVIEWED":
+            return "Reviewed";
+        case "APPROVED":
+            return "Approved";
+        case "REJECTED":
+            return "Rejected";
+        case "RESUBMIT":
+            return "Rejected (resubmit)";
+        case "DTA_READY":
+            return "DTA ready";
+        case "DTA_SIGNED":
+            return "DTA signed";
+        case "DATA_READY":
+            return "Data ready";
+        default:
+            return "Unknown status";
+    } 
+}
+
 
 function htmlEncode(value){
     //create a in-memory div, set it's inner text(which jQuery automatically encodes)
