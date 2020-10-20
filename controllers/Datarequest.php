@@ -315,6 +315,7 @@ class Datarequest extends MY_Controller
                           "title": "Publication type",
                           "enum": [
                             "Article or report",
+                            "Article or report that will also be part of a PhD thesis",
                             "PhD thesis"
                           ]
                         }
