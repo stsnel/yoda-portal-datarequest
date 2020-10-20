@@ -1348,9 +1348,9 @@ class Datarequest extends MY_Controller
         # Load Filesystem model
         $this->load->model('filesystem');
 
-        # Replace original filename with "signed_dta.pdf" for easier
+        # Replace original filename with "dta_signed.pdf" for easier
         # retrieval later on
-        $new_filename = "signed_dta.pdf";
+        $new_filename = "dta_signed.pdf";
         $_FILES["file"]["name"] = $new_filename;
 
         # Construct path to data request directory (in which the document will
@@ -1380,7 +1380,7 @@ class Datarequest extends MY_Controller
         $this->load->model('filesystem');
 
         $rodsaccount = $this->rodsuser->getRodsAccount();
-        $filePath = '/tempZone/home/datarequests-research/' . $requestId . '/signed_dta.pdf';
+        $filePath = '/tempZone/home/datarequests-research/' . $requestId . '/dta_signed.pdf';
 
         $this->filesystem->download($rodsaccount, $filePath);
     }
