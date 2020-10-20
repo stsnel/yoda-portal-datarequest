@@ -337,7 +337,7 @@ class Datarequest extends MY_Controller
             "methods": {
               "type": "object",
               "title": "Methods",
-              "description": "In this section, you should make clear how the hypotheses are tested. Be as specific as possible.<br/>Please describe:<ul><li>The study design and study population (Which data do you require from which subjects?)</li><li>The general processing steps (to prepare the data for analysis)</li>The analysis steps (How are the data analysed to address the hypotheses? If possible, link each description to a specific hypothesis)</li><li>Any additional aspects that need to be described to clarify the methodological approach (optional)</li></ul>",
+              "description": "In this section, you should make clear how the hypotheses are tested. Be as specific as possible.<br/>Please describe:<ul><li>The study design and study population (Which data do you require from which subjects?)</li><li>The general processing steps (to prepare the data for analysis)</li><li>The analysis steps (How are the data analysed to address the hypotheses? If possible, link each description to a specific hypothesis)</li><li>Any additional aspects that need to be described to clarify the methodological approach (optional)</li></ul>",
               "properties": {
                 "design": {
                   "type": "string",
@@ -544,13 +544,22 @@ class Datarequest extends MY_Controller
           },
           "research_context": {
             "background": {
-              "ui:widget": "textarea"
+              "ui:widget": "textarea",
+              "ui:options": {
+                "rows": 20
+              }
             },
             "research_question": {
-              "ui:widget": "textarea"
+              "ui:widget": "textarea",
+              "ui:options": {
+                "rows": 5
+              }
             },
             "requested_data_summary": {
-              "ui:widget": "textarea"
+              "ui:widget": "textarea",
+              "ui:options": {
+                "rows": 5
+              }
             },
             "references": {
               "ui:widget": "textarea"
@@ -558,18 +567,30 @@ class Datarequest extends MY_Controller
           },
           "hypotheses": {
             "hypotheses": {
-              "ui:widget": "textarea"
+              "ui:widget": "textarea",
+              "ui:options": {
+                "rows": 8
+              }
             }
           },
           "methods": {
             "design": {
-              "ui:widget": "textarea"
+              "ui:widget": "textarea",
+              "ui:options": {
+                "rows": 10
+              }
             },
             "preparation": {
-              "ui:widget": "textarea"
+              "ui:widget": "textarea",
+              "ui:options": {
+                "rows": 8
+              }
             },
             "processing": {
-              "ui:widget": "textarea"
+              "ui:widget": "textarea",
+              "ui:options": {
+                "rows": 8
+              }
             },
             "additional_methodological_aspects": {
               "ui:widget": "textarea"
