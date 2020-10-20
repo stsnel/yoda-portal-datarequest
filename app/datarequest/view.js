@@ -72,8 +72,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     })
     // Get data request schema and uischema
-    .then(() => {
-        Yoda.call("datarequest_schema_get", {schema_name: "datarequest"})
+    .then(async () => {
+        await Yoda.call("datarequest_schema_get", {schema_name: "datarequest"})
         .then(response => {
             datarequestSchema   = response.schema;
             datarequestUiSchema = response.uischema;

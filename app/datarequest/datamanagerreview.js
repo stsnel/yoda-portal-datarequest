@@ -17,8 +17,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         datarequestFormData = JSON.parse(datarequest.requestJSON);
     })
     // Get data request schema and uischema
-    .then(() => {
-        Yoda.call("datarequest_schema_get", {schema_name: "datarequest"})
+    .then(async () => {
+        await Yoda.call("datarequest_schema_get", {schema_name: "datarequest"})
         .then(response => {
             datarequestSchema   = response.schema;
             datarequestUiSchema = response.uischema;
@@ -45,8 +45,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         prFormData = JSON.parse(response);
     })
     // Get preliminary review schema and uischema
-    .then(() => {
-        Yoda.call("datarequest_schema_get", {schema_name: "preliminary_review"})
+    .then(async () => {
+        await Yoda.call("datarequest_schema_get", {schema_name: "preliminary_review"})
         .then(response => {
             prSchema   = response.schema;
             prUiSchema = response.uischema;
