@@ -9,7 +9,7 @@ import DataSelection, { DataSelectionTable } from "./DataSelection.js";
 document.addEventListener("DOMContentLoaded", async () => {
 
     // Get data request schema and uiSchema
-    Yoda.call("schema_get", {schema_name: "datarequest"})
+    Yoda.call("datarequest_schema_get", {schema_name: "datarequest"})
     .then(response => {
         let datarequestSchema = response.schema;
         let datarequestUiSchema = response.uischema;

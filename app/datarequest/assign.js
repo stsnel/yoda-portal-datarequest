@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     })
     // Get data request schema and uischema
     .then(() => {
-        Yoda.call("schema_get", {schema_name: "datarequest"})
+        Yoda.call("datarequest_schema_get", {schema_name: "datarequest"})
         .then(response => {
             datarequestSchema   = response.schema;
             datarequestUiSchema = response.uischema;
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     })
     // Get preliminary review schema and uischema
     .then(() => {
-        Yoda.call("schema_get", {schema_name: "preliminary_review"})
+        Yoda.call("datarequest_schema_get", {schema_name: "preliminary_review"})
         .then(response => {
             prSchema   = response.schema;
             prUiSchema = response.uischema;
@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     })
     // Get data manager review schema and uischema
     .then(() => {
-        Yoda.call("schema_get", {schema_name: "datamanager_review"})
+        Yoda.call("datarequest_schema_get", {schema_name: "datamanager_review"})
         .then(response => {
             dmrSchema   = response.schema;
             dmrUiSchema = response.uischema;
@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     // Get the schema of the data request review form for the data manager
-    Yoda.call("schema_get", {schema_name: "assignment"})
+    Yoda.call("datarequest_schema_get", {schema_name: "assignment"})
     .then(response => {
         let assignSchema = response.schema;
         let assignUiSchema = response.uiSchema;
