@@ -171,7 +171,9 @@ class YodaForm extends React.Component {
                   schema={this.props.schema}
                   uiSchema={this.props.uiSchema}
                   idPrefix={"yoda"}
-                  onSubmit={onSubmit}>
+                  onSubmit={onSubmit}
+                  showErrorList={false}
+                  noHtml5Validate>
                   <button ref={(btn) => {this.submitButton=btn;}}
                           className="hidden" />
             </Form>
