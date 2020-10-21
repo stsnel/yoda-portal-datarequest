@@ -17,8 +17,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         datarequestFormData = JSON.parse(datarequest.requestJSON);
     })
     // Get data request schema and uischema
-    .then(() => {
-        Yoda.call("datarequest_schema_get", {schema_name: "datarequest"})
+    .then(async () => {
+        await Yoda.call("datarequest_schema_get", {schema_name: "datarequest"})
         .then(response => {
             datarequestSchema   = response.schema;
             datarequestUiSchema = response.uischema;
@@ -45,8 +45,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         prFormData = JSON.parse(response);
     })
     // Get preliminary review schema and uischema
-    .then(() => {
-        Yoda.call("datarequest_schema_get", {schema_name: "preliminary_review"})
+    .then(async () => {
+        await Yoda.call("datarequest_schema_get", {schema_name: "preliminary_review"})
         .then(response => {
             prSchema   = response.schema;
             prUiSchema = response.uischema;
@@ -72,8 +72,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         dmrFormData = JSON.parse(response);
     })
     // Get data manager review schema and uischema
-    .then(() => {
-        Yoda.call("datarequest_schema_get", {schema_name: "datamanager_review"})
+    .then(async () => {
+        await Yoda.call("datarequest_schema_get", {schema_name: "datamanager_review"})
         .then(response => {
             dmrSchema   = response.schema;
             dmrUiSchema = response.uischema;
@@ -99,8 +99,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         assignFormData = JSON.parse(response);
     })
     // Get assignment schema and uischema
-    .then(() => {
-        Yoda.call("datarequest_schema_get", {schema_name: "assignment"})
+    .then(async () => {
+        await Yoda.call("datarequest_schema_get", {schema_name: "assignment"})
         .then(response => {
             assignSchema   = response.schema;
             assignUiSchema = response.uischema;
@@ -126,8 +126,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         reviewFormData = JSON.parse(response);
     })
     // Get review schema and uischema
-    .then(() => {
-        Yoda.call("datarequest_schema_get", {schema_name: "review"})
+    .then(async () => {
+        await Yoda.call("datarequest_schema_get", {schema_name: "review"})
         .then(response => {
             reviewSchema   = response.schema;
             reviewUiSchema = response.uischema;
