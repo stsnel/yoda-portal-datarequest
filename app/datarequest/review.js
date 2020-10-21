@@ -16,14 +16,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     .then(datarequest => {
         datarequestFormData = JSON.parse(datarequest.requestJSON);
     })
-    // Get data request schema and uiSchema
-    .then(async () => {
-        let response = await fetch("/datarequest/datarequest/schema");
-
-        let schemas = await response.json();
-
-        datarequestSchema   = schemas.schema;
-        datarequestUiSchema = schemas.uiSchema;
+    // Get data request schema and uischema
+    .then(() => {
+        Yoda.call("datarequest_schema_get", {schema_name: "datarequest"})
+        .then(response => {
+            datarequestSchema   = response.schema;
+            datarequestUiSchema = response.uischema;
+        })
     })
     // Render data request as disabled form
     .then(() => {
@@ -45,14 +44,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     .then(response => {
         prFormData = JSON.parse(response);
     })
-    // Get preliminary review schema and uiSchema
-    .then(async () => {
-        let response = await fetch("/datarequest/datarequest/preliminaryReviewSchema");
-
-        let schemas = await response.json();
-
-        prSchema   = schemas.schema;
-        prUiSchema = schemas.uiSchema;
+    // Get preliminary review schema and uischema
+    .then(() => {
+        Yoda.call("datarequest_schema_get", {schema_name: "preliminary_review"})
+        .then(response => {
+            prSchema   = response.schema;
+            prUiSchema = response.uischema;
+        })
     })
     // Render preliminary review as disabled form
     .then(() => {
@@ -73,14 +71,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     .then(response => {
         dmrFormData = JSON.parse(response);
     })
-    .then(async () => {
-        let response = await fetch("/datarequest/datarequest/datamanagerReviewSchema");
-
-        let schemas = await response.json();
-
-        dmrSchema = schemas.schema;
-        dmrUiSchema = schemas.uiSchema;
+    // Get data manager review schema and uischema
+    .then(() => {
+        Yoda.call("datarequest_schema_get", {schema_name: "datamanager_review"})
+        .then(response => {
+            dmrSchema   = response.schema;
+            dmrUiSchema = response.uischema;
+        })
     })
+    // Render data manager review as disabled form
     .then(() => {
         render(<ContainerReadonly schema={dmrSchema}
                                   uiSchema={dmrUiSchema}
@@ -99,14 +98,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     .then(response => {
         assignFormData = JSON.parse(response);
     })
-    .then(async () => {
-        let response = await fetch("/datarequest/datarequest/assignSchema");
-
-        let schemas = await response.json();
-
-        assignSchema = schemas.schema;
-        assignUiSchema = schemas.uiSchema;
+    // Get assignment schema and uischema
+    .then(() => {
+        Yoda.call("datarequest_schema_get", {schema_name: "assignment"})
+        .then(response => {
+            assignSchema   = response.schema;
+            assignUiSchema = response.uischema;
+        })
     })
+    // Render assignment as disabled form
     .then(() => {
         render(<ContainerReadonly schema={assignSchema}
                                   uiSchema={assignUiSchema}
@@ -115,12 +115,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     // Get the schema and uiSchema of the review form
-    fetch("/datarequest/datarequest/reviewSchema")
-    .then(async response => {
-        let schemas = await response.json();
-
-        let reviewSchema = schemas.schema;
-        let reviewUiSchema = schemas.uiSchema;
+    Yoda.call("datarequest_schema_get", {schema_name: "review"})
+    .then(response => {
+        let reviewSchema = response.schema;
+        let reviewUiSchema = response.uiSchema;
 
         render(<Container schema={reviewSchema}
                           uiSchema={reviewUiSchema} />,

@@ -9,12 +9,10 @@ import DataSelection, { DataSelectionTable } from "./DataSelection.js";
 document.addEventListener("DOMContentLoaded", async () => {
 
     // Get data request schema and uiSchema
-    fetch("/datarequest/datarequest/schema")
-    .then(async response => {
-        let schemas = await response.json();
-
-        let datarequestSchema = schemas.schema;
-        let datarequestUiSchema = schemas.uiSchema;
+    Yoda.call("datarequest_schema_get", {schema_name: "datarequest"})
+    .then(response => {
+        let datarequestSchema = response.schema;
+        let datarequestUiSchema = response.uischema;
 
         // If specified, get data of previous data request (of which the present
         // data request will become a resubmission) and prefill data request
