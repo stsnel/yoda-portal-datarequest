@@ -341,8 +341,7 @@ class Datarequest extends MY_Controller
                                   ['request_id' => $requestId]);
     }
 
-    public function download_signed_dta($requestId)
-    {
+    public function download_signed_dta($requestId) {
         # Check if user is a data manager. If not, return a 403
         $isDatamanager = $this->api->call('datarequest_is_datamanager');
         if (!$isDatamanager) {
