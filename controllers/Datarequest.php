@@ -9,8 +9,7 @@
 
 class Datarequest extends MY_Controller
 {
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
 
         $this->load->library('api');
@@ -86,7 +85,6 @@ class Datarequest extends MY_Controller
     }
 
     public function add($previousRequestId = NULL) {
-
         // Load CSRF token
         $tokenName = $this->security->get_csrf_token_name();
         $tokenHash = $this->security->get_csrf_hash();
@@ -290,8 +288,7 @@ class Datarequest extends MY_Controller
                                   ['request_id' => $requestId]);
     }
 
-    public function download_dta($requestId)
-    {
+    public function download_dta($requestId) {
         # Check if user owns the data request. If not, return a 403
         $isRequestOwner = $this->api->call('datarequest_is_owner', ['request_id' => $requestId]);
         if (!$isRequestOwner) {
