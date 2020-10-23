@@ -9,8 +9,7 @@
 
 class Datarequest extends MY_Controller
 {
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
 
         $this->load->library('api');
@@ -38,6 +37,11 @@ class Datarequest extends MY_Controller
         loadView('/datarequest/index', $viewParams);
     }
 
+    function datarequestStatus($requestId) {
+	$result = $this->api->call('datarequest_get', ['request_id' => $requestId]);
+	return $result->data->requestStatus;
+    }
+
     public function view($requestId) {
         # Check user group memberships and statuses
         $isBoardMember  = $this->api->call('datarequest_is_bod_member');
@@ -57,15 +61,14 @@ class Datarequest extends MY_Controller
         $tokenHash = $this->security->get_csrf_hash();
 
 	# Get datarequest status
-	$result = $this->api->call('datarequest_get', ['request_id' => $requestId]);
-	$datarequestStatus = $result->data->requestStatus;
+        $requestStatus = $this->datarequestStatus($requestId);
 
         # Set view params and render the view
         $viewParams = array(
             'tokenName'      => $tokenName,
             'tokenHash'      => $tokenHash,
             'requestId'      => $requestId,
-            'requestStatus'  => $datarequestStatus,
+            'requestStatus'  => $requestStatus,
             'isReviewer'     => $isReviewer,
             'isBoardMember'  => $isBoardMember,
             'isDatamanager'  => $isDatamanager,
@@ -82,7 +85,6 @@ class Datarequest extends MY_Controller
     }
 
     public function add($previousRequestId = NULL) {
-
         // Load CSRF token
         $tokenName = $this->security->get_csrf_token_name();
         $tokenHash = $this->security->get_csrf_hash();
@@ -103,6 +105,13 @@ class Datarequest extends MY_Controller
         // Check if user is board of directors member. If not, return a 403
         $isBoardMember = $this->api->call('datarequest_is_bod_member');
         if (!$isBoardMember) {
+            $this->output->set_status_header('403');
+            return;
+        }
+
+	# Check if request status is appropriate
+        $requestStatus = $this->datarequestStatus($requestId);
+        if ($requestStatus !== "SUBMITTED") {
             $this->output->set_status_header('403');
             return;
         }
@@ -130,6 +139,14 @@ class Datarequest extends MY_Controller
             return;
         }
 
+	# Check if request status is appropriate
+        $requestStatus = $this->datarequestStatus($requestId);
+        if (!in_array($requestStatus, ["PRELIMINARY_ACCEPT", "PRELIMINARY_REJECT",
+                                      "PRELIMINARY_RESUBMIT"])) {
+            $this->output->set_status_header('403');
+            return;
+        }
+
         // Load CSRF token
         $tokenName = $this->security->get_csrf_token_name();
         $tokenHash = $this->security->get_csrf_hash();
@@ -148,6 +165,14 @@ class Datarequest extends MY_Controller
         // Check if user is board of directors member. If not, return a 403
         $isBoardMember = $this->api->call('datarequest_is_bod_member');
         if (!$isBoardMember) {
+            $this->output->set_status_header('403');
+            return;
+        }
+
+	# Check if request status is appropriate
+        $requestStatus = $this->datarequestStatus($requestId);
+        if (!in_array($requestStatus, ["DATAMANAGER_ACCEPT", "DATAMANAGER_REJECT",
+                                       "DATAMANAGER_RESUBMIT"])) {
             $this->output->set_status_header('403');
             return;
         }
@@ -175,6 +200,13 @@ class Datarequest extends MY_Controller
             return;
         }
 
+	# Check if request status is appropriate
+        $requestStatus = $this->datarequestStatus($requestId);
+        if ($requestStatus !== "UNDER_REVIEW") {
+            $this->output->set_status_header('403');
+            return;
+        }
+
         // Load CSRF token
         $tokenName = $this->security->get_csrf_token_name();
         $tokenHash = $this->security->get_csrf_hash();
@@ -194,6 +226,13 @@ class Datarequest extends MY_Controller
         // Check if user is board of directors member. If not, return a 403
         $isBoardMember = $this->api->call('datarequest_is_bod_member');
         if (!$isBoardMember) {
+            $this->output->set_status_header('403');
+            return;
+        }
+
+	# Check if request status is appropriate
+        $requestStatus = $this->datarequestStatus($requestId);
+        if ($requestStatus !== "REVIEWED") {
             $this->output->set_status_header('403');
             return;
         }
@@ -220,6 +259,13 @@ class Datarequest extends MY_Controller
             return;
         }
 
+	# Check if request status is appropriate
+        $requestStatus = $this->datarequestStatus($requestId);
+        if ($requestStatus !== "APPROVED") {
+            $this->output->set_status_header('403');
+            return;
+        }
+
         # Load Filesystem model
         $this->load->model('filesystem');
 
@@ -242,8 +288,7 @@ class Datarequest extends MY_Controller
                                   ['request_id' => $requestId]);
     }
 
-    public function download_dta($requestId)
-    {
+    public function download_dta($requestId) {
         # Check if user owns the data request. If not, return a 403
         $isRequestOwner = $this->api->call('datarequest_is_owner', ['request_id' => $requestId]);
         if (!$isRequestOwner) {
@@ -265,6 +310,13 @@ class Datarequest extends MY_Controller
         $isRequestOwner = $this->api->call('datarequest_is_owner', ['request_id' => $requestId]);
         if (!$isRequestOwner) {
             $this->output->set_status_header('403');
+        }
+
+	# Check if request status is appropriate
+        $requestStatus = $this->datarequestStatus($requestId);
+        if ($requestStatus !== "DTA_READY") {
+            $this->output->set_status_header('403');
+            return;
         }
 
         # Load Filesystem model
@@ -297,6 +349,13 @@ class Datarequest extends MY_Controller
             $this->output->set_status_header('403');
         }
 
+	# Check if request status is appropriate
+        $requestStatus = $this->datarequestStatus($requestId);
+        if (!in_array($requestStatus, ["DTA_SIGNED", "DATA_READY"])) {
+            $this->output->set_status_header('403');
+            return;
+        }
+
         # Load Filesystem model
         $this->load->model('filesystem');
 
@@ -310,6 +369,13 @@ class Datarequest extends MY_Controller
         # Check if user is a data manager. If not, return a 403
         $isDatamanager = $this->api->call('datarequest_is_datamanager');
         if (!$isDatamanager) {
+            $this->output->set_status_header('403');
+            return;
+        }
+
+	# Check if request status is appropriate
+        $requestStatus = $this->datarequestStatus($requestId);
+        if ($requestStatus !== "DTA_SIGNED") {
             $this->output->set_status_header('403');
             return;
         }
