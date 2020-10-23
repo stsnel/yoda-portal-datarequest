@@ -39,23 +39,12 @@ class Datarequest extends MY_Controller
     }
 
     public function view($requestId) {
-        $this->load->model('user');
-
-        # Check if user is a Board of Directors representative. If not, do
-        # not allow the user to approve the datarequest
-        $isBoardMember = $this->user->isBoardMember();
-
-        # Check if user is a data manager
-        $isDatamanager = $this->user->isDatamanager();
-
-        # Check if user is the owner of the datarequest. If so, the approve
-        # button will not be rendered
-        $isRequestOwner = $this->user->isRequestOwner($requestId);
-
-        # Check if user is assigned to review this proposal.
-        $isDMCMember = $this->user->isDMCMember();
-
-        $isReviewer = $this->user->isReviewer($requestId);
+        # Check user group memberships and statuses
+        $isBoardMember  = $this->api->call('datarequest_is_bod_member');
+        $isDatamanager  = $this->api->call('datarequest_is_datamanager');
+        $isDMCMember    = $this->api->call('datarequest_is_dmc_member');
+        $isRequestOwner = $this->api->call('datarequest_is_owner', ['request_id' => $requestId]);
+        $isReviewer     = $this->api->call('datarequest_is_reviewer', ['request_id' => $requestId]);
 
         # If the user is neither of the above, return a 403
         if (!$isBoardMember && !$isDatamanager && !$isDMCMember && !$isRequestOwner) {
@@ -67,7 +56,7 @@ class Datarequest extends MY_Controller
         $tokenName = $this->security->get_csrf_token_name();
         $tokenHash = $this->security->get_csrf_hash();
 
-	# Get the data request status from iRODS
+	# Get datarequest status
 	$result = $this->api->call('datarequest_get', ['request_id' => $requestId]);
 	$datarequestStatus = $result->data->requestStatus;
 
@@ -112,8 +101,7 @@ class Datarequest extends MY_Controller
 
     public function preliminaryReview($requestId) {
         // Check if user is board of directors member. If not, return a 403
-        $this->load->model('user');
-        $isBoardMember = $this->user->isBoardMember();
+        $isBoardMember = $this->api->call('datarequest_is_bod_member');
         if (!$isBoardMember) {
             $this->output->set_status_header('403');
             return;
@@ -135,8 +123,7 @@ class Datarequest extends MY_Controller
 
     public function datamanagerReview($requestId) {
         // Check if user is data manager. If not, return a 403
-        $this->load->model('user');
-        $isDatamanager = $this->user->isDatamanager();
+        $isDatamanager = $this->api->call('datarequest_is_datamanager');
 
         if (!$isDatamanager) {
             $this->output->set_status_header('403');
@@ -159,8 +146,7 @@ class Datarequest extends MY_Controller
 
     public function assign($requestId) {
         // Check if user is board of directors member. If not, return a 403
-        $this->load->model('user');
-        $isBoardMember = $this->user->isBoardMember();
+        $isBoardMember = $this->api->call('datarequest_is_bod_member');
         if (!$isBoardMember) {
             $this->output->set_status_header('403');
             return;
@@ -183,8 +169,7 @@ class Datarequest extends MY_Controller
     public function review($requestId) {
         // Check if user has been assigned as a review to the specified data
         // request. If not, return 403.
-        $this->load->model('user');
-        $isReviewer = $this->user->isReviewer($requestId);
+        $isReviewer = $this->api->call('datarequest_is_reviewer', ['request_id' => $requestId]);
         if (!$isReviewer) {
             $this->output->set_status_header('403');
             return;
@@ -207,8 +192,7 @@ class Datarequest extends MY_Controller
 
     public function evaluate($requestId) {
         // Check if user is board of directors member. If not, return a 403
-        $this->load->model('user');
-        $isBoardMember = $this->user->isBoardMember();
+        $isBoardMember = $this->api->call('datarequest_is_bod_member');
         if (!$isBoardMember) {
             $this->output->set_status_header('403');
             return;
@@ -230,8 +214,7 @@ class Datarequest extends MY_Controller
 
     public function upload_dta($requestId) {
         // Check if user is a data manager. If not, return a 403
-        $this->load->model('user');
-        $isDatamanager = $this->user->isDatamanager();
+        $isDatamanager = $this->api->call('datarequest_is_datamanager');
         if (!$isDatamanager) {
             $this->output->set_status_header('403');
             return;
@@ -262,8 +245,7 @@ class Datarequest extends MY_Controller
     public function download_dta($requestId)
     {
         # Check if user owns the data request. If not, return a 403
-        $this->load->model('user');
-        $isRequestOwner = $this->user->isRequestOwner($requestId);
+        $isRequestOwner = $this->api->call('datarequest_is_owner', ['request_id' => $requestId]);
         if (!$isRequestOwner) {
             $this->output->set_status_header('403');
             return;
@@ -280,8 +262,7 @@ class Datarequest extends MY_Controller
 
     public function upload_signed_dta($requestId) {
         # Check if user is the owner of the datarequest. If not, return a 403
-        $this->load->model('user');
-        $isRequestOwner = $this->user->isRequestOwner($requestId);
+        $isRequestOwner = $this->api->call('datarequest_is_owner', ['request_id' => $requestId]);
         if (!$isRequestOwner) {
             $this->output->set_status_header('403');
         }
@@ -311,8 +292,7 @@ class Datarequest extends MY_Controller
     public function download_signed_dta($requestId)
     {
         # Check if user is a data manager. If not, return a 403
-        $this->load->model('user');
-        $isDatamanager = $this->user->isDatamanager($requestId);
+        $isDatamanager = $this->api->call('datarequest_is_datamanager');
         if (!$isDatamanager) {
             $this->output->set_status_header('403');
         }
@@ -328,8 +308,7 @@ class Datarequest extends MY_Controller
 
     public function data_ready($requestId) {
         # Check if user is a data manager. If not, return a 403
-        $this->load->model('user');
-        $isDatamanager = $this->user->isDatamanager($requestId);
+        $isDatamanager = $this->api->call('datarequest_is_datamanager');
         if (!$isDatamanager) {
             $this->output->set_status_header('403');
             return;
