@@ -113,3 +113,9 @@
         <td>The researcher may now download the requested data.</td>
     </tr>
 </table>
+
+<hr>
+
+<h4><center>Need help?</center></h4>
+
+<center><p>Send an email to <?php echo $help_contact_name ?> at <a href=mailto:<?php echo $help_contact_email ?>><?php echo $help_contact_email ?></a>.</p></center>
