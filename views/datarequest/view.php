@@ -64,79 +64,83 @@
 <?php if (in_array($requestStatus, array("DATAMANAGER_ACCEPT", "DATAMANAGER_RESUBMIT", "DATAMANAGER_REJECT")) && $isBoardMember): ?>
     <a href="/datarequest/assign/<?php echo html_escape($requestId) ?>" class="btn btn-default pull-right" role="button">Assign</a>
 <?php endif ?>
+<div class="row">
 <?php if ($requestStatus == "PRELIMINARY_ACCEPT" && $isDatamanager): ?>
     <a href="/datarequest/datamanagerreview/<?php echo html_escape($requestId) ?>" class="btn btn-default pull-right" role="button">Data manager review</a>
 <?php endif ?>
+</div>
 <?php if ($requestStatus == "SUBMITTED" && $isBoardMember): ?>
     <a href="/datarequest/preliminaryreview/<?php echo html_escape($requestId) ?>" class="btn btn-default pull-right" role="button">Preliminary review</a>
 <?php endif ?>
-<div class="row">
+<div class="row datarequest-button-margin-fix">
     <div class=col-md-12>
-        <div class="panel panel-default">
-            <div class="panel-heading clearfix">
-                <h3 class="panel-title pull-left">Data request: <?php echo html_escape($requestId) ?></h3>
-                <div class="pull-right">
-                    <a class="btn btn-default" href="/datarequest">Back</a>
-                </div>
-            </div>
-            <div class="panel-body">
-                <div class="row bs-wizard" style="border-bottom:0;">
-                    <div class="col-xs-3 bs-wizard-step disabled" id="step-0">
-                      <div class="text-center bs-wizard-stepnum">1. Submission</div>
-                      <div class="progress"><div class="progress-bar"></div></div>
-                      <a href="#" class="bs-wizard-dot"></a>
-                    </div>
-
-                    <div class="col-xs-3 bs-wizard-step disabled" id="step-1">
-                      <div class="text-center bs-wizard-stepnum">2. Under review</div>
-                      <div class="progress"><div class="progress-bar"></div></div>
-                      <a href="#" class="bs-wizard-dot"></a>
-                    </div>
-
-                    <div class="col-xs-3 bs-wizard-step disabled" id="step-2">
-                      <div class="text-center bs-wizard-stepnum">3. Reviewed</div>
-                      <div class="progress"><div class="progress-bar"></div></div>
-                      <a href="#" class="bs-wizard-dot"></a>
-                    </div>
-
-                    <div class="col-xs-3 bs-wizard-step disabled" id="step-3">
-                      <div class="text-center bs-wizard-stepnum">4. Approved</div>
-                      <div class="progress"><div class="progress-bar"></div></div>
-                      <a href="#" class="bs-wizard-dot"></a>
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title pull-left">Data request: <?php echo html_escape($requestId) ?></h3>
+                    <div class="pull-right">
+                        <a class="btn btn-default" href="/datarequest">Back</a>
                     </div>
                 </div>
-                <div class="row bs-wizard col-md-offset-2" style="border-bottom:0;">
-                    <div class="col-xs-3 bs-wizard-step disabled" id="step-4">
-                      <div class="text-center bs-wizard-stepnum">5. DTA ready</div>
-                      <div class="progress"><div class="progress-bar"></div></div>
-                      <a href="#" class="bs-wizard-dot"></a>
+                <div class="panel-body">
+                    <div class="row bs-wizard" style="border-bottom:0;">
+                        <div class="col-xs-3 bs-wizard-step disabled" id="step-0">
+                          <div class="text-center bs-wizard-stepnum">1. Submission</div>
+                          <div class="progress"><div class="progress-bar"></div></div>
+                          <a href="#" class="bs-wizard-dot"></a>
+                        </div>
+
+                        <div class="col-xs-3 bs-wizard-step disabled" id="step-1">
+                          <div class="text-center bs-wizard-stepnum">2. Under review</div>
+                          <div class="progress"><div class="progress-bar"></div></div>
+                          <a href="#" class="bs-wizard-dot"></a>
+                        </div>
+
+                        <div class="col-xs-3 bs-wizard-step disabled" id="step-2">
+                          <div class="text-center bs-wizard-stepnum">3. Reviewed</div>
+                          <div class="progress"><div class="progress-bar"></div></div>
+                          <a href="#" class="bs-wizard-dot"></a>
+                        </div>
+
+                        <div class="col-xs-3 bs-wizard-step disabled" id="step-3">
+                          <div class="text-center bs-wizard-stepnum">4. Approved</div>
+                          <div class="progress"><div class="progress-bar"></div></div>
+                          <a href="#" class="bs-wizard-dot"></a>
+                        </div>
+                    </div>
+                    <div class="row bs-wizard col-md-offset-2" style="border-bottom:0;">
+                        <div class="col-xs-3 bs-wizard-step disabled" id="step-4">
+                          <div class="text-center bs-wizard-stepnum">5. DTA ready</div>
+                          <div class="progress"><div class="progress-bar"></div></div>
+                          <a href="#" class="bs-wizard-dot"></a>
+                        </div>
+
+                        <div class="col-xs-3 bs-wizard-step disabled" id="step-5">
+                          <div class="text-center bs-wizard-stepnum">6. DTA signed</div>
+                          <div class="progress"><div class="progress-bar"></div></div>
+                          <a href="#" class="bs-wizard-dot"></a>
+                        </div>
+
+                        <div class="col-xs-3 bs-wizard-step disabled" id="step-6">
+                          <div class="text-center bs-wizard-stepnum">7. Data ready</div>
+                          <div class="progress"><div class="progress-bar"></div></div>
+                          <a href="#" class="bs-wizard-dot"></a>
+                        </div>
                     </div>
 
-                    <div class="col-xs-3 bs-wizard-step disabled" id="step-5">
-                      <div class="text-center bs-wizard-stepnum">6. DTA signed</div>
-                      <div class="progress"><div class="progress-bar"></div></div>
-                      <a href="#" class="bs-wizard-dot"></a>
-                    </div>
+                    <?php if (in_array($requestStatus, array("PRELIMINARY_REJECT", "PRELIMINARY_RESUBMIT", "REJECTED_AFTER_DATAMANAGER_REVIEW", "RESUBMIT_AFTER_DATAMANAGER_REVIEW", "REJECTED", "RESUBMIT"))): ?>
+                        <div class="rejected"><h3>Proposal rejected</h3></div>
+                    <?php endif ?>
 
-                    <div class="col-xs-3 bs-wizard-step disabled" id="step-6">
-                      <div class="text-center bs-wizard-stepnum">7. Data ready</div>
-                      <div class="progress"><div class="progress-bar"></div></div>
-                      <a href="#" class="bs-wizard-dot"></a>
-                    </div>
+                    <hr>
+
+                        <div id="datarequest" class="metadata-form"
+                             data-csrf_token_name="<?php echo rawurlencode($tokenName); ?>"
+                             data-csrf_token_hash="<?php echo rawurlencode($tokenHash); ?>">
+                            <p>Loading metadata <i class="fa fa-spinner fa-spin fa-fw"></i></p>
+                        </div>
+
                 </div>
-
-                <?php if (in_array($requestStatus, array("PRELIMINARY_REJECT", "PRELIMINARY_RESUBMIT", "REJECTED_AFTER_DATAMANAGER_REVIEW", "RESUBMIT_AFTER_DATAMANAGER_REVIEW", "REJECTED", "RESUBMIT"))): ?>
-                    <div class="rejected"><h3>Proposal rejected</h3></div>
-                <?php endif ?>
-
-                <hr>
-
-                    <div id="datarequest" class="metadata-form"
-                         data-csrf_token_name="<?php echo rawurlencode($tokenName); ?>"
-                         data-csrf_token_hash="<?php echo rawurlencode($tokenHash); ?>">
-                        <p>Loading metadata <i class="fa fa-spinner fa-spin fa-fw"></i></p>
-                    </div>
-
             </div>
         </div>
     </div>
