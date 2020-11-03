@@ -31,7 +31,9 @@ class Datarequest extends MY_Controller
                 'js/datarequest/index.js',
             ),
             'items'        => $items,
-            'activeModule' => 'datarequest'
+            'activeModule' => 'datarequest',
+            'help_contact_name' => $this->config->item('help_contact_name'),
+            'help_contact_email' => $this->config->item('help_contact_email')
         );
 
         loadView('/datarequest/index', $viewParams);

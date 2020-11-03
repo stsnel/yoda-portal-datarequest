@@ -11,3 +11,6 @@ $config['browser-items-per-page'] = 10;
 if (file_exists(dirname(__FILE__) . '/config_local.php'))
     include(    dirname(__FILE__) . '/config_local.php');
 // }}}
+
+$config['help_contact_name'] = "this Yoda instance's data manager";
+$config['help_contact_email'] = "help@yoda.instance";
