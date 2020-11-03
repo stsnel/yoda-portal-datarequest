@@ -74,7 +74,8 @@ class YodaForm extends React.Component {
                   fields={fields}
                   onSubmit={onSubmit}
                   showErrorList={false}
-                  noHtml5Validate>
+                  noHtml5Validate
+                  transformErrors={transformErrors}>
                   <button ref={(btn) => {this.submitButton=btn;}}
                           className="hidden" />
             </Form>
@@ -110,6 +111,15 @@ const fields = {
   DescriptionField: CustomDescriptionField,
   DataSelection: DataSelectionTable
 };
+
+function transformErrors(errors) {
+    return errors.map(error => {
+        if(error.name === "not" && error.property === ".contribution") {
+            error.message = "Please specify at least one contribution."
+        }
+        return error;
+    });
+}
 
 function submitData(data)
 {
