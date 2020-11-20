@@ -3,7 +3,7 @@
 </script>
 
 <div class="row">
-    <a href="/datarequest/datarequest/add" class="btn btn-secondary float-right" role="button">Add data request</a>
+    <a href="/datarequest/datarequest/add" class="btn btn-primary float-right" role="button">Add data request</a>
 </div>
 <div class="row">
     <div class="col-md-12">
