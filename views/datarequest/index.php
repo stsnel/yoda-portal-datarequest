@@ -3,8 +3,11 @@
 </script>
 
 <div class="row">
-    <a href="/datarequest/datarequest/add" class="btn btn-primary float-right" role="button">Add data request</a>
+    <div class="col-md-12">
+        <a href="/datarequest/datarequest/add" class="btn btn-primary float-right" role="button">Add data request</a>
+    </div>
 </div>
+
 <div class="row">
     <div class="col-md-12">
         <table id="file-browser" class="table yoda-table table-striped">
