@@ -7,19 +7,17 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <div class="row">
-            <table id="file-browser" class="table yoda-table table-striped">
-                <thead>
-                    <tr>
-                        <th>User</th>
-                        <th>Request ID</th>
-                        <th>Research proposal</th>
-                        <th>Submission date</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
+        <table id="file-browser" class="table yoda-table table-striped">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Request ID</th>
+                    <th>Research proposal</th>
+                    <th>Submission date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+        </table>
     </div>
 </div>
 
