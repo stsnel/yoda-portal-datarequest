@@ -45,40 +45,40 @@
 </div>
 
 <?php if ($requestStatus == "DTA_SIGNED" && $isDatamanager): ?>
-    <a href="/datarequest/download_signed_dta/<?php echo html_escape($requestId) ?>" class="btn btn-secondary float-xs-right">Download signed DTA</a>
-    <a href="/datarequest/data_ready/<?php echo html_escape($requestId) ?>" class="btn btn-secondary float-xs-right" role="button">Data ready</a>
+    <a href="/datarequest/download_signed_dta/<?php echo html_escape($requestId) ?>" class="btn btn-secondary float-right">Download signed DTA</a>
+    <a href="/datarequest/data_ready/<?php echo html_escape($requestId) ?>" class="btn btn-secondary float-right" role="button">Data ready</a>
 <?php endif ?>
 <?php if ($requestStatus == "DTA_READY" && $isRequestOwner): ?>
-    <a href="/datarequest/download_dta/<?php echo html_escape($requestId) ?>" class="btn btn-secondary float-xs-right">Download DTA</a>
-    <button type="button" class="btn btn-secondary float-xs-right upload_signed_dta" data-path="">Upload signed DTA</button>
+    <a href="/datarequest/download_dta/<?php echo html_escape($requestId) ?>" class="btn btn-secondary float-right">Download DTA</a>
+    <button type="button" class="btn btn-secondary float-right upload_signed_dta" data-path="">Upload signed DTA</button>
 <?php endif ?>
 <?php if ($requestStatus == "APPROVED" && $isDatamanager): ?>
-    <button type="button" class="btn btn-secondary float-xs-right upload_dta" data-path="">Upload DTA</button>
+    <button type="button" class="btn btn-secondary float-right upload_dta" data-path="">Upload DTA</button>
 <?php endif ?>
 <?php if ($requestStatus == "REVIEWED" && $isBoardMember): ?>
-    <a href="/datarequest/evaluate/<?php echo html_escape($requestId) ?>" class="btn btn-secondary float-xs-right" role="button">Evaluate data request</a>
+    <a href="/datarequest/evaluate/<?php echo html_escape($requestId) ?>" class="btn btn-secondary float-right" role="button">Evaluate data request</a>
 <?php endif ?>
 <?php if ($requestStatus == "UNDER_REVIEW" && $isReviewer): ?>
-    <a href="/datarequest/review/<?php echo html_escape($requestId) ?>" class="btn btn-secondary float-xs-right" role="button">Review data request</a>
+    <a href="/datarequest/review/<?php echo html_escape($requestId) ?>" class="btn btn-secondary float-right" role="button">Review data request</a>
 <?php endif ?>
 <?php if (in_array($requestStatus, array("DATAMANAGER_ACCEPT", "DATAMANAGER_RESUBMIT", "DATAMANAGER_REJECT")) && $isBoardMember): ?>
-    <a href="/datarequest/assign/<?php echo html_escape($requestId) ?>" class="btn btn-secondary float-xs-right" role="button">Assign</a>
+    <a href="/datarequest/assign/<?php echo html_escape($requestId) ?>" class="btn btn-secondary float-right" role="button">Assign</a>
 <?php endif ?>
 <div class="row">
 <?php if ($requestStatus == "PRELIMINARY_ACCEPT" && $isDatamanager): ?>
-    <a href="/datarequest/datamanagerreview/<?php echo html_escape($requestId) ?>" class="btn btn-secondary float-xs-right" role="button">Data manager review</a>
+    <a href="/datarequest/datamanagerreview/<?php echo html_escape($requestId) ?>" class="btn btn-secondary float-right" role="button">Data manager review</a>
 <?php endif ?>
 </div>
 <?php if ($requestStatus == "SUBMITTED" && $isBoardMember): ?>
-    <a href="/datarequest/preliminaryreview/<?php echo html_escape($requestId) ?>" class="btn btn-secondary float-xs-right" role="button">Preliminary review</a>
+    <a href="/datarequest/preliminaryreview/<?php echo html_escape($requestId) ?>" class="btn btn-secondary float-right" role="button">Preliminary review</a>
 <?php endif ?>
 <div class="row datarequest-button-margin-fix">
     <div class=col-md-12>
         <div class="row">
             <div class="card ">
                 <div class="card-header clearfix">
-                    <h3 class="card-header float-xs-left">Data request: <?php echo html_escape($requestId) ?></h3>
-                    <div class="float-xs-right">
+                    <h3 class="card-header float-left">Data request: <?php echo html_escape($requestId) ?></h3>
+                    <div class="float-right">
                         <a class="btn btn-secondary" href="/datarequest">Back</a>
                     </div>
                 </div>

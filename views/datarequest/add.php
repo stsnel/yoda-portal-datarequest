@@ -8,10 +8,10 @@
         <div class="col-md-12">
             <div class="card ">
                 <div class="card-header clearfix">
-                    <h3 class="card-header float-xs-left">
+                    <h3 class="card-header float-left">
                         Data request submission form
                     </h3>
-                    <div class="input-group-sm has-feedback float-xs-right">
+                    <div class="input-group-sm has-feedback float-right">
                         <a class="btn btn-secondary" href="/datarequest">Back</a>
                     </div>
                 </div>
