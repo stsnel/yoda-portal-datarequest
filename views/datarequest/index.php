@@ -3,7 +3,7 @@
 </script>
 
 <div class="row">
-    <a href="/datarequest/datarequest/add" class="btn btn-default pull-right" role="button">Add data request</a>
+    <a href="/datarequest/datarequest/add" class="btn btn-secondary float-xs-right" role="button">Add data request</a>
 </div>
 <div class="row">
     <div class="col-md-12">
@@ -29,44 +29,44 @@
 
 <div class="row bs-wizard" style="border-bottom:0;">
     <div class="col-xs-3 bs-wizard-step disabled">
-        <div class="text-center bs-wizard-stepnum">1. Submission</div>
+        <div class="text-xs-center bs-wizard-stepnum">1. Submission</div>
         <div class="progress"><div class="progress-bar"></div></div>
         <a href="#" class="bs-wizard-dot"></a>
     </div>
 
     <div class="col-xs-3 bs-wizard-step disabled">
-        <div class="text-center bs-wizard-stepnum">2. Under review</div>
+        <div class="text-xs-center bs-wizard-stepnum">2. Under review</div>
         <div class="progress"><div class="progress-bar"></div></div>
         <a href="#" class="bs-wizard-dot"></a>
     </div>
 
     <div class="col-xs-3 bs-wizard-step disabled">
-        <div class="text-center bs-wizard-stepnum">3. Reviewed</div>
+        <div class="text-xs-center bs-wizard-stepnum">3. Reviewed</div>
         <div class="progress"><div class="progress-bar"></div></div>
         <a href="#" class="bs-wizard-dot"></a>
     </div>
 
     <div class="col-xs-3 bs-wizard-step disabled">
-        <div class="text-center bs-wizard-stepnum">4. Approved</div>
+        <div class="text-xs-center bs-wizard-stepnum">4. Approved</div>
         <div class="progress"><div class="progress-bar"></div></div>
         <a href="#" class="bs-wizard-dot"></a>
     </div>
 </div>
-<div class="row bs-wizard col-md-offset-2" style="border-bottom:0;">
+<div class="row bs-wizard offset-md-2" style="border-bottom:0;">
     <div class="col-xs-3 bs-wizard-step disabled">
-        <div class="text-center bs-wizard-stepnum">5. DTA ready</div>
+        <div class="text-xs-center bs-wizard-stepnum">5. DTA ready</div>
         <div class="progress"><div class="progress-bar"></div></div>
         <a href="#" class="bs-wizard-dot"></a>
     </div>
 
     <div class="col-xs-3 bs-wizard-step disabled">
-        <div class="text-center bs-wizard-stepnum">6. DTA signed</div>
+        <div class="text-xs-center bs-wizard-stepnum">6. DTA signed</div>
         <div class="progress"><div class="progress-bar"></div></div>
         <a href="#" class="bs-wizard-dot"></a>
     </div>
 
     <div class="col-xs-3 bs-wizard-step disabled">
-        <div class="text-center bs-wizard-stepnum">7. Data ready</div>
+        <div class="text-xs-center bs-wizard-stepnum">7. Data ready</div>
         <div class="progress"><div class="progress-bar"></div></div>
         <a href="#" class="bs-wizard-dot"></a>
     </div>

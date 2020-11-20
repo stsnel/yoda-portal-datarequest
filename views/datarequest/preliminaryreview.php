@@ -13,11 +13,11 @@
 <div class="row">
     <div class="col-md-12">
         <div class="row">
-            <div class="panel panel-default">
-                <div class="panel-heading clearfix">
-                    <h3 class="panel-title pull-left">Data request <?php echo html_escape($requestId) ?></h3>
+            <div class="card ">
+                <div class="card-header clearfix">
+                    <h3 class="card-header float-xs-left">Data request <?php echo html_escape($requestId) ?></h3>
                 </div>
-                <div class="panel-body">
+                <div class="card-body">
                     <div id="datarequest" class="metadata-form"
                          data-csrf_token_name="<?php echo rawurlencode($tokenName); ?>"
                          data-csrf_token_hash="<?php echo rawurlencode($tokenHash); ?>">
