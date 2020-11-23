@@ -2,7 +2,7 @@
 	<div class="row">
 		<div class=col-md-12>
 			<div class="card ">
-		                <div class="card-header clearfix">
+		        <div class="card-header clearfix">
 					<h3 class="card-header float-left">Permission denied</h3>
 					<div class="float-right">
 						<a class="btn btn-secondary" href="/datarequest">Back</a>

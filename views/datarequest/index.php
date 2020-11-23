@@ -29,53 +29,53 @@
 <h4><center>What are the 7 steps to receiving YOUth data?</center></h4>
 
 <div class="row bs-wizard" style="border-bottom:0;">
-    <div class="col-xs-3 bs-wizard-step disabled">
-        <div class="text-xs-center bs-wizard-stepnum">1. Submission</div>
+    <div class="col-md-3 bs-wizard-step disabled">
+        <div class="text-md-center bs-wizard-stepnum">1. Submission</div>
         <div class="progress"><div class="progress-bar"></div></div>
         <a href="#" class="bs-wizard-dot"></a>
     </div>
 
-    <div class="col-xs-3 bs-wizard-step disabled">
-        <div class="text-xs-center bs-wizard-stepnum">2. Under review</div>
+    <div class="col-md-3 bs-wizard-step disabled">
+        <div class="text-md-center bs-wizard-stepnum">2. Under review</div>
         <div class="progress"><div class="progress-bar"></div></div>
         <a href="#" class="bs-wizard-dot"></a>
     </div>
 
-    <div class="col-xs-3 bs-wizard-step disabled">
-        <div class="text-xs-center bs-wizard-stepnum">3. Reviewed</div>
+    <div class="col-md-3 bs-wizard-step disabled">
+        <div class="text-md-center bs-wizard-stepnum">3. Reviewed</div>
         <div class="progress"><div class="progress-bar"></div></div>
         <a href="#" class="bs-wizard-dot"></a>
     </div>
 
-    <div class="col-xs-3 bs-wizard-step disabled">
-        <div class="text-xs-center bs-wizard-stepnum">4. Approved</div>
+    <div class="col-md-3 bs-wizard-step disabled">
+        <div class="text-md-center bs-wizard-stepnum">4. Approved</div>
         <div class="progress"><div class="progress-bar"></div></div>
         <a href="#" class="bs-wizard-dot"></a>
     </div>
 </div>
 <div class="row bs-wizard offset-md-2" style="border-bottom:0;">
-    <div class="col-xs-3 bs-wizard-step disabled">
-        <div class="text-xs-center bs-wizard-stepnum">5. DTA ready</div>
+    <div class="col-md-3 bs-wizard-step disabled">
+        <div class="text-md-center bs-wizard-stepnum">5. DTA ready</div>
         <div class="progress"><div class="progress-bar"></div></div>
         <a href="#" class="bs-wizard-dot"></a>
     </div>
 
-    <div class="col-xs-3 bs-wizard-step disabled">
-        <div class="text-xs-center bs-wizard-stepnum">6. DTA signed</div>
+    <div class="col-md-3 bs-wizard-step disabled">
+        <div class="text-md-center bs-wizard-stepnum">6. DTA signed</div>
         <div class="progress"><div class="progress-bar"></div></div>
         <a href="#" class="bs-wizard-dot"></a>
     </div>
 
-    <div class="col-xs-3 bs-wizard-step disabled">
-        <div class="text-xs-center bs-wizard-stepnum">7. Data ready</div>
+    <div class="col-md-3 bs-wizard-step disabled">
+        <div class="text-md-center bs-wizard-stepnum">7. Data ready</div>
         <div class="progress"><div class="progress-bar"></div></div>
         <a href="#" class="bs-wizard-dot"></a>
     </div>
 </div>
 
-<hr>
+<hr />
 
-<h4><center>What happens at each step?</center></h4>
+<h4>What happens at each step?</h4>
 
 <table class="process-table">
     <tr>
@@ -115,8 +115,8 @@
     </tr>
 </table>
 
-<hr>
+<hr />
 
-<h4><center>Need help?</center></h4>
+<h4>Need help?</h4>
 
-<center><p>Send an email to <?php echo $help_contact_name ?> at <a href=mailto:<?php echo $help_contact_email ?>><?php echo $help_contact_email ?></a>.</p></center>
+<p>Send an email to <?php echo $help_contact_name ?> at <a href=mailto:<?php echo $help_contact_email ?>><?php echo $help_contact_email ?></a>.</p>
