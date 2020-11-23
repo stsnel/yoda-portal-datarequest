@@ -4,7 +4,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <a href="/datarequest/datarequest/add" class="btn btn-primary float-right" role="button">Add data request</a>
+        <a href="/datarequest/datarequest/add" class="btn btn-primary mb-3 float-right" role="button">Add data request</a>
     </div>
 </div>
 
@@ -26,7 +26,7 @@
 
 <hr>
 
-<h4><center>What are the 7 steps to receiving YOUth data?</center></h4>
+<h4 class="text-center">What are the 7 steps to receiving YOUth data?</h4>
 
 <div class="row bs-wizard" style="border-bottom:0;">
     <div class="col-md-3 bs-wizard-step disabled">
@@ -75,7 +75,7 @@
 
 <hr />
 
-<h4>What happens at each step?</h4>
+<h4 class="text-center">What happens at each step?</h4>
 
 <table class="process-table">
     <tr>
@@ -117,6 +117,5 @@
 
 <hr />
 
-<h4>Need help?</h4>
-
-<p>Send an email to <?php echo $help_contact_name ?> at <a href=mailto:<?php echo $help_contact_email ?>><?php echo $help_contact_email ?></a>.</p>
+<h4 class="text-center">Need help?</h4>
+<p class="text-center">Send an email to <?php echo $help_contact_name ?> at <a href=mailto:<?php echo $help_contact_email ?>><?php echo $help_contact_email ?></a>.</p>
