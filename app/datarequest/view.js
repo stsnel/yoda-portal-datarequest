@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { render } from "react-dom";
-import Form from "react-jsonschema-form";
+import Form from "@rjsf/bootstrap-4";
 import DataSelection, { DataSelectionCart } from "./DataSelection.js";
 
 $(document).ajaxSend((e, request, settings) => {
