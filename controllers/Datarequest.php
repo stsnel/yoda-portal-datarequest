@@ -53,7 +53,7 @@ class Datarequest extends MY_Controller
         $isReviewer     = $this->api->call('datarequest_is_reviewer', ['request_id' => $requestId]);
 
         # If the user is neither of the above, return a 403
-        if (!$isBoardMember && !$isDatamanager && !$isDMCMember && !$isRequestOwner && !$isReviewer) {
+        if (!$isBoardMember->data && !$isDatamanager->data && !$isDMCMember->data && !$isRequestOwner->data && !$isReviewer->data) {
             $this->output->set_status_header('403');
             return;
         }
@@ -71,10 +71,10 @@ class Datarequest extends MY_Controller
             'tokenHash'      => $tokenHash,
             'requestId'      => $requestId,
             'requestStatus'  => $requestStatus,
-            'isReviewer'     => $isReviewer,
-            'isBoardMember'  => $isBoardMember,
-            'isDatamanager'  => $isDatamanager,
-            'isRequestOwner' => $isRequestOwner,
+            'isReviewer'     => $isReviewer->data,
+            'isBoardMember'  => $isBoardMember->data,
+            'isDatamanager'  => $isDatamanager->data,
+            'isRequestOwner' => $isRequestOwner->data,
             'activeModule'   => 'datarequest',
             'scriptIncludes' => array(
                 'js/datarequest/view.js'
@@ -106,7 +106,7 @@ class Datarequest extends MY_Controller
     public function preliminaryReview($requestId) {
         // Check if user is board of directors member. If not, return a 403
         $isBoardMember = $this->api->call('datarequest_is_bod_member');
-        if (!$isBoardMember) {
+        if (!$isBoardMember->data) {
             $this->output->set_status_header('403');
             return;
         }
@@ -136,7 +136,7 @@ class Datarequest extends MY_Controller
         // Check if user is data manager. If not, return a 403
         $isDatamanager = $this->api->call('datarequest_is_datamanager');
 
-        if (!$isDatamanager) {
+        if (!$isDatamanager->data) {
             $this->output->set_status_header('403');
             return;
         }
@@ -166,7 +166,7 @@ class Datarequest extends MY_Controller
     public function assign($requestId) {
         // Check if user is board of directors member. If not, return a 403
         $isBoardMember = $this->api->call('datarequest_is_bod_member');
-        if (!$isBoardMember) {
+        if (!$isBoardMember->data) {
             $this->output->set_status_header('403');
             return;
         }
@@ -197,7 +197,7 @@ class Datarequest extends MY_Controller
         // Check if user has been assigned as a review to the specified data
         // request. If not, return 403.
         $isReviewer = $this->api->call('datarequest_is_reviewer', ['request_id' => $requestId]);
-        if (!$isReviewer) {
+        if (!$isReviewer->data) {
             $this->output->set_status_header('403');
             return;
         }
@@ -227,7 +227,7 @@ class Datarequest extends MY_Controller
     public function evaluate($requestId) {
         // Check if user is board of directors member. If not, return a 403
         $isBoardMember = $this->api->call('datarequest_is_bod_member');
-        if (!$isBoardMember) {
+        if (!$isBoardMember->data) {
             $this->output->set_status_header('403');
             return;
         }
@@ -256,7 +256,7 @@ class Datarequest extends MY_Controller
     public function upload_dta($requestId) {
         // Check if user is a data manager. If not, return a 403
         $isDatamanager = $this->api->call('datarequest_is_datamanager');
-        if (!$isDatamanager) {
+        if (!$isDatamanager->data) {
             $this->output->set_status_header('403');
             return;
         }
@@ -293,7 +293,7 @@ class Datarequest extends MY_Controller
     public function download_dta($requestId) {
         # Check if user owns the data request. If not, return a 403
         $isRequestOwner = $this->api->call('datarequest_is_owner', ['request_id' => $requestId]);
-        if (!$isRequestOwner) {
+        if (!$isRequestOwner->data) {
             $this->output->set_status_header('403');
             return;
         }
@@ -310,7 +310,7 @@ class Datarequest extends MY_Controller
     public function upload_signed_dta($requestId) {
         # Check if user is the owner of the datarequest. If not, return a 403
         $isRequestOwner = $this->api->call('datarequest_is_owner', ['request_id' => $requestId]);
-        if (!$isRequestOwner) {
+        if (!$isRequestOwner->data) {
             $this->output->set_status_header('403');
         }
 
@@ -346,7 +346,7 @@ class Datarequest extends MY_Controller
     public function download_signed_dta($requestId) {
         # Check if user is a data manager. If not, return a 403
         $isDatamanager = $this->api->call('datarequest_is_datamanager');
-        if (!$isDatamanager) {
+        if (!$isDatamanager->data) {
             $this->output->set_status_header('403');
         }
 
@@ -369,7 +369,7 @@ class Datarequest extends MY_Controller
     public function data_ready($requestId) {
         # Check if user is a data manager. If not, return a 403
         $isDatamanager = $this->api->call('datarequest_is_datamanager');
-        if (!$isDatamanager) {
+        if (!$isDatamanager->data) {
             $this->output->set_status_header('403');
             return;
         }
