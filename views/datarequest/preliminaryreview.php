@@ -17,7 +17,7 @@
     <div class="col-md-12">
         <div class="card ">
             <div class="card-header clearfix">
-                <h3 class="card-header float-xs-left">Data request <?php echo html_escape($requestId) ?></h3>
+                <h5 class="card-header float-xs-left">Data request <?php echo html_escape($requestId) ?></h5>
             </div>
             <div class="card-body">
                 <div id="datarequest" class="metadata-form"

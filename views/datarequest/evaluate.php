@@ -16,7 +16,7 @@
     <div class="col-md-12">
         <div class="card ">
             <div class="card-header clearfix">
-                <h3 class="card-header float-left">Board of Directors response to data manager review (if any)</h3>
+                <h5 class="card-header float-left">Board of Directors response to data manager review (if any)</h5>
             </div>
             <div class="card-body">
                 <div id="assign" class="metadata-form"
@@ -33,7 +33,7 @@
     <div class="col-md-12">
         <div class="card ">
             <div class="card-header clearfix">
-                <h3 class="card-header float-left">Data manager review</h3>
+                <h5 class="card-header float-left">Data manager review</h5>
             </div>
             <div class="card-body">
                 <div id="datamanagerReview" class="metadata-form"
@@ -50,7 +50,7 @@
     <div class="col-md-12">
         <div class="card ">
             <div class="card-header clearfix">
-                <h3 class="card-header float-left">Board of Directors preliminary review</h3>
+                <h5 class="card-header float-left">Board of Directors preliminary review</h5>
             </div>
             <div class="card-body">
                 <div id="preliminaryReview" class="metadata-form"
@@ -68,7 +68,7 @@
         <div class="row">
             <div class="card ">
                 <div class="card-header clearfix">
-                    <h3 class="card-header float-left">Data request <?php echo html_escape($requestId) ?></h3>
+                    <h5 class="card-header float-left">Data request <?php echo html_escape($requestId) ?></h5>
                 </div>
                 <div class="card-body">
                     <div id="datarequest" class="metadata-form"

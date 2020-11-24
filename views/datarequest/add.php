@@ -8,9 +8,9 @@
     <div class="col-md-12">
         <div class="card ">
             <div class="card-header clearfix">
-                <h3 class="card-header float-left">
+                <h5 class="card-header float-left">
                     Data request submission form
-                </h3>
+                </h5>
                 <div class="input-group-sm has-feedback float-right">
                     <a class="btn btn-secondary" href="/datarequest">Back</a>
                 </div>
