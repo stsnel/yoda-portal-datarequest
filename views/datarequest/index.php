@@ -100,7 +100,7 @@
     <tr>
         <td><img src=/datarequest/static/img/button.png></img></td>
         <td>DTA ready</td>
-        <td>The YOUth data manager has created a Data Transfer Agreeement, stipulating the terms and conditions under which the researcher is allowed to use the data.</td>
+        <td>The YOUth data manager has created a Data Transfer Agreement, stipulating the terms and conditions under which the researcher is allowed to use the data.</td>
     </tr>
     <tr>
         <td><img src=/datarequest/static/img/button.png></img></td>
